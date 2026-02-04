@@ -1,0 +1,18 @@
+FROM node:24.13.0-bookworm-slim
+
+WORKDIR /app
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+
+COPY backend/package.json backend/yarn.lock ./
+
+RUN yarn config set nodeLinker node-modules
+RUN yarn install
+
+COPY backend ./
+
+EXPOSE 3000
+CMD ["yarn", "start:dev"]

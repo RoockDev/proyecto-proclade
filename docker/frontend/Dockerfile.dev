@@ -1,0 +1,22 @@
+FROM node:24.13.0-bookworm-slim
+
+WORKDIR /app
+
+# Yarn 4.12.0 con Corepack
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+
+# Primero copiamos package.json y lock (aquí ya existe el proyecto)
+COPY frontend/package.json frontend/yarn.lock ./
+
+# Ahora sí: forzamos node_modules (evita PnP)
+RUN yarn config set nodeLinker node-modules
+
+# Instalamos deps
+RUN yarn install
+
+# Copiamos el resto del código
+COPY frontend ./
+
+EXPOSE 5173
+CMD ["yarn", "dev", "--host", "0.0.0.0", "--port", "5173"]
