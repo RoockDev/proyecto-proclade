@@ -40,7 +40,7 @@ export class TransformInterceptor<T>
         return {
           success: true,
           message,
-          data: responseData,
+          data: responseData === undefined ? null : responseData,
         };
       }),
     );
