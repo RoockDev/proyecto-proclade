@@ -601,6 +601,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@popperjs/core@npm:^2.9.2":
+  version: 2.11.8
+  resolution: "@popperjs/core@npm:2.11.8"
+  checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
+  languageName: node
+  linkType: hard
+
 "@rolldown/pluginutils@npm:1.0.0-beta.53":
   version: 1.0.0-beta.53
   resolution: "@rolldown/pluginutils@npm:1.0.0-beta.53"
@@ -828,6 +835,15 @@ __metadata:
   dependencies:
     "@babel/types": "npm:^7.28.2"
   checksum: 10c0/b52d7d4e8fc6a9018fe7361c4062c1c190f5778cf2466817cb9ed19d69fbbb54f9a85ffedeb748ed8062d2cf7d4cc088ee739848f47c57740de1c48cbf0d0994
+  languageName: node
+  linkType: hard
+
+"@types/bootstrap@npm:^5":
+  version: 5.2.10
+  resolution: "@types/bootstrap@npm:5.2.10"
+  dependencies:
+    "@popperjs/core": "npm:^2.9.2"
+  checksum: 10c0/3e978855eb780df3907e8fe991371dc661c7a8c5b9852a10e33bcf6a909bc1481857aa8786d18b3aa828fb28660145fda0c8648265719e8a97a448b9f0158eae
   languageName: node
   linkType: hard
 
@@ -1096,6 +1112,22 @@ __metadata:
   bin:
     baseline-browser-mapping: dist/cli.js
   checksum: 10c0/569928db78bcd081953d7db79e4243a59a579a34b4ae1806b9b42d3b7f84e5bc40e6e82ae4fa06e7bef8291bf747b33b3f9ef5d3c6e1e420cb129d9295536129
+  languageName: node
+  linkType: hard
+
+"bootstrap-icons@npm:^1.13.1":
+  version: 1.13.1
+  resolution: "bootstrap-icons@npm:1.13.1"
+  checksum: 10c0/2c1adeb1796502e67b476ce049c86bc3a7ff7984c61777e056820389a8db5ec6535c12a33f76f3ed52674bca4c01472065a7fbcde6cc384ebb86c2eae51390bd
+  languageName: node
+  linkType: hard
+
+"bootstrap@npm:^5.3.8":
+  version: 5.3.8
+  resolution: "bootstrap@npm:5.3.8"
+  peerDependencies:
+    "@popperjs/core": ^2.11.8
+  checksum: 10c0/0039a9df2c3e7bfa04f1abca199c299ff3b75869d578c0cb1721c6f1f203c91531788a5631ecbee01513481979314d0e4ba0d90c2011e6ce18fc2e0bc93e18d9
   languageName: node
   linkType: hard
 
@@ -1624,10 +1656,13 @@ __metadata:
   resolution: "frontend@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.39.1"
+    "@types/bootstrap": "npm:^5"
     "@types/node": "npm:^24.10.1"
     "@types/react": "npm:^19.2.5"
     "@types/react-dom": "npm:^19.2.3"
     "@vitejs/plugin-react": "npm:^5.1.1"
+    bootstrap: "npm:^5.3.8"
+    bootstrap-icons: "npm:^1.13.1"
     eslint: "npm:^9.39.1"
     eslint-plugin-react-hooks: "npm:^7.0.1"
     eslint-plugin-react-refresh: "npm:^0.4.24"
