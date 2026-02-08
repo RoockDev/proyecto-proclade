@@ -1,0 +1,16 @@
+.home-stats {
+  background-color: var(--brand-white);
+}
+
+.home-stats__value {
+  color: var(--brand-primary);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.home-stats__label {
+  color: var(--brand-muted);
+  margin-bottom: 0;
+  font-weight: 500;
+}
