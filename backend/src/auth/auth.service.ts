@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import type { Prisma } from 'generated/prisma/client';
-import { UsersService } from '../users/users.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
 
 type UserWithRoles = Prisma.UserGetPayload<{
@@ -16,7 +16,7 @@ type SafeUserWithRoles = Omit<UserWithRoles, 'passwordHash'>;
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -24,7 +24,17 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<SafeUserWithRoles> {
-    const user = await this.usersService.findByEmail(email);
+    // TODO(HU-users): mover este lookup a UsersService cuando se implemente
+    // la HU de gestion de usuarios y dejar AuthService solo con logica de autenticacion.
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email,
+        deletedAt: null,
+      },
+      include: {
+        roles: true,
+      },
+    });
 
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');

@@ -1,2 +1,30 @@
 @baseUrl = http://localhost:3000
 
+
+
+### LOGIN OK - admin
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+### LOGIN OK - user
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "123456"
+}
+
+### LOGIN FAIL - password
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "1234567"
+}
