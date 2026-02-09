@@ -1,0 +1,38 @@
+.brand-footer {
+  background: linear-gradient(135deg, var(--brand-secondary), #1e3352);
+  color: var(--brand-white);
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+}
+
+.footer-title {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+.footer-list li {
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.footer-list a {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.footer-list a:hover,
+.footer-list a:focus {
+  color: var(--brand-accent);
+}
+
+.footer-separator {
+  border-color: rgba(255, 255, 255, 0.2);
+  margin: 2rem 0 1rem;
+}
+
+.footer-copy {
+  color: rgba(255, 255, 255, 0.72);
+}

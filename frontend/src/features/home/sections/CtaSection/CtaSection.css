@@ -1,0 +1,17 @@
+.home-cta {
+  background: linear-gradient(135deg, var(--brand-secondary) 0%, #1e3352 100%);
+  color: var(--brand-white);
+}
+
+.home-cta__title {
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.home-cta__text {
+  font-size: 1.1rem;
+  max-width: 46rem;
+  margin: 0 auto 2rem;
+  opacity: 0.95;
+}

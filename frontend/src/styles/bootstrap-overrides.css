@@ -1,0 +1,28 @@
+.btn-brand {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: var(--brand-white);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+  background-color: #004d85;
+  border-color: #004d85;
+  color: var(--brand-white);
+}
+
+.btn-brand-outline {
+  border: 1px solid var(--brand-primary);
+  color: var(--brand-primary);
+  background: transparent;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.btn-brand-outline:hover,
+.btn-brand-outline:focus {
+  background-color: var(--brand-primary);
+  color: var(--brand-white);
+}
