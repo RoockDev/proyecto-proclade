@@ -1,16 +1,29 @@
 generator client {
-  provider = "prisma-client-js"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
-  // NO url aquí en Prisma 7
+  // NO url aquí en Prisma 7 - se define en prisma.config.ts
 }
 
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String
+  fullName     String
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  roles        Role[]    @relation("UserRoles")
+}
 
-
-model Message {
+model Role {
   id        Int      @id @default(autoincrement())
-  text      String
+  name      String   @unique
+  users     User[]   @relation("UserRoles")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
