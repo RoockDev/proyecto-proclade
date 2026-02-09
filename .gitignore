@@ -28,4 +28,4 @@ Thumbs.db
 # Docker
 *.pid
 
-.yarn/install-state.gz
+**/.yarn/install-state.gz

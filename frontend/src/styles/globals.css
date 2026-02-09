@@ -1,0 +1,38 @@
+:root {
+  --brand-primary: #005c9f;
+  --brand-secondary: #1f3f6b;
+  --brand-accent: #f0c419;
+  --brand-dark: #0f172a;
+  --brand-muted: #64748b;
+  --brand-bg: #f8fafc;
+  --brand-white: #ffffff;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: var(--brand-dark);
+  background-color: var(--brand-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.section-padding {
+  padding: 4rem 0;
+}
