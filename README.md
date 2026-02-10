@@ -146,7 +146,7 @@ Verás algo como:
 **2. Entrar al backend:**
 
 ```bash
-docker exec -it proyecto-proclade-backend-1 sh
+docker exec -it proyectoproclade-backend-1 sh
 ```
 - Salir escribiendo: `exit`
 
@@ -154,17 +154,17 @@ docker exec -it proyecto-proclade-backend-1 sh
 
 - **Instalar una dependencia en el backend:**
   ```bash
-  docker exec -it proyecto-proclade-backend-1 yarn add bcrypt
+  docker exec -it proyectoproclade-backend-1 yarn add bcrypt
   ```
 
 - **Instalar una dependencia de desarrollo:**
   ```bash
-  docker exec -it proyecto-proclade-backend-1 yarn add -D @types/bcrypt
+  docker exec -it proyectoproclade-backend-1 yarn add -D @types/bcrypt
   ```
 
 - **Ejecutar Prisma:**
   ```bash
-  docker exec -it proyecto-proclade-backend-1 yarn prisma migrate dev
+  docker exec -it proyectoproclade-backend-1 yarn prisma migrate dev
   ```
 
 ### ❓ ¿Puedo ejecutar estos comandos desde VS Code?
@@ -183,3 +183,108 @@ docker exec -it proyecto-proclade-backend-1 sh
 - ✅ `yarn install` local solo es para el editor.
 - ❌ **No** tocar `node_modules` de Docker.
 - ❌ **No** subir archivos `.env` al repositorio.
+
+---
+
+## 📌 Protocolo de dependencias (Yarn 4) + comandos
+
+### 1) Regla base
+- Usar **Yarn 4 (Corepack)**.
+- No usar `npm install`.
+- No subir `package-lock.json` ni `.yarn/install-state.gz`.
+
+### 2) Instalar una dependencia nueva (frontend/backend)
+
+#### Frontend
+```bash
+cd frontend
+corepack enable
+corepack prepare yarn@4.12.0 --activate
+yarn add <paquete>
+```
+
+#### Backend
+```bash
+cd backend
+corepack enable
+corepack prepare yarn@4.12.0 --activate
+yarn add <paquete>
+```
+
+#### Dependencia de desarrollo
+```bash
+yarn add -D <paquete>
+```
+
+#### Quitar dependencia
+```bash
+yarn remove <paquete>
+```
+
+### 3) Qué subir a Git cuando cambian dependencias
+Siempre juntos:
+- `package.json`
+- `yarn.lock`
+
+Comprobar:
+```bash
+git status --short
+```
+
+### 4) Después de `git pull`
+
+#### Si NO cambiaron dependencias
+```bash
+docker compose up -d
+```
+
+#### Si SÍ cambiaron dependencias (`package.json`/`yarn.lock`)
+```bash
+docker compose down
+docker compose up -d --build
+```
+
+### 5) Si Docker sigue fallando por módulos/cache
+```bash
+docker compose down
+docker volume rm proyectoproclade_backend_node_modules proyectoproclade_frontend_node_modules
+docker compose up -d --build
+```
+
+Comprobar estado:
+```bash
+docker compose ps
+docker compose logs --tail=100 backend
+docker compose logs --tail=100 frontend
+```
+
+### 6) Si se cuela npm sin querer
+Eliminar lock npm:
+```bash
+rm -f backend/package-lock.json frontend/package-lock.json
+```
+
+Reinstalar con Yarn 4:
+```bash
+cd backend && corepack enable && corepack prepare yarn@4.12.0 --activate && yarn install
+cd ../frontend && corepack enable && corepack prepare yarn@4.12.0 --activate && yarn install
+```
+
+### 7) Si `install-state.gz` aparece en Git
+Quitar del tracking (una vez):
+```bash
+git rm --cached backend/.yarn/install-state.gz frontend/.yarn/install-state.gz
+```
+
+Descartar cambios locales de ese archivo:
+```bash
+git restore backend/.yarn/install-state.gz frontend/.yarn/install-state.gz
+```
+
+### 8) Verificación rápida de lockfile correcto (Yarn 4)
+```bash
+head -n 8 backend/yarn.lock
+head -n 8 frontend/yarn.lock
+```
+
+Debe verse `__metadata` y `version: 8`.
