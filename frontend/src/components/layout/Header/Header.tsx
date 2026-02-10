@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import './Header.css';
 
-export const Header = () => {
+interface HeaderProps {
+  onAccessClick?: () => void;
+}
+
+export const Header = ({ onAccessClick }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
@@ -60,7 +64,10 @@ export const Header = () => {
             <button
               type="button"
               className="btn btn-brand ms-lg-3"
-              onClick={closeMenu}
+              onClick={() => {
+                closeMenu();
+                onAccessClick?.();
+              }}
             >
               <i className="bi bi-person-circle me-2" />
               Acceso
