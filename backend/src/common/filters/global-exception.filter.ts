@@ -40,7 +40,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         'message' in errorResponse
       ) {
         const msg = (errorResponse as { message: string | string[] }).message;
-        return Array.isArray(msg) ? msg.join(', ') : msg;
+        return Array.isArray(msg) ? msg.join('. ') : msg;
       }
 
       if (typeof errorResponse === 'string') {
