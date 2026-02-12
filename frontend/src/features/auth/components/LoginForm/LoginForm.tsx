@@ -7,7 +7,11 @@ import type { LoginResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
 import './LoginForm.css';
 
-export function LoginForm() {
+interface LoginFormProps {
+  onSwitchToRegister?: () => void;
+}
+
+export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const [formState, setFormState] = useState<LoginFormState>({
     email: '',
     password: '',
@@ -146,6 +150,17 @@ export function LoginForm() {
           'Entrar'
         )}
       </button>
+
+      <p className="login-form__switch mt-3 mb-0 text-center">
+        ¿No estás registrado?{' '}
+        <button
+          type="button"
+          className="btn btn-link p-0 align-baseline login-form__switch-link"
+          onClick={onSwitchToRegister}
+        >
+          Regístrate
+        </button>
+      </p>
     </form>
   );
 }

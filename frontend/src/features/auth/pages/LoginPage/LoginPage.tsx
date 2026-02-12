@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
+import { RegisterForm } from '../../components/RegisterForm/RegisterForm';
 import './LoginPage.css';
 
 interface LoginPageProps {
@@ -6,6 +8,10 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ onBack }: LoginPageProps) {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+
+  const isLoginMode = mode === 'login';
+
   return (
     <main className="login-page">
       <div className="container">
@@ -22,11 +28,19 @@ export function LoginPage({ onBack }: LoginPageProps) {
                   Volver
                 </button>
               )}
-              <h1 className="login-page__title text-center">Iniciar sesión</h1>
+              <h1 className="login-page__title text-center">
+                {isLoginMode ? 'Iniciar sesión' : 'Crear cuenta'}
+              </h1>
               <p className="login-page__description text-center">
-                Accede a tu cuenta para continuar
+                {isLoginMode
+                  ? 'Accede a tu cuenta para continuar'
+                  : 'Regístrate para acceder a la plataforma'}
               </p>
-              <LoginForm />
+              {isLoginMode ? (
+                <LoginForm onSwitchToRegister={() => setMode('register')} />
+              ) : (
+                <RegisterForm onSwitchToLogin={() => setMode('login')} />
+              )}
             </div>
           </div>
         </div>
