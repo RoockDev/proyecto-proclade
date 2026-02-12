@@ -1,2 +1,5 @@
-// Tipos compartidos para respuestas de API
-export {};
+export type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T | null;
+};
