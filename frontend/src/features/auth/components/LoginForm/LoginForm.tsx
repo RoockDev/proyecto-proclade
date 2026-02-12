@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
+import { login } from '../../api/auth.api';
+import type { ApiResponse } from '../../../../types/api';
+import type { LoginResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
 import './LoginForm.css';
 
@@ -8,31 +13,69 @@ export function LoginForm() {
     password: '',
     loading: false,
     error: null,
+    successMessage: null,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({
       ...prev,
       [name]: value,
       error: null,
+      successMessage: null,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Simulación de loading (sin integración real aún)
-    setFormState((prev) => ({ ...prev, loading: true, error: null }));
-    
-    // Simular respuesta después de 1.5s
-    setTimeout(() => {
+    setFormState((prev) => ({
+      ...prev,
+      loading: true,
+      error: null,
+      successMessage: null,
+    }));
+
+    try {
+      const response = await login({
+        email: formState.email,
+        password: formState.password,
+      });
+
+      if (!response.success || !response.data) {
+        setFormState((prev) => ({
+          ...prev,
+          error: response.message,
+        }));
+        return;
+      }
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+      setFormState((prev) => ({
+        ...prev,
+        successMessage: response.message,
+      }));
+    } catch (error) {
+      let errorMessage = 'No se pudo iniciar sesion. Intentalo de nuevo.';
+
+      if (axios.isAxiosError(error)) {
+        const backendError = error.response?.data as
+          | ApiResponse<LoginResponseData>
+          | undefined;
+        if (backendError?.message) {
+          errorMessage = backendError.message;
+        }
+      }
+
+      setFormState((prev) => ({
+        ...prev,
+        error: errorMessage,
+      }));
+    } finally {
       setFormState((prev) => ({
         ...prev,
         loading: false,
-        error: 'Integración con API pendiente (HU futura)',
       }));
-    }, 1500);
+    }
   };
 
   return (
@@ -72,6 +115,12 @@ export function LoginForm() {
           autoComplete="current-password"
         />
       </div>
+
+      {formState.successMessage && (
+        <div className="login-form__success" role="status">
+          {formState.successMessage}
+        </div>
+      )}
 
       {formState.error && (
         <div className="login-form__error" role="alert">
