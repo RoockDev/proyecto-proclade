@@ -1,30 +1,61 @@
 @baseUrl = http://localhost:3000
+@adminEmail = admin@demo.com
+@userEmail = usuario@demo.com
+@validPasswordUser = 123456  
+@validPasswordAdmin = admin123       
+@invalidPassword = 1234567
+@unknownEmail = noexiste@test.com
 
-
-
-### LOGIN OK - admin
-POST http://localhost:3000/auth/login
+### LOGIN OK - admin (200)
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@test.com",
-  "password": "123456"
+  "email": "{{adminEmail}}",
+  "password": "{{validPasswordAdmin}}"
 }
 
-### LOGIN OK - user
-POST http://localhost:3000/auth/login
+### LOGIN OK - user (200)
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@test.com",
-  "password": "123456"
+  "email": "{{userEmail}}",
+  "password": "{{validPasswordUser}}"
 }
 
-### LOGIN FAIL - password
-POST http://localhost:3000/auth/login
+### LOGIN FAIL - wrong password (401)
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@test.com",
-  "password": "1234567"
+  "email": "{{userEmail}}",
+  "password": "{{invalidPassword}}"
+}
+
+### LOGIN FAIL - unknown email (401)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{unknownEmail}}",
+  "password": "{{validPasswordUser}}"
+}
+
+### LOGIN FAIL - invalid payload: password too short (400)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "password": "123"
+}
+
+### LOGIN FAIL - invalid payload: bad email format (400)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "email-invalido",
+  "password": "{{validPasswordUser}}"
 }
