@@ -3,4 +3,5 @@ export type LoginFormState = {
   password: string;
   loading: boolean;
   error: string | null;
+  successMessage: string | null;
 };

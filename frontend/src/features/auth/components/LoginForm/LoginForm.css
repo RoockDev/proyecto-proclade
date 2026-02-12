@@ -9,6 +9,12 @@
   margin-top: 0.5rem;
 }
 
+.login-form__success {
+  color: var(--bs-success);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
 .login-form__input:focus {
   border-color: var(--bs-primary);
   box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
