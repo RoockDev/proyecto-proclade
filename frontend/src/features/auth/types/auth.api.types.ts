@@ -3,11 +3,24 @@ export type LoginRequestDto = {
   password: string;
 };
 
-export type AuthUser = {
+export type RegisterRequestDto = {
+  name: string;
+  surname: string;
   email: string;
+  password: string;
 };
 
-export type LoginResponseData = {
+
+
+export type AuthUser = {
+  id: number;
+  email: string;
+  name: string;
+  surname: string;
+  roles: string[];
+};
+
+export type AuthResponseData = {
   accessToken: string;
   user: AuthUser;
 };
