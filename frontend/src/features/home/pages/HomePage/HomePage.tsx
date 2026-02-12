@@ -5,13 +5,14 @@ import { StatsSection } from '../../sections/StatsSection/StatsSection';
 import { LatestNewsSection } from '../../sections/LatestNewsSection/LatestNewsSection';
 import { CtaSection } from '../../sections/CtaSection/CtaSection';
 
+interface HomePageProps {
+  onAccessClick?: () => void;
+}
 
-
-
-export const HomePage = () => {
+export const HomePage = ({ onAccessClick }: HomePageProps) => {
   return (
     <>
-      <Header />
+      <Header onAccessClick={onAccessClick} />
 
       <main>
         <HeroSection />

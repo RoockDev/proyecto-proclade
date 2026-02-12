@@ -2,7 +2,6 @@
 .env
 .env.*
 !.env.example
-.env
 backend/.env
 frontend/.env
 
@@ -14,6 +13,7 @@ frontend/.env
 **/.vite/
 **/.eslintcache
 **/*.log
+**/package-lock.json
 
 # OS / IDE
 .DS_Store
@@ -24,8 +24,10 @@ Thumbs.db
 # Prisma / DB
 **/prisma/*.db
 **/prisma/*.db-journal
+**/generated/
 
 # Docker
 *.pid
 
+# Yarn
 **/.yarn/install-state.gz
