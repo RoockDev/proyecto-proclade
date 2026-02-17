@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 import { RegisterForm } from '../../components/RegisterForm/RegisterForm';
-import './LoginPage.css';
+import './AuthPage.css';
 
-interface LoginPageProps {
-  onBack?: () => void;
+export type AuthPageMode = 'login' | 'register';
+
+interface AuthPageProps {
+  mode: AuthPageMode;
 }
 
-export function LoginPage({ onBack }: LoginPageProps) {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-
+export const AuthPage = ({ mode }: AuthPageProps) => {
   const isLoginMode = mode === 'login';
 
   return (
@@ -18,16 +18,11 @@ export function LoginPage({ onBack }: LoginPageProps) {
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
             <div className="login-page__card">
-              {onBack && (
-                <button
-                  type="button"
-                  className="btn btn-link p-0 mb-3 text-decoration-none"
-                  onClick={onBack}
-                >
-                  <i className="bi bi-arrow-left me-1"></i>
-                  Volver
-                </button>
-              )}
+              <Link to="/" className="btn btn-link p-0 mb-3 text-decoration-none">
+                <i className="bi bi-arrow-left me-1"></i>
+                Volver
+              </Link>
+
               <h1 className="login-page__title text-center">
                 {isLoginMode ? 'Iniciar sesión' : 'Crear cuenta'}
               </h1>
@@ -36,10 +31,11 @@ export function LoginPage({ onBack }: LoginPageProps) {
                   ? 'Accede a tu cuenta para continuar'
                   : 'Regístrate para acceder a la plataforma'}
               </p>
+
               {isLoginMode ? (
-                <LoginForm onSwitchToRegister={() => setMode('register')} />
+                <LoginForm />
               ) : (
-                <RegisterForm onSwitchToLogin={() => setMode('login')} />
+                <RegisterForm />
               )}
             </div>
           </div>
@@ -47,4 +43,4 @@ export function LoginPage({ onBack }: LoginPageProps) {
       </div>
     </main>
   );
-}
+};
