@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { login } from '../../api/auth.api';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
 import './LoginForm.css';
 
-interface LoginFormProps {
-  onSwitchToRegister?: () => void;
-}
-
-export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
+export function LoginForm() {
   const [formState, setFormState] = useState<LoginFormState>({
     email: '',
     password: '',
@@ -153,13 +150,12 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
 
       <p className="login-form__switch mt-3 mb-0 text-center">
         ¿No estás registrado?{' '}
-        <button
-          type="button"
+        <Link
+          to="/auth/register"
           className="btn btn-link p-0 align-baseline login-form__switch-link"
-          onClick={onSwitchToRegister}
         >
           Regístrate
-        </button>
+        </Link>
       </p>
     </form>
   );

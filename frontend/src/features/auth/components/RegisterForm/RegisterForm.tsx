@@ -2,13 +2,10 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import './RegisterForm.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { register } from '../../api/auth.api';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
-
-interface RegisterFormProps {
-  onSwitchToLogin?: () => void;
-}
 
 type RegisterFormState = {
   name: string;
@@ -21,7 +18,7 @@ type RegisterFormState = {
   successMessage: string | null;
 };
 
-export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
+export const RegisterForm = () => {
   const [formState, setFormState] = useState<RegisterFormState>({
     name: '',
     surname: '',
@@ -235,14 +232,13 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
 
       <p className="register-form__switch mt-3 mb-0 text-center">
         ¿Ya tienes cuenta?{' '}
-        <button
-          type="button"
+        <Link
+          to="/auth/login"
           className="btn btn-link p-0 align-baseline register-form__switch-link"
-          onClick={onSwitchToLogin}
         >
           Inicia sesión
-        </button>
+        </Link>
       </p>
     </form>
   );
-}
+};

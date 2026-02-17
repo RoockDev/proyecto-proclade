@@ -1,0 +1,14 @@
+.public-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-layout__content {
+  flex: 1 0 auto;
+}
+
+.public-layout > .brand-footer {
+  margin-top: auto;
+}

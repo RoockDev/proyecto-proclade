@@ -1,22 +1,19 @@
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 
-interface HeaderProps {
-  onAccessClick?: () => void;
-}
-
-export const Header = ({ onAccessClick }: HeaderProps) => {
+export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    'Inicio',
-    'Conocenos',
-    'Campanas',
-    'Noticias',
-    'Retos',
-    'Comercio Justo',
-    'Colabora',
-    'Contacto',
+    { label: 'Inicio', to: '/', end: true },
+    { label: 'Conocenos', to: '/conocenos' },
+    { label: 'Campanas', to: '/campanas' },
+    { label: 'Noticias', to: '/noticias' },
+    { label: 'Retos', to: '/retos' },
+    { label: 'Comercio Justo', to: '/comercio-justo' },
+    { label: 'Colabora', to: '/colabora' },
+    { label: 'Contacto', to: '/contacto' },
   ];
 
   const toggleMenu = () => {
@@ -31,10 +28,14 @@ export const Header = ({ onAccessClick }: HeaderProps) => {
     <header className="brand-header sticky-top">
       <nav className="navbar navbar-expand-lg">
         <div className="container">
-          <a className="navbar-brand d-flex align-items-center gap-2" href="#">
+          <Link
+            className="navbar-brand d-flex align-items-center gap-2"
+            to="/"
+            onClick={closeMenu}
+          >
             <span className="brand-logo">FP</span>
             <span className="brand-name">Fundacion PROCLADE</span>
-          </a>
+          </Link>
 
           <button
             className="navbar-toggler"
@@ -53,25 +54,25 @@ export const Header = ({ onAccessClick }: HeaderProps) => {
           >
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               {navItems.map((item) => (
-                <li className="nav-item" key={item}>
-                  <a className="nav-link" href="#" onClick={closeMenu}>
-                    {item}
-                  </a>
+                <li className="nav-item" key={item.label}>
+                  <NavLink
+                    to={item.to}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `nav-link${isActive ? ' active' : ''}`
+                    }
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </NavLink>
                 </li>
               ))}
             </ul>
 
-            <button
-              type="button"
-              className="btn btn-brand ms-lg-3"
-              onClick={() => {
-                closeMenu();
-                onAccessClick?.();
-              }}
-            >
+            <Link to="/auth/login" className="btn btn-brand ms-lg-3" onClick={closeMenu}>
               <i className="bi bi-person-circle me-2" />
               Acceso
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
