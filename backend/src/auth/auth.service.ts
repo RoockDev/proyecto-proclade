@@ -12,6 +12,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { RoleName } from '../common/types/role-name.enum';
 import { PrismaService } from '../prisma/prisma.service';
 import { GoogleSignInDto } from './dto/google-sign-in.dto';
+import { GoogleAuthService } from './google/google-auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -28,6 +29,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly googleAuthService: GoogleAuthService,
   ) {}
 
   private async validateUser(
@@ -110,10 +112,12 @@ export class AuthService {
   }
 
   async googleSignIn(googleSignInDto: GoogleSignInDto) {
-    const googlePayload = await this.verifyGoogleIdToken(googleSignInDto.idToken);
+    const googlePayload = await this.googleAuthService.verifyIdToken(
+      googleSignInDto.idToken,
+    );
 
     const email = googlePayload.email?.trim().toLowerCase();
-    if (!email || googlePayload.email_verified !== true) {
+    if (!email || googlePayload.emailVerified !== true) {
       throw new UnauthorizedException('No se pudo iniciar sesión con Google');
     }
 
@@ -138,7 +142,8 @@ export class AuthService {
         throw new NotFoundException('No existe el rol USER');
       }
 
-      const { name, surname } = this.extractUserNames(googlePayload);
+      const name = googlePayload.name?.trim() || 'Usuario';
+      const surname = googlePayload.surname?.trim() || 'Google';
       const randomPassword = randomBytes(24).toString('hex');
       const passwordHash = await bcrypt.hash(randomPassword, 10);
 
