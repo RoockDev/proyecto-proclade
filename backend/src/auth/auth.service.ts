@@ -43,6 +43,12 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    if (user.google) {
+      throw new UnauthorizedException(
+        'Esta cuenta debe iniciar sesión con Google',
+      );
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 
     if (!isPasswordValid) {
