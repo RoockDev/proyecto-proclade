@@ -6,9 +6,12 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 import type { Prisma } from 'generated/prisma/client';
+import { OAuth2Client } from 'google-auth-library';
 import { RoleName } from '../common/types/role-name.enum';
 import { PrismaService } from '../prisma/prisma.service';
+import { GoogleSignInDto } from './dto/google-sign-in.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -106,6 +109,61 @@ export class AuthService {
     return this.buildAuthResponse(safeUser, 'Registro completado correctamente');
   }
 
+  async googleSignIn(googleSignInDto: GoogleSignInDto) {
+    const googlePayload = await this.verifyGoogleIdToken(googleSignInDto.idToken);
+
+    const email = googlePayload.email?.trim().toLowerCase();
+    if (!email || googlePayload.email_verified !== true) {
+      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
+    }
+
+    let user = await this.prisma.user.findFirst({
+      where: {
+        email,
+        deletedAt: null,
+      },
+      include: {
+        roles: true,
+      },
+    });
+
+    if (!user) {
+      const userRole = await this.prisma.role.findUnique({
+        where: {
+          name: RoleName.USER,
+        },
+      });
+
+      if (!userRole) {
+        throw new NotFoundException('No existe el rol USER');
+      }
+
+      const { name, surname } = this.extractUserNames(googlePayload);
+      const randomPassword = randomBytes(24).toString('hex');
+      const passwordHash = await bcrypt.hash(randomPassword, 10);
+
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          name,
+          surname,
+          roles: {
+            connect: {
+              id: userRole.id,
+            },
+          },
+        },
+        include: {
+          roles: true,
+        },
+      });
+    }
+
+    const { passwordHash, ...safeUser } = user;
+    return this.buildAuthResponse(safeUser, 'Google Sign-In exitoso');
+  }
+
   private buildAuthResponse(user: SafeUserWithRoles, message: string) {
     const roles = this.getNormalizedRoles(user.roles);
     const payload = {
@@ -129,5 +187,63 @@ export class AuthService {
 
   private getNormalizedRoles(roles: Array<{ name: string }>): string[] {
     return roles.map((role) => role.name.toUpperCase());
+  }
+
+  private async verifyGoogleIdToken(idToken: string): Promise<{
+    email?: string;
+    email_verified?: boolean;
+    name?: string;
+    given_name?: string;
+    family_name?: string;
+  }> {
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+
+    if (!googleClientId) {
+      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
+    }
+
+    try {
+      const client = new OAuth2Client(googleClientId);
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: googleClientId,
+      });
+
+      const payload = ticket.getPayload();
+      if (!payload) {
+        throw new UnauthorizedException('No se pudo iniciar sesión con Google');
+      }
+
+      return payload;
+    } catch {
+      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
+    }
+  }
+
+  private extractUserNames(payload: {
+    name?: string;
+    given_name?: string;
+    family_name?: string;
+  }) {
+    const fullName = payload.name?.trim() ?? '';
+    const givenName = payload.given_name?.trim() ?? '';
+    const familyName = payload.family_name?.trim() ?? '';
+
+    if (givenName || familyName) {
+      return {
+        name: givenName || fullName || 'Usuario',
+        surname: familyName || 'Google',
+      };
+    }
+
+    if (!fullName) {
+      return { name: 'Usuario', surname: 'Google' };
+    }
+
+    const [firstWord, ...restWords] = fullName.split(' ').filter(Boolean);
+    return {
+      name: firstWord || 'Usuario',
+      surname: restWords.join(' ') || 'Google',
+    };
   }
 }
