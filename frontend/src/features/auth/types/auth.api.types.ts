@@ -10,7 +10,9 @@ export type RegisterRequestDto = {
   password: string;
 };
 
-
+export type GoogleSignInRequestDto = {
+  idToken: string;
+};
 
 export type AuthUser = {
   id: number;

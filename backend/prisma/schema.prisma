@@ -15,6 +15,7 @@ model User {
   passwordHash String
   name         String
   surname      String
+  google       Boolean   @default(false)
   deletedAt    DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

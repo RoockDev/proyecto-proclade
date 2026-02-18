@@ -4,6 +4,7 @@ import type {
   LoginRequestDto,
   AuthResponseData,
   RegisterRequestDto,
+  GoogleSignInRequestDto,
 } from '../types/auth.api.types';
 
 export async function login(
@@ -26,3 +27,13 @@ export const register = async (
   );
   return response.data;
 };
+
+export async function googleSignIn(
+  payload: GoogleSignInRequestDto,
+): Promise<ApiResponse<AuthResponseData>> {
+  const response = await api.post<ApiResponse<AuthResponseData>>(
+    '/auth/google',
+    payload,
+  );
+  return response.data;
+}

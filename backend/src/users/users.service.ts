@@ -1,9 +1,16 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import type { Prisma } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RoleName } from '../common/types/role-name.enum';
 import * as bcrypt from 'bcrypt';
+
+type UserWithRoles = Prisma.UserGetPayload<{
+  include: {
+    roles: true;
+  };
+}>;
 
 @Injectable()
 export class UsersService {
@@ -66,6 +73,18 @@ export class UsersService {
     }
 
     return this.formatUserResponse(user);
+  }
+
+  async findActiveByEmailWithRoles(email: string): Promise<UserWithRoles | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        email,
+        deletedAt: null,
+      },
+      include: {
+        roles: true,
+      },
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

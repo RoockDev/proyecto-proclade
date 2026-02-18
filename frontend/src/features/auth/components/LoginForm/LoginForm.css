@@ -40,3 +40,30 @@
   font-size: inherit;
   text-decoration: none;
 }
+
+.login-form__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  color: var(--bs-secondary);
+  font-size: 0.875rem;
+}
+
+.login-form__divider::before,
+.login-form__divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.login-form__google {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.login-form__google--disabled {
+  pointer-events: none;
+  opacity: 0.65;
+}
