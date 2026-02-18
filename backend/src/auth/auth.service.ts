@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import type { Prisma } from 'generated/prisma/client';
-import { OAuth2Client } from 'google-auth-library';
 import { RoleName } from '../common/types/role-name.enum';
 import { PrismaService } from '../prisma/prisma.service';
 import { GoogleSignInDto } from './dto/google-sign-in.dto';
@@ -192,63 +191,5 @@ export class AuthService {
 
   private getNormalizedRoles(roles: Array<{ name: string }>): string[] {
     return roles.map((role) => role.name.toUpperCase());
-  }
-
-  private async verifyGoogleIdToken(idToken: string): Promise<{
-    email?: string;
-    email_verified?: boolean;
-    name?: string;
-    given_name?: string;
-    family_name?: string;
-  }> {
-    const googleClientId = process.env.GOOGLE_CLIENT_ID;
-
-    if (!googleClientId) {
-      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
-    }
-
-    try {
-      const client = new OAuth2Client(googleClientId);
-      const ticket = await client.verifyIdToken({
-        idToken,
-        audience: googleClientId,
-      });
-
-      const payload = ticket.getPayload();
-      if (!payload) {
-        throw new UnauthorizedException('No se pudo iniciar sesión con Google');
-      }
-
-      return payload;
-    } catch {
-      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
-    }
-  }
-
-  private extractUserNames(payload: {
-    name?: string;
-    given_name?: string;
-    family_name?: string;
-  }) {
-    const fullName = payload.name?.trim() ?? '';
-    const givenName = payload.given_name?.trim() ?? '';
-    const familyName = payload.family_name?.trim() ?? '';
-
-    if (givenName || familyName) {
-      return {
-        name: givenName || fullName || 'Usuario',
-        surname: familyName || 'Google',
-      };
-    }
-
-    if (!fullName) {
-      return { name: 'Usuario', surname: 'Google' };
-    }
-
-    const [firstWord, ...restWords] = fullName.split(' ').filter(Boolean);
-    return {
-      name: firstWord || 'Usuario',
-      surname: restWords.join(' ') || 'Google',
-    };
   }
 }
