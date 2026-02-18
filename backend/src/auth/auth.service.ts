@@ -10,6 +10,7 @@ import { randomBytes } from 'crypto';
 import type { Prisma } from 'generated/prisma/client';
 import { RoleName } from '../common/types/role-name.enum';
 import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 import { GoogleSignInDto } from './dto/google-sign-in.dto';
 import { GoogleAuthService } from './google/google-auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -29,23 +30,14 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly googleAuthService: GoogleAuthService,
+    private readonly usersService: UsersService,
   ) {}
 
   private async validateUser(
     email: string,
     password: string,
   ): Promise<SafeUserWithRoles> {
-    // TODO(HU-users): mover este lookup a UsersService cuando se implemente
-    // la HU de gestion de usuarios y dejar AuthService solo con logica de autenticacion.
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-        deletedAt: null,
-      },
-      include: {
-        roles: true,
-      },
-    });
+    const user = await this.usersService.findActiveByEmailWithRoles(email);
 
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
@@ -120,15 +112,7 @@ export class AuthService {
       throw new UnauthorizedException('No se pudo iniciar sesión con Google');
     }
 
-    let user = await this.prisma.user.findFirst({
-      where: {
-        email,
-        deletedAt: null,
-      },
-      include: {
-        roles: true,
-      },
-    });
+    let user = await this.usersService.findActiveByEmailWithRoles(email);
 
     if (!user) {
       const userRole = await this.prisma.role.findUnique({
