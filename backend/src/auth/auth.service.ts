@@ -152,6 +152,7 @@ export class AuthService {
           passwordHash,
           name,
           surname,
+          google: true,
           roles: {
             connect: {
               id: userRole.id,
