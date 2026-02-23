@@ -4,6 +4,7 @@ import './RegisterForm.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { register } from '../../api/auth.api';
+import { saveAuthSession } from '../../utils/auth-session.storage';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 
@@ -76,7 +77,7 @@ export const RegisterForm = () => {
         return;
       }
 
-      localStorage.setItem('accessToken', response.data.accessToken);
+      saveAuthSession(response.data);
       setFormState((prev) => ({
         ...prev,
         successMessage: response.message,

@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { googleSignIn, login } from '../../api/auth.api';
+import { saveAuthSession } from '../../utils/auth-session.storage';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
@@ -111,7 +112,7 @@ export const LoginForm = () => {
           return;
         }
 
-        localStorage.setItem('accessToken', apiResponse.data.accessToken);
+        saveAuthSession(apiResponse.data);
         setFormState((prev) => ({
           ...prev,
           successMessage: apiResponse.message,
@@ -194,7 +195,7 @@ export const LoginForm = () => {
         return;
       }
 
-      localStorage.setItem('accessToken', response.data.accessToken);
+      saveAuthSession(response.data);
       setFormState((prev) => ({
         ...prev,
         successMessage: response.message,

@@ -1,0 +1,65 @@
+.admin-stat-card {
+  background-color: var(--brand-white);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem 1.35rem;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background-color: var(--admin-stat-accent, var(--brand-primary));
+}
+
+.admin-stat-card__label {
+  margin: 0;
+  color: var(--brand-muted);
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.admin-stat-card__value {
+  margin: 0;
+  color: var(--admin-stat-accent, var(--brand-primary));
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.admin-stat-card--primary {
+  --admin-stat-accent: var(--brand-primary);
+}
+
+.admin-stat-card--warning {
+  --admin-stat-accent: #d97706;
+}
+
+.admin-stat-card--info {
+  --admin-stat-accent: #2563eb;
+}
+
+.admin-stat-card--success {
+  --admin-stat-accent: #15803d;
+}
+
+@media (max-width: 575.98px) {
+  .admin-stat-card {
+    min-height: 96px;
+    padding: 1rem 1.1rem;
+  }
+
+  .admin-stat-card__label {
+    font-size: 0.92rem;
+  }
+}
