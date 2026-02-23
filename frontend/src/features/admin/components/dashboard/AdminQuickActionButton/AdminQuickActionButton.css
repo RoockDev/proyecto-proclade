@@ -1,0 +1,54 @@
+.admin-quick-action-button {
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-quick-action-button__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.admin-quick-action-button--solid {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, #0a78c2 100%);
+  color: var(--brand-white);
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(0, 92, 159, 0.2);
+}
+
+.admin-quick-action-button--solid:hover,
+.admin-quick-action-button--solid:focus-visible {
+  background: linear-gradient(135deg, #004d85 0%, var(--brand-primary) 100%);
+  color: var(--brand-white);
+  outline: none;
+}
+
+.admin-quick-action-button--outline {
+  background: var(--brand-white);
+  color: var(--brand-dark);
+  border-color: #d1d5db;
+}
+
+.admin-quick-action-button--outline:hover,
+.admin-quick-action-button--outline:focus-visible {
+  background: #f8fafc;
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  outline: none;
+}
+
+@media (max-width: 575.98px) {
+  .admin-quick-action-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
