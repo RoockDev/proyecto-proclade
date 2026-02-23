@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import {
   getAuthSession,
   subscribeToAuthSession,
@@ -63,10 +63,14 @@ export const AdminLayout = () => {
           </ul>
         </nav>
 
-        <button type="button" className="admin-layout__logout">
+        <Link
+          to="/"
+          className="admin-layout__logout"
+          aria-label="Volver a la página principal"
+        >
           <i className="bi bi-box-arrow-left me-2" aria-hidden="true" />
           Salir
-        </button>
+        </Link>
       </aside>
 
       <div className="admin-layout__main">
