@@ -138,10 +138,25 @@ export const userHasAdminRole = (user: AuthUser | null | undefined): boolean => 
     return false;
   }
 
-  
   return user.roles.some((role) => role.toUpperCase() === 'ADMIN');
 };
 
+/*
+  subscribeToAuthSession sirve para que un componente (por ejemplo Header)
+  escuche cuándo cambia la sesión en localStorage para poder hacer csoitas después
+
+  Flujo de ejemplo para mostrar el bo´ton de panel de admin:
+  - Login/Register guarda sesión con saveAuthSession(...)
+  - saveAuthSession(...) lanza un evento de cambio
+  - Header (suscrito) recibe ese aviso
+  - Header vuelve a leer la sesión con getAuthSession()
+  - Header actualiza el botón (Acceso / Panel Admin) sin recargar
+
+  Importante:
+  - No modifica datos de sesión
+  - Solo notifica/escucha cambios
+  - Devuelve una función para cancelar la suscripción al desmontar el componente
+*/
 export const subscribeToAuthSession = (onChange: () => void): (() => void) => {
   if (!isBrowser) {
     return () => undefined;
