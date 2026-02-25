@@ -31,47 +31,10 @@
   align-items: center;
 }
 
-.admin-list-item__badge {
-  flex-shrink: 0;
-  border-radius: 999px;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  line-height: 1;
-  border: 1px solid transparent;
-}
-
-.admin-list-item__badge--pendiente {
-  background: rgba(245, 158, 11, 0.14);
-  color: #b45309;
-  border-color: rgba(245, 158, 11, 0.24);
-}
-
-.admin-list-item__badge--aprobado {
-  background: rgba(22, 163, 74, 0.12);
-  color: #166534;
-  border-color: rgba(22, 163, 74, 0.22);
-}
-
-.admin-list-item__badge--rechazado {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b91c1c;
-  border-color: rgba(220, 38, 38, 0.2);
-}
-
-.admin-list-item__badge--publicado {
-  background: rgba(0, 92, 159, 0.12);
-  color: var(--brand-primary);
-  border-color: rgba(0, 92, 159, 0.2);
-}
-
 @media (max-width: 767.98px) {
   .admin-list-item {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .admin-list-item__badge {
-    align-self: flex-start;
-  }
 }

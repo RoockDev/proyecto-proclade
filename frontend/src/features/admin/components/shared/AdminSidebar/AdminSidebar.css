@@ -1,0 +1,122 @@
+.admin-sidebar {
+  width: 260px;
+  background: linear-gradient(
+    180deg,
+    var(--brand-primary) 0%,
+    #0a78c2 55%,
+    var(--brand-secondary) 100%
+  );
+  color: var(--brand-white);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.admin-sidebar__brand-icon {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.admin-sidebar__nav {
+  flex: 1;
+  margin-top: 0.5rem;
+}
+
+.admin-sidebar__nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin-sidebar__nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.admin-sidebar__nav-item:hover,
+.admin-sidebar__nav-item:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.admin-sidebar__nav-item--active {
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--brand-white);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.55);
+}
+
+.admin-sidebar__nav-item[disabled] {
+  opacity: 0.9;
+  cursor: default;
+}
+
+.admin-sidebar__nav-badge {
+  min-width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--brand-white);
+}
+
+.admin-sidebar__logout {
+  margin-top: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  text-decoration: none;
+}
+
+.admin-sidebar__logout:hover,
+.admin-sidebar__logout:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .admin-sidebar__nav-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-sidebar__nav-list {
+    grid-template-columns: 1fr;
+  }
+}

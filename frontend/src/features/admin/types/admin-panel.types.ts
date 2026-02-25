@@ -13,11 +13,18 @@ export type AdminMetric = {
   accent: AdminMetricAccent;
 };
 
-export type AdminListItemStatus =
+export type AdminStatusCode =
   | 'PENDIENTE'
   | 'APROBADO'
   | 'RECHAZADO'
-  | 'PUBLICADO';
+  | 'PUBLICADO'
+  | 'ACTIVA'
+  | 'FINALIZADA';
+
+export type AdminListItemStatus = Extract<
+  AdminStatusCode,
+  'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'PUBLICADO'
+>;
 
 export type AdminDashboardListItem = {
   id: string;
@@ -43,4 +50,15 @@ export type AdminQuickAction = {
   icon: string;
   variant: AdminQuickActionVariant;
   target?: string;
+};
+
+export type AdminCampaignStatus = Extract<AdminStatusCode, 'ACTIVA' | 'FINALIZADA'>;
+
+export type AdminCampaign = {
+  id: string;
+  title: string;
+  category: string;
+  status: AdminCampaignStatus;
+  raisedAmount: number;
+  goalAmount: number;
 };

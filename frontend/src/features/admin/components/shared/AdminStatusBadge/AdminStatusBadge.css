@@ -1,0 +1,58 @@
+.admin-status-badge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  border: 1px solid transparent;
+}
+
+.admin-status-badge--pendiente {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.24);
+}
+
+.admin-status-badge--aprobado,
+.admin-status-badge--activa {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+  border-color: rgba(22, 163, 74, 0.22);
+}
+
+.admin-status-badge--rechazado {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.admin-status-badge--publicado {
+  background: rgba(0, 92, 159, 0.12);
+  color: var(--brand-primary);
+  border-color: rgba(0, 92, 159, 0.2);
+}
+
+.admin-status-badge--finalizada {
+  background: rgba(107, 114, 128, 0.14);
+  color: #4b5563;
+  border-color: rgba(107, 114, 128, 0.24);
+}
+
+.admin-status-badge--info {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0c4a6e;
+  border-color: rgba(2, 132, 199, 0.22);
+}
+
+.admin-status-badge--warning {
+  background: rgba(217, 119, 6, 0.14);
+  color: #92400e;
+  border-color: rgba(217, 119, 6, 0.24);
+}
+
+.admin-status-badge--neutral {
+  background: rgba(107, 114, 128, 0.12);
+  color: #374151;
+  border-color: rgba(107, 114, 128, 0.22);
+}

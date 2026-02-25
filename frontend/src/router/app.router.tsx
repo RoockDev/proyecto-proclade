@@ -5,6 +5,7 @@ import { AdminLayout } from '../features/admin/components/layout/AdminLayout/Adm
 import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPanelPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ export const appRouter = createBrowserRouter([
         path: '*',
         element: <NotFoundPage />,
       },
+      
     ],
   },
   {
@@ -36,6 +38,10 @@ export const appRouter = createBrowserRouter([
       {
         index: true,
         element: <AdminPanelPage />,
+      },
+      {
+        path: 'campanas',
+        element: <AdminCampaignsPage />,
       },
     ],
   },
