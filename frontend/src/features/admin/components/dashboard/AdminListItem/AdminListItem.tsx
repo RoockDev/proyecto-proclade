@@ -2,6 +2,7 @@ import type {
   AdminDashboardListItem,
   AdminListItemStatus,
 } from '../../../types/admin-panel.types';
+import { AdminStatusBadge } from '../../shared/AdminStatusBadge/AdminStatusBadge';
 import './AdminListItem.css';
 
 type AdminListItemProps = {
@@ -27,11 +28,7 @@ export const AdminListItem = ({ item }: AdminListItemProps) => {
         </p>
       </div>
 
-      <span
-        className={`admin-list-item__badge admin-list-item__badge--${item.status.toLowerCase()}`}
-      >
-        {statusLabelMap[item.status]}
-      </span>
+      <AdminStatusBadge label={statusLabelMap[item.status]} status={item.status} />
     </article>
   );
 };

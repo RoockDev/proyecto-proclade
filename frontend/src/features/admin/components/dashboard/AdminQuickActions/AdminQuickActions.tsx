@@ -1,5 +1,5 @@
 import type { AdminQuickAction } from '../../../types/admin-panel.types';
-import { AdminQuickActionButton } from '../AdminQuickActionButton/AdminQuickActionButton';
+import { AdminQuickActionButton } from '../../shared/AdminQuickActionButton/AdminQuickActionButton';
 import './AdminQuickActions.css';
 
 type AdminQuickActionsProps = {
