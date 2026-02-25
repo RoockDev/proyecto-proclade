@@ -1,0 +1,28 @@
+.admin-data-table {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.admin-data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-data-table th,
+.admin-data-table td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #eef2f7;
+  text-align: left;
+}
+
+.admin-data-table th {
+  font-weight: 600;
+  background: #f9fafb;
+}
+
+.admin-data-table__empty {
+  text-align: center;
+  color: #6b7280;
+}

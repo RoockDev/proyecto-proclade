@@ -1,0 +1,11 @@
+.admin-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.admin-row-actions button {
+  border: 0;
+  background: transparent;
+  padding: 0.2rem 0.3rem;
+}

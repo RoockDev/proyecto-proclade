@@ -1,0 +1,36 @@
+.admin-topbar {
+  min-height: 72px;
+  background: var(--brand-white);
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+
+.admin-topbar__title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.admin-topbar__context {
+  color: var(--brand-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 991.98px) {
+  .admin-topbar {
+    padding: 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-topbar__title {
+    font-size: 1.4rem;
+  }
+}
