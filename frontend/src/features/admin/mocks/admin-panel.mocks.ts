@@ -1,4 +1,5 @@
 import type {
+  AdminCampaign,
   AdminListBlock,
   AdminMetric,
   AdminQuickAction,
@@ -123,5 +124,48 @@ export const adminQuickActionsMock: AdminQuickAction[] = [
     icon: 'bi bi-inbox',
     variant: 'outline',
     target: '/admin/solicitudes',
+  },
+];
+
+export const adminCampaignsQuickActionMock: AdminQuickAction = {
+  id: 'new-campaign-toolbar',
+  label: 'Nueva Campaña',
+  icon: 'bi bi-plus-lg',
+  variant: 'solid',
+  target: '/admin/campanas/nueva',
+};
+
+export const adminCampaignsMock: AdminCampaign[] = [
+  {
+    id: 'campaign-1',
+    title: 'Educacion para Todos',
+    category: 'Educacion',
+    status: 'ACTIVA',
+    raisedAmount: 9800,
+    goalAmount: 15000,
+  },
+  {
+    id: 'campaign-2',
+    title: 'Agua Limpia',
+    category: 'Infraestructura',
+    status: 'ACTIVA',
+    raisedAmount: 18500,
+    goalAmount: 25000,
+  },
+  {
+    id: 'campaign-3',
+    title: 'Salud Comunitaria',
+    category: 'Salud',
+    status: 'FINALIZADA',
+    raisedAmount: 12000,
+    goalAmount: 12000,
+  },
+  {
+    id: 'campaign-4',
+    title: 'Huertos Escolares',
+    category: 'Medio Ambiente',
+    status: 'ACTIVA',
+    raisedAmount: 3200,
+    goalAmount: 8000,
   },
 ];
