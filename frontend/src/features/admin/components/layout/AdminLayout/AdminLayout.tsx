@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import {
   getAuthSession,
   subscribeToAuthSession,
   userHasAdminRole,
 } from '../../../../auth/utils/auth-session.storage';
+import { AdminSidebar, type AdminNavItem } from '../../shared/AdminSidebar/AdminSidebar';
+import { AdminTopbar } from '../../shared/AdminTopbar/AdminTopbar';
 import './AdminLayout.css';
 
-const sidebarItems = [
-  'Panel',
-  'Campanas',
-  'Noticias',
-  'Retos',
-  'Solicitudes',
-  'Propuestas',
-  'Chat',
+const navItems: AdminNavItem[] = [
+  { label: 'Panel', to: '/admin' },
+  { label: 'Campañas', to: '/admin/campanas' },
+  { label: 'Noticias' },
+  { label: 'Retos' },
+  { label: 'Solicitudes' },
+  { label: 'Propuestas' },
+  { label: 'Chat' },
 ];
 
+const getAdminTitle = (pathname: string): string => {
+  if (pathname.startsWith('/admin/campanas')) return 'Campañas';
+  if (pathname === '/admin') return 'Panel';
+  return 'Administración';
+};
+
 export const AdminLayout = () => {
+  const location = useLocation();
   const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
 
   useEffect(() => {
-    // Sincroniza la UI del panel si cambia la sesión (login/logout) sin recargar.
     const unsubscribe = subscribeToAuthSession(() => {
       setSessionUser(getAuthSession().user);
     });
@@ -36,50 +44,17 @@ export const AdminLayout = () => {
       sessionUser.roles[0].slice(1).toLowerCase()
     : '';
 
+  const title = useMemo(() => getAdminTitle(location.pathname), [location.pathname]);
+
   return (
     <div className="admin-layout">
-      <aside className="admin-layout__sidebar" aria-label="Navegacion del panel">
-        <div className="admin-layout__brand">
-          <span className="admin-layout__brand-icon" aria-hidden="true">
-            <i className="bi bi-shield-lock" />
-          </span>
-          <span className="admin-layout__brand-text">Administración</span>
-        </div>
-
-        <nav className="admin-layout__nav">
-          <ul className="admin-layout__nav-list">
-            {sidebarItems.map((item) => (
-              <li key={item}>
-                <button
-                  type="button"
-                  className={`admin-layout__nav-item ${
-                    item === 'Panel' ? 'admin-layout__nav-item--active' : ''
-                  }`}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <Link
-          to="/"
-          className="admin-layout__logout"
-          aria-label="Volver a la página principal"
-        >
-          <i className="bi bi-box-arrow-left me-2" aria-hidden="true" />
-          Salir
-        </Link>
-      </aside>
+      <AdminSidebar items={navItems} />
 
       <div className="admin-layout__main">
-        <header className="admin-layout__topbar">
-          <h1 className="admin-layout__title">Panel</h1>
-          <p className="admin-layout__context mb-0">
-            {isAdmin ? `${topbarRole} · ${topbarEmail}` : 'Acceso restringido'}
-          </p>
-        </header>
+        <AdminTopbar
+          title={title}
+          context={isAdmin ? `${topbarRole} · ${topbarEmail}` : 'Acceso restringido'}
+        />
 
         <main className="admin-layout__content">
           {isAdmin ? (
