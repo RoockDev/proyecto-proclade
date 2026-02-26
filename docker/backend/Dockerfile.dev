@@ -14,5 +14,10 @@ RUN yarn install
 
 COPY backend ./
 
+# Generar cliente Prisma (DATABASE_URL dummy solo para generate, no conecta a DB)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+RUN yarn prisma:generate
+ENV DATABASE_URL=""
+
 EXPOSE 3000
 CMD ["yarn", "start:dev"]
