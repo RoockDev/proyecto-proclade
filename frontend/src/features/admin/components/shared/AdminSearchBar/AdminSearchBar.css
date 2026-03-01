@@ -1,0 +1,17 @@
+.admin-search-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(100%, 320px);
+  border: 1px solid #d1d5db;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  background: #fff;
+}
+
+.admin-search-bar input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}

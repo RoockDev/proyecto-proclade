@@ -1,9 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import {
+  getAuthSession,
+  subscribeToAuthSession,
+  userHasAdminRole,
+} from '../../../features/auth/utils/auth-session.storage';
 import './Header.css';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
+
+  useEffect(() => {
+    // aquí se escuchann cambios de sesión para actualizar el botón del header sin recargar la página
+    const unsubscribe = subscribeToAuthSession(() => {
+      setSessionUser(getAuthSession().user);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const navItems = [
     { label: 'Inicio', to: '/', end: true },
@@ -15,6 +30,9 @@ export const Header = () => {
     { label: 'Colabora', to: '/colabora' },
     { label: 'Contacto', to: '/contacto' },
   ];
+
+  
+  const isAdmin = userHasAdminRole(sessionUser);
 
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
@@ -69,10 +87,17 @@ export const Header = () => {
               ))}
             </ul>
 
-            <Link to="/auth/login" className="btn btn-brand ms-lg-3" onClick={closeMenu}>
-              <i className="bi bi-person-circle me-2" />
-              Acceso
-            </Link>
+            {isAdmin ? (
+              <Link to="/admin" className="btn btn-brand ms-lg-3" onClick={closeMenu}>
+                <i className="bi bi-speedometer2 me-2" />
+                Panel Admin
+              </Link>
+            ) : (
+              <Link to="/auth/login" className="btn btn-brand ms-lg-3" onClick={closeMenu}>
+                <i className="bi bi-person-circle me-2" />
+                Acceso
+              </Link>
+            )}
           </div>
         </div>
       </nav>

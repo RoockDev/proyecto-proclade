@@ -1,8 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { HomePage } from '../features/home/pages/HomePage/HomePage';
 import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
+import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
+import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPanelPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -24,6 +27,21 @@ export const appRouter = createBrowserRouter([
       {
         path: '*',
         element: <NotFoundPage />,
+      },
+      
+    ],
+  },
+  {
+    path: '/admin',
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <AdminPanelPage />,
+      },
+      {
+        path: 'campanas',
+        element: <AdminCampaignsPage />,
       },
     ],
   },
