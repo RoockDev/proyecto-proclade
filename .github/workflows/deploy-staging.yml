@@ -1,10 +1,46 @@
+# -----------------------------------------------------------------------------
+# CI/CD: Deploy to Staging 
+# -----------------------------------------------------------------------------
+# Este workflow automatiza el flujo base de integración y despliegue hacia
+# staging cuando hay cambios en `dev` (o manualmente con `workflow_dispatch`).
+#
+# Flujo actual:
+# 1) lint  -> placeholder (pendiente integración HU-24)
+# 2) build -> placeholder (pendiente integración HU-25)
+# 3) test  -> placeholder (pendiente integración HU-26)
+# 4) deploy:
+#    - valida secretos críticos de staging
+#    - comprueba conectividad SSH contra el servidor remoto
+#
+# Estado actual:
+# - La base del pipeline está lista.
+# - Falta el deploy completo (git pull + docker compose + healthcheck).
+# - En PR a `dev` solo corre CI; deploy se ejecuta tras merge a `dev` o manual.
+# -----------------------------------------------------------------------------
 name: Deploy to Staging
 
+# Eventos que disparan este workflow
 on:
+  # Permite lanzarlo manualmente desde GitHub (botón "Run workflow").
   workflow_dispatch:
+  # También se ejecuta automáticamente al hacer push.
   push:
+    # Solo en la rama dev (evita deploys desde otras ramas por accidente).
     branches:
       - dev
+    # Solo se lanza si cambian rutas relevantes para la app/despliegue.
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/deploy-staging.yml'
+  # También se ejecuta en PR hacia dev para validar CI antes del merge.
+  pull_request:
+    # Solo PR cuyo destino es la rama dev.
+    branches:
+      - dev
+    # Mismas rutas para no ejecutar el workflow si no hay cambios relevantes.
     paths:
       - 'backend/**'
       - 'frontend/**'
@@ -12,55 +48,133 @@ on:
       - 'docker-compose.yml'
       - '.github/workflows/deploy-staging.yml'
 
+# Controla concurrencia para que no haya dos despliegues de staging a la vez.
 concurrency:
+  # Nombre lógico del grupo de concurrencia.
   group: deploy-staging
+  # Si entra una nueva ejecución, cancela la anterior que siga en progreso.
   cancel-in-progress: true
 
+# Definición de trabajos (jobs) del pipeline.
 jobs:
+  # Job 1: lint.
   lint:
     name: Lint
+    # Runner: máquina Linux gestionada por GitHub.
     runs-on: ubuntu-latest
+    # Lista de pasos secuenciales del job.
     steps:
+      # Descarga el código del repositorio en el runner.
       - name: Checkout repository
+        # Acción oficial para hacer checkout del repo.
         uses: actions/checkout@v4
 
       # Placeholder temporal hasta que HU-24 (lint) esté integrada.
       - name: Lint placeholder
+        # Comando temporal para dejar el pipeline encadenado.
         run: echo "Lint job placeholder for HU-24"
 
+  # Job 2: build.
   build:
     name: Build
+    # Runner Linux gestionado por GitHub.
     runs-on: ubuntu-latest
+    # Este job no arranca hasta que "lint" termine en verde.
     needs: lint
+    # Pasos secuenciales del job.
     steps:
+      # Checkout del código para tener acceso al proyecto.
       - name: Checkout repository
+        # Acción oficial de checkout.
         uses: actions/checkout@v4
 
       # Placeholder temporal hasta que HU-25 (build) esté integrada.
       - name: Build placeholder
+        # Comando temporal de build para esta fase.
         run: echo "Build job placeholder for HU-25"
 
+  # Job 3: test.
   test:
     name: Test
+    # Runner Linux gestionado por GitHub.
     runs-on: ubuntu-latest
+    # Este job espera a que "build" acabe correctamente.
     needs: build
+    # Pasos secuenciales del job.
     steps:
+      # Checkout del repositorio.
       - name: Checkout repository
+        # Acción oficial de checkout.
         uses: actions/checkout@v4
 
       # Placeholder temporal hasta que HU-26 (test) esté integrada.
       - name: Test placeholder
+        # Comando temporal de test para esta fase.
         run: echo "Test job placeholder for HU-26"
 
+  # Job 4: deploy a staging.
   deploy:
     name: Deploy
+    # Runner Linux gestionado por GitHub.
     runs-on: ubuntu-latest
+    # Solo despliega si test terminó en verde.
     needs: test
+    # Política de despliegue:
+    # - Sí en push real a dev (normalmente tras merge de PR).
+    # - Sí en ejecución manual (workflow_dispatch).
+    # - No en pull_request (para evitar deploys durante revisión).
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      github.event_name == 'workflow_dispatch'
+    # Marca este job como asociado al entorno "staging" en GitHub.
     environment: staging
+    # Permisos mínimos del token de GitHub para este job.
+    permissions:
+      # Solo lectura del contenido del repositorio.
+      contents: read
+    # Pasos secuenciales del job.
     steps:
+      # Checkout del repositorio para disponer del contexto de código.
       - name: Checkout repository
+        # Acción oficial de checkout.
         uses: actions/checkout@v4
 
-      # Deploy real (SSH + compose) se implementará en el siguiente bloque.
-      - name: Deploy placeholder
-        run: echo "Deploy job scaffold ready for HU-23 implementation"
+      # Validación temprana: fallamos rápido si faltan secretos críticos.
+      - name: Validate required secrets
+        # Variables de entorno leídas desde Secrets de GitHub.
+        env:
+          # IP o dominio del servidor staging.
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          # Usuario SSH con permisos para desplegar.
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+          # Clave privada SSH (normalmente formato OpenSSH).
+          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+        # Script shell que comprueba si cada secreto tiene valor.
+        run: |
+          # Si STAGING_HOST está vacío, muestra error y finaliza con código 1.
+          [ -n "$STAGING_HOST" ] || (echo "Missing secret: STAGING_HOST" && exit 1)
+          # Si STAGING_USER está vacío, muestra error y finaliza con código 1.
+          [ -n "$STAGING_USER" ] || (echo "Missing secret: STAGING_USER" && exit 1)
+          # Si STAGING_SSH_KEY está vacío, muestra error y finaliza con código 1.
+          [ -n "$STAGING_SSH_KEY" ] || (echo "Missing secret: STAGING_SSH_KEY" && exit 1)
+
+      # Primer bloque de deploy real: comprobamos conectividad SSH al servidor staging.
+      - name: SSH connectivity check
+        # Acción de terceros para ejecutar comandos remotos por SSH.
+        uses: appleboy/ssh-action@v1.2.0
+        # Parámetros de conexión de la acción.
+        with:
+          # Host remoto destino (staging).
+          host: ${{ secrets.STAGING_HOST }}
+          # Usuario remoto para conectarse por SSH.
+          username: ${{ secrets.STAGING_USER }}
+          # Clave privada SSH usada en la autenticación.
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          # Si un comando falla, la acción se detiene inmediatamente.
+          script_stop: true
+          # Bloque de comandos que se ejecuta en el servidor remoto.
+          script: |
+            # Mensaje para confirmar que la sesión SSH se abrió correctamente.
+            echo "Connected to staging server"
+            # Imprime información del sistema remoto (debug básico).
+            uname -a
