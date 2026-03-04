@@ -1,38 +1,45 @@
-import type { NewsItem, StatItem } from '../types/home.types';
+import type { MissionCard, SuperheroPreview } from '../types/home.types';
 
-export const HOME_STATS: StatItem[] = [
-  { label: 'Proyectos activos', value: '+50' },
-  { label: 'Voluntarios', value: '+200' },
-  { label: 'Paises', value: '15' },
-  { label: 'Beneficiarios', value: '+5000' },
+export const MISSION_CARDS: MissionCard[] = [
+  {
+    title: 'Conciencia crítica',
+    description:
+      'Entender las causas del hambre y cómo nos afecta a todos, desde lo local hasta lo global.',
+    icon: 'bi-book',
+  },
+  {
+    title: 'Responsabilidad compartida',
+    description:
+      'Sentir que el hambre no es un problema ajeno. Cada persona puede ser parte de la solución.',
+    icon: 'bi-people',
+  },
+  {
+    title: 'Acción local y global',
+    description:
+      'Promover acciones concretas en nuestras comunidades que contribuyan a un cambio real y sostenible.',
+    icon: 'bi-bullseye',
+  },
 ];
 
-export const LATEST_NEWS: NewsItem[] = [
+export const SUPERHEROES_PREVIEW: SuperheroPreview[] = [
   {
-    title: 'Nueva campana educativa en comunidades rurales',
-    date: '2026-02-01',
-    tag: 'Cooperacion',
-    excerpt:
-      'Iniciamos una nueva linea de apoyo educativo para mejorar el acceso a formacion basica.',
-    image:
-      'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80',
+    name: 'La Maestra Semilla',
+    speech: '“Cada lección planta una semilla de esperanza.”',
+    imageKey: 'hero-maestra',
   },
   {
-    title: 'Jornada de voluntariado con participacion record',
-    date: '2026-01-20',
-    tag: 'Voluntariado',
-    excerpt:
-      'Mas de 200 personas participaron en actividades de sensibilizacion y apoyo comunitario.',
-    image:
-      'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1200&q=80',
+    name: 'El Abuelo Tierra',
+    speech: '“La tierra nos da todo si la cuidamos con amor.”',
+    imageKey: 'hero-agricultor',
   },
   {
-    title: 'Comercio justo: nuevos productores aliados',
-    date: '2026-01-08',
-    tag: 'Comercio Justo',
-    excerpt:
-      'Ampliamos la red de productores locales para impulsar consumo responsable e ingresos dignos.',
-    image:
-      'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+    name: 'Lía Mundo',
+    speech: '“¡El mundo cambia cuando nos unimos!”',
+    imageKey: 'hero-estudiante',
+  },
+  {
+    name: 'Don Reparto',
+    speech: '“Cada caja que entrego lleva un pedacito de corazón.”',
+    imageKey: 'hero-voluntario',
   },
 ];

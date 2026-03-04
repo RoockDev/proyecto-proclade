@@ -1,39 +1,62 @@
 .home-hero {
-  background: linear-gradient(135deg, var(--brand-primary) 0%, #0a78c2 100%);
+  padding-top: 5rem;
+  padding-bottom: 5rem;
   color: var(--brand-white);
-  padding: 5rem 0;
 }
 
-.home-hero__title {
-  font-size: clamp(2rem, 4vw, 3.1rem);
-  font-weight: 800;
-  line-height: 1.15;
+.home-hero__grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+.home-hero__badge {
+  display: inline-flex;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.15);
   margin-bottom: 1rem;
 }
 
-.home-hero__text {
-  font-size: 1.125rem;
-  opacity: 0.95;
+.home-hero__title {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.home-hero__subtitle {
+  font-size: 1.2rem;
+  max-width: 40rem;
   margin-bottom: 2rem;
-  max-width: 46rem;
-}
-
-.home-hero__card {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  text-align: center;
-  box-shadow: var(--shadow-soft);
-}
-
-.home-hero__icon {
-  font-size: 5rem;
   opacity: 0.9;
 }
 
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.home-hero__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.4rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
 .home-hero__card-text {
-  margin-top: 1rem;
-  margin-bottom: 0;
-  font-size: 1.05rem;
+  margin: 0;
   font-weight: 600;
+}
+
+.home-hero__illustration img {
+  width: 100%;
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-soft);
 }
