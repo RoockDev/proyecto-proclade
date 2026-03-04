@@ -9,6 +9,11 @@ datasource db {
   // NO url aquí en Prisma 7 - se define en prisma.config.ts
 }
 
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
@@ -20,6 +25,7 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   roles        Role[]    @relation("UserRoles")
+  createdNews  News[]
 }
 
 
@@ -29,4 +35,21 @@ model Role {
   users     User[]   @relation("UserRoles")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          Int        @id @default(autoincrement())
+  title       String
+  slug        String     @unique
+  excerpt     String
+  content     String     @db.Text
+  imageUrl    String?
+  status      NewsStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdById Int
+  deletedAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id])
 }
