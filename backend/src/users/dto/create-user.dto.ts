@@ -1,8 +1,18 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { RoleName } from '../../common/types/role-name.enum';
 
 export class CreateUserDto {
-  @IsEmail({}, { message: 'El correo electrónico debe tener un formato válido' })
+  @IsEmail(
+    {},
+    { message: 'El correo electrónico debe tener un formato válido' },
+  )
   @IsNotEmpty({ message: 'El correo electrónico es obligatorio' })
   email: string;
 
@@ -20,6 +30,9 @@ export class CreateUserDto {
   password: string;
 
   @IsOptional()
-  @IsEnum(RoleName, { each: true, message: 'Se ha proporcionado un rol inválido' })
+  @IsEnum(RoleName, {
+    each: true,
+    message: 'Se ha proporcionado un rol inválido',
+  })
   roles?: RoleName[];
 }

@@ -16,7 +16,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-      stopAtFirstError:true
+      stopAtFirstError: true,
     }),
   );
   app.useGlobalInterceptors(new TransformInterceptor());
