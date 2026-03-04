@@ -1,12 +1,11 @@
-export type StatItem = {
-  label: string;
-  value: string;
+export type MissionCard = {
+  title: string;
+  description: string;
+  icon: string;
 };
 
-export type NewsItem = {
-  title: string;
-  date: string;
-  tag: string;
-  excerpt: string;
-  image: string;
+export type SuperheroPreview = {
+  name: string;
+  speech: string;
+  imageKey: string;
 };
