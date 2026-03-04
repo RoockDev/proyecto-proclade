@@ -206,6 +206,7 @@ export class NewsService {
    * Convierte un título legible en un identificador URL-friendly.
    * Ejemplo: "Título de Prueba!" -> "titulo-de-prueba"
    * Esto mejora el SEO y evita IDs públicos en la ruta
+  
    */
   private buildBaseSlug(title: string): string {
     const normalized = title
