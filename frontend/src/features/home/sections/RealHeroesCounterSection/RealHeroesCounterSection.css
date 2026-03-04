@@ -1,0 +1,47 @@
+.real-heroes-counter {
+  position: relative;
+  overflow: hidden;
+}
+
+.real-heroes-counter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 20%,
+    rgba(255, 255, 255, 0.14),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.real-heroes-counter .container {
+  position: relative;
+}
+
+.real-heroes-counter__title {
+  font-size: clamp(1.75rem, 3vw, 2.6rem);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.real-heroes-counter__description {
+  max-width: 44rem;
+  margin: 0 auto 1.4rem;
+  opacity: 0.92;
+}
+
+.real-heroes-counter__value {
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.real-heroes-counter__label {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  opacity: 0.95;
+}
