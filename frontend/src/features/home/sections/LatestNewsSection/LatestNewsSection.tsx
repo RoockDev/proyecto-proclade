@@ -1,4 +1,4 @@
-import { LATEST_NEWS } from '../../mocks/home.mocks';
+import { LATEST_NEWS } from '../../mocks/home.news.mock';
 import './LatestNewsSection.css';
 
 export const LatestNewsSection = () => {

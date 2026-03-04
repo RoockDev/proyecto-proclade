@@ -1,5 +1,5 @@
 import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
-import { MISSION_CARDS } from '../../mocks/home.mocks';
+import { MISSION_CARDS } from '../../content/home.content';
 import { MissionCard } from './parts/MissionCard';
 import { MissionGrid } from './parts/MissionGrid';
 import './MissionSection.css';
