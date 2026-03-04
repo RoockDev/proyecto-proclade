@@ -36,7 +36,10 @@ export class AdminNewsController {
   }
 
   @Post()
-  create(@Body() createNewsDto: CreateNewsDto, @Req() request: RequestWithUser) {
+  create(
+    @Body() createNewsDto: CreateNewsDto,
+    @Req() request: RequestWithUser,
+  ) {
     return this.newsService.create(createNewsDto, request.user.id);
   }
 

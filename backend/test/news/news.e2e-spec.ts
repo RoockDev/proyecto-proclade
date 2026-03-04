@@ -85,7 +85,9 @@ describe('News (e2e)', () => {
       deletedAt: new Date('2026-03-02T10:00:00.000Z'),
     });
 
-    const listResponse = await request(app.getHttpServer()).get('/news').expect(200);
+    const listResponse = await request(app.getHttpServer())
+      .get('/news')
+      .expect(200);
 
     expect(listResponse.body.success).toBe(true);
     expect(Array.isArray(listResponse.body.data)).toBe(true);
@@ -160,8 +162,14 @@ describe('News (e2e)', () => {
     expect(inDb).not.toBeNull();
     expect(inDb?.deletedAt).not.toBeNull();
 
-    const publicList = await request(app.getHttpServer()).get('/news').expect(200);
-    expect(publicList.body.data.some((item: { id: number }) => item.id === record.id)).toBe(false);
+    const publicList = await request(app.getHttpServer())
+      .get('/news')
+      .expect(200);
+    expect(
+      publicList.body.data.some(
+        (item: { id: number }) => item.id === record.id,
+      ),
+    ).toBe(false);
   });
 
   async function ensureRolesAndUsers() {

@@ -54,7 +54,9 @@ describe('NewsService', () => {
   describe('buildBaseSlug (private)', () => {
     it('normaliza acentos, simbolos y espacios', () => {
       // Accedemos por "as any" porque el metodo es privado y queremos probar su regla de negocio.
-      const slug = (service as any).buildBaseSlug('  Título de Prueba!!! 2026  ');
+      const slug = (service as any).buildBaseSlug(
+        '  Título de Prueba!!! 2026  ',
+      );
       expect(slug).toBe('titulo-de-prueba-2026');
     });
 

@@ -9,7 +9,6 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { GoogleAuthService } from './google/google-auth.service';
 import { UsersModule } from '../users/users.module';
 
-
 @Module({
   imports: [
     PrismaModule,

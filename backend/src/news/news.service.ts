@@ -86,7 +86,10 @@ export class NewsService {
 
       // Regla de negocio HU-20: si la noticia está en DRAFT, el cambio de título puede recalcular slug.
       if (currentNews.status === NewsStatus.DRAFT) {
-        updateData.slug = await this.generateUniqueSlug(updateNewsDto.title, id);
+        updateData.slug = await this.generateUniqueSlug(
+          updateNewsDto.title,
+          id,
+        );
       }
     }
 
