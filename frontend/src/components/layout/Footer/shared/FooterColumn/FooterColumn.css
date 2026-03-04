@@ -1,0 +1,19 @@
+.footer-column__title {
+  font-weight: 600;
+  color: var(--brand-white);
+  margin-bottom: 0.5rem;
+}
+
+.footer-column__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.footer-column__list a {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
