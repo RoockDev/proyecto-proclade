@@ -42,3 +42,23 @@ img {
 .section-padding {
   padding: 4rem 0;
 }
+
+.gradient-hero {
+  background: linear-gradient(120deg, #0a72c2 0%, #09396a 60%, #031642 100%);
+  color: var(--brand-white);
+}
+
+.gradient-warm {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(249, 115, 22, 0.1));
+}
+
+.gradient-teal {
+  background: linear-gradient(135deg, #0f766e, #0e8388);
+  color: var(--brand-white);
+}
+
+.brand-logo-img {
+  max-height: 56px;
+  width: auto;
+  display: block;
+}

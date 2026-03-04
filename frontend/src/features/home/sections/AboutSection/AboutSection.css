@@ -1,0 +1,17 @@
+.about-section {
+  background-color: var(--brand-white);
+}
+
+.about-section__title {
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin-bottom: 1rem;
+  font-weight: 800;
+}
+
+.about-section__text {
+  max-width: 60rem;
+  margin: 0 auto;
+  color: var(--brand-muted);
+  line-height: 1.7;
+  font-size: 1.1rem;
+}

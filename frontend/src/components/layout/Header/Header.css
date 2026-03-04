@@ -3,18 +3,6 @@
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
 }
 
-.brand-logo {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  background-color: var(--brand-primary);
-  color: var(--brand-white);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
 .brand-name {
   color: var(--brand-dark);
   font-weight: 700;
@@ -28,4 +16,8 @@
 .brand-header .nav-link:hover,
 .brand-header .nav-link:focus {
   color: var(--brand-primary);
+}
+
+.header-actions {
+  margin-left: auto;
 }
