@@ -1,0 +1,66 @@
+name: Deploy to Staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/deploy-staging.yml'
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Placeholder temporal hasta que HU-24 (lint) esté integrada.
+      - name: Lint placeholder
+        run: echo "Lint job placeholder for HU-24"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Placeholder temporal hasta que HU-25 (build) esté integrada.
+      - name: Build placeholder
+        run: echo "Build job placeholder for HU-25"
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Placeholder temporal hasta que HU-26 (test) esté integrada.
+      - name: Test placeholder
+        run: echo "Test job placeholder for HU-26"
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: test
+    environment: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Deploy real (SSH + compose) se implementará en el siguiente bloque.
+      - name: Deploy placeholder
+        run: echo "Deploy job scaffold ready for HU-23 implementation"
