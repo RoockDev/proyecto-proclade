@@ -5,6 +5,8 @@ import type {
   AuthResponseData,
   RegisterRequestDto,
   GoogleSignInRequestDto,
+  ForgotPasswordRequestDto,
+  ResetPasswordRequestDto,
 } from '../types/auth.api.types';
 
 export async function login(
@@ -33,6 +35,26 @@ export async function googleSignIn(
 ): Promise<ApiResponse<AuthResponseData>> {
   const response = await api.post<ApiResponse<AuthResponseData>>(
     '/auth/google',
+    payload,
+  );
+  return response.data;
+}
+
+export async function forgotPassword(
+  payload: ForgotPasswordRequestDto,
+): Promise<ApiResponse<null>> {
+  const response = await api.post<ApiResponse<null>>(
+    '/auth/forgot-password',
+    payload,
+  );
+  return response.data;
+}
+
+export async function resetPassword(
+  payload: ResetPasswordRequestDto,
+): Promise<ApiResponse<null>> {
+  const response = await api.post<ApiResponse<null>>(
+    '/auth/reset-password',
     payload,
   );
   return response.data;
