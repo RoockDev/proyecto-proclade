@@ -1,29 +1,29 @@
+import { Link } from 'react-router-dom';
 import './CtaSection.css';
 
 export const CtaSection = () => {
   return (
     <section className="home-cta section-padding">
       <div className="container text-center">
-        <h2 className="home-cta__title">Quieres colaborar con nosotros?</h2>
+        <h2 className="home-cta__title">Únete al cambio</h2>
         <p className="home-cta__text">
-          Puedes apoyar haciendote socio, participando como voluntario o
-          colaborando con recursos.
+          Cada acción cuenta. Colabora con tu tiempo, tu historia o tu
+          donación para construir un mundo sin hambre.
         </p>
 
-        <div className="d-flex flex-wrap justify-content-center gap-3">
-          <a href="#" className="btn btn-light btn-lg">
-            <i className="bi bi-people-fill me-2" />
-            Hazte socio
-          </a>
+        <div className="home-cta__actions">
+          <Link to="/colabora" className="btn btn-light btn-lg home-cta__btn-main">
+            Colabora ahora <i className="bi bi-arrow-right ms-2" />
+          </Link>
 
-          <a href="#" className="btn btn-outline-light btn-lg">
+          <a
+            href="https://www.fundacionproclade.org/dona/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-outline-light btn-lg home-cta__btn-alt"
+          >
             <i className="bi bi-heart-fill me-2" />
-            Voluntariado
-          </a>
-
-          <a href="#" className="btn btn-outline-light btn-lg">
-            <i className="bi bi-gift-fill me-2" />
-            Donar recursos
+            Donar
           </a>
         </div>
       </div>

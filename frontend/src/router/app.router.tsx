@@ -6,6 +6,9 @@ import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPane
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
+import { SuperheroesPage } from '../features/home/pages/SuperheroesPage/SuperheroesPage';
+import { NoticiasPage } from '../features/home/pages/NoticiasPage/NoticiasPage';
+import { ColaboraPage } from '../features/home/pages/ColaboraPage/ColaboraPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -25,10 +28,21 @@ export const appRouter = createBrowserRouter([
         element: <AuthPage mode="register" />,
       },
       {
+        path: 'superheroes',
+        element: <SuperheroesPage />,
+      },
+      {
+        path: 'noticias',
+        element: <NoticiasPage />,
+      },
+      {
+        path: 'colabora',
+        element: <ColaboraPage />,
+      },
+      {
         path: '*',
         element: <NotFoundPage />,
       },
-      
     ],
   },
   {

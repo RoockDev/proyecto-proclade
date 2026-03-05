@@ -1,6 +1,24 @@
 .home-cta {
   background: linear-gradient(135deg, var(--brand-secondary) 0%, #1e3352 100%);
   color: var(--brand-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 80% 20%,
+    rgba(255, 255, 255, 0.12),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.home-cta .container {
+  position: relative;
 }
 
 .home-cta__title {
@@ -14,4 +32,16 @@
   max-width: 46rem;
   margin: 0 auto 2rem;
   opacity: 0.95;
+}
+
+.home-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.home-cta__btn-main,
+.home-cta__btn-alt {
+  min-width: 190px;
 }
