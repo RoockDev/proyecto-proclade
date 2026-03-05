@@ -109,50 +109,50 @@ export const RegisterForm = () => {
   };
 
   return (
-    <form className="register-form" onSubmit={handleSubmit} noValidate>
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">
+    <form className="auth-form" onSubmit={handleSubmit} noValidate>
+      <div className="auth-form__field">
+        <label htmlFor="name" className="auth-form__label">
           Nombre
         </label>
         <input
           type="text"
-          className="form-control register-form__input"
+          className="auth-form__input"
           id="name"
           name="name"
           value={formState.name}
           onChange={handleChange}
-          placeholder="Escribe tu nombre..."
+          placeholder="Escribe tu nombre…"
           disabled={formState.loading}
           required
           autoComplete="given-name"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="surname" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="surname" className="auth-form__label">
           Apellidos
         </label>
         <input
           type="text"
-          className="form-control register-form__input"
+          className="auth-form__input"
           id="surname"
           name="surname"
           value={formState.surname}
           onChange={handleChange}
-          placeholder="Escribe tus apellidos..."
+          placeholder="Escribe tus apellidos…"
           disabled={formState.loading}
           required
           autoComplete="family-name"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="register-email" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="register-email" className="auth-form__label">
           Correo electrónico
         </label>
         <input
           type="email"
-          className="form-control register-form__input"
+          className="auth-form__input"
           id="register-email"
           name="email"
           value={formState.email}
@@ -164,13 +164,13 @@ export const RegisterForm = () => {
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="register-password" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="register-password" className="auth-form__label">
           Contraseña
         </label>
         <input
           type="password"
-          className="form-control register-form__input"
+          className="auth-form__input"
           id="register-password"
           name="password"
           value={formState.password}
@@ -182,13 +182,13 @@ export const RegisterForm = () => {
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="confirmPassword" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="confirmPassword" className="auth-form__label">
           Confirmar contraseña
         </label>
         <input
           type="password"
-          className="form-control register-form__input"
+          className="auth-form__input"
           id="confirmPassword"
           name="confirmPassword"
           value={formState.confirmPassword}
@@ -201,20 +201,22 @@ export const RegisterForm = () => {
       </div>
 
       {formState.successMessage && (
-        <div className="register-form__success" role="status">
+        <div className="auth-form__feedback auth-form__feedback--success" role="status">
+          <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
           {formState.successMessage}
         </div>
       )}
 
       {formState.error && (
-        <div className="register-form__error" role="alert">
+        <div className="auth-form__feedback auth-form__feedback--error" role="alert">
+          <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
           {formState.error}
         </div>
       )}
 
       <button
         type="submit"
-        className="btn btn-primary register-form__btn mt-3"
+        className="btn-brand-auth auth-form__submit"
         disabled={formState.loading}
       >
         {formState.loading ? (
@@ -224,19 +226,16 @@ export const RegisterForm = () => {
               role="status"
               aria-hidden="true"
             ></span>
-            Registrando...
+            Registrando…
           </>
         ) : (
           'Crear cuenta'
         )}
       </button>
 
-      <p className="register-form__switch mt-3 mb-0 text-center">
+      <p className="auth-form__switch">
         ¿Ya tienes cuenta?{' '}
-        <Link
-          to="/auth/login"
-          className="btn btn-link p-0 align-baseline register-form__switch-link"
-        >
+        <Link to="/auth/login" className="auth-form__switch-link">
           Inicia sesión
         </Link>
       </p>

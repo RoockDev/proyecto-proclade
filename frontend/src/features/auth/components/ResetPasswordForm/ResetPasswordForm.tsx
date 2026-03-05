@@ -99,14 +99,14 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   };
 
   return (
-    <form className="reset-password-form" onSubmit={handleSubmit} noValidate>
-      <div className="mb-3">
-        <label htmlFor="newPassword" className="form-label">
+    <form className="auth-form" onSubmit={handleSubmit} noValidate>
+      <div className="auth-form__field">
+        <label htmlFor="newPassword" className="auth-form__label">
           Nueva contraseña
         </label>
         <input
           type="password"
-          className="form-control reset-password-form__input"
+          className="auth-form__input"
           id="newPassword"
           name="newPassword"
           value={formState.newPassword}
@@ -119,13 +119,13 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="confirmPassword" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="confirmPassword" className="auth-form__label">
           Confirmar contraseña
         </label>
         <input
           type="password"
-          className="form-control reset-password-form__input"
+          className="auth-form__input"
           id="confirmPassword"
           name="confirmPassword"
           value={formState.confirmPassword}
@@ -139,13 +139,15 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
       </div>
 
       {formState.successMessage && (
-        <div className="reset-password-form__success" role="status">
-          {formState.successMessage}. Redirigiendo al login...
+        <div className="auth-form__feedback auth-form__feedback--success" role="status">
+          <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
+          {formState.successMessage}. Redirigiendo al login…
         </div>
       )}
 
       {formState.error && (
-        <div className="reset-password-form__error" role="alert">
+        <div className="auth-form__feedback auth-form__feedback--error" role="alert">
+          <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
           {formState.error}
         </div>
       )}
@@ -153,7 +155,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
       {!formState.successMessage && (
         <button
           type="submit"
-          className="btn btn-primary reset-password-form__btn mt-3"
+          className="btn-brand-auth auth-form__submit"
           disabled={
             formState.loading ||
             !formState.newPassword ||
@@ -167,7 +169,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
                 role="status"
                 aria-hidden="true"
               ></span>
-              Guardando...
+              Guardando…
             </>
           ) : (
             'Restablecer contraseña'
@@ -175,11 +177,8 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
         </button>
       )}
 
-      <p className="reset-password-form__switch mt-3 mb-0 text-center">
-        <Link
-          to="/auth/login"
-          className="btn btn-link p-0 align-baseline reset-password-form__switch-link"
-        >
+      <p className="auth-form__switch">
+        <Link to="/auth/login" className="auth-form__switch-link">
           Volver al login
         </Link>
       </p>
