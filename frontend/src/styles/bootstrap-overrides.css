@@ -78,3 +78,41 @@
   color: var(--brand-white);
   background: linear-gradient(135deg, #438a55, #286d5b);
 }
+
+/* ── Auth button (formularios login/registro) ── */
+.btn-brand-auth {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.2rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--brand-white);
+  background: linear-gradient(135deg, #4d9860, #2f7f6b);
+  box-shadow: 0 8px 18px rgba(39, 105, 70, 0.22);
+  transition: background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-brand-auth:hover,
+.btn-brand-auth:focus {
+  color: var(--brand-white);
+  background: linear-gradient(135deg, #438a55, #286d5b);
+  box-shadow: 0 6px 14px rgba(39, 105, 70, 0.30);
+}
+
+.btn-brand-auth:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.55);
+  outline-offset: 2px;
+}
+
+.btn-brand-auth:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

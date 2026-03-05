@@ -20,9 +20,22 @@
   --brand-muted: #5d6470;
   --brand-bg: #f4f5f7;
   --brand-white: var(--puch-white);
+  --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1.1rem;
   --shadow-soft: 0 14px 34px rgba(17, 74, 30, 0.12);
+
+  /* Auth / Formularios */
+  --auth-card-bg: var(--puch-white);
+  --auth-card-radius: var(--radius-lg);
+  --auth-card-shadow: 0 16px 40px rgba(13, 59, 115, 0.10);
+  --auth-input-border: #d1d5db;
+  --auth-input-focus: var(--puch-indigo);
+  --auth-input-radius: var(--radius-md);
+  --auth-feedback-success: #16a34a;
+  --auth-feedback-error: #dc2626;
+  --auth-feedback-bg-success: rgba(22, 163, 74, 0.08);
+  --auth-feedback-bg-error: rgba(220, 38, 38, 0.07);
 }
 
 * {

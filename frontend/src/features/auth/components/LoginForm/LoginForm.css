@@ -1,69 +1,159 @@
-.login-form {
-  max-width: 400px;
+/* ── Auth Form: shared visual style (login & register) ── */
+.auth-form {
   width: 100%;
 }
 
-.login-form__error {
-  color: var(--bs-danger);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+/* ── Field group ── */
+.auth-form__field {
+  margin-bottom: 1rem;
 }
 
-.login-form__success {
-  color: var(--bs-success);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+.auth-form__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--brand-dark);
 }
 
-.login-form__input:focus {
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
-}
-
-.login-form__btn {
+.auth-form__input {
+  display: block;
   width: 100%;
-  padding: 0.75rem;
-  font-weight: 500;
+  padding: 0.6rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--brand-dark);
+  background-color: var(--brand-white);
+  border: 1.5px solid var(--auth-input-border);
+  border-radius: var(--auth-input-radius);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
 }
 
-.login-form__btn:disabled {
+.auth-form__input::placeholder {
+  color: var(--puch-silver);
+}
+
+.auth-form__input:focus {
+  border-color: var(--auth-input-focus);
+  box-shadow: 0 0 0 3px rgba(13, 59, 115, 0.12);
+}
+
+.auth-form__input:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  opacity: 0.65;
 }
 
-.login-form__switch {
-  color: var(--bs-secondary);
-  font-size: 0.95rem;
+/* ── Submit button spacing ── */
+.auth-form__submit {
+  margin-top: 0.6rem;
 }
 
-.login-form__switch-link {
-  font-size: inherit;
-  text-decoration: none;
+/* ── Feedback (error / success) ── */
+.auth-form__feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.login-form__divider {
+.auth-form__feedback--error {
+  color: var(--auth-feedback-error);
+  background-color: var(--auth-feedback-bg-error);
+}
+
+.auth-form__feedback--success {
+  color: var(--auth-feedback-success);
+  background-color: var(--auth-feedback-bg-success);
+}
+
+/* ── Divider ── */
+.auth-form__divider {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 1.25rem;
-  color: var(--bs-secondary);
-  font-size: 0.875rem;
+  margin: 1.25rem 0;
+  color: var(--brand-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-.login-form__divider::before,
-.login-form__divider::after {
+.auth-form__divider::before,
+.auth-form__divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+  border-bottom: 1px solid var(--auth-input-border);
 }
 
-.login-form__google {
-  margin-top: 1rem;
+/* ── Google button wrapper ── */
+.auth-form__google {
   display: flex;
   justify-content: center;
 }
 
-.login-form__google--disabled {
+.auth-form__google--disabled {
   pointer-events: none;
-  opacity: 0.65;
+  opacity: 0.55;
+}
+
+/* ── Forgot password ── */
+.auth-form__forgot {
+  margin: 0.9rem 0 0;
+  text-align: center;
+}
+
+.auth-form__forgot-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--brand-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.auth-form__forgot-link:hover,
+.auth-form__forgot-link:focus {
+  color: var(--brand-secondary);
+  text-decoration: underline;
+}
+
+.auth-form__forgot-link:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.55);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Switch (link to register/login) ── */
+.auth-form__switch {
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--brand-muted);
+  text-align: center;
+}
+
+.auth-form__switch-link {
+  color: var(--brand-secondary);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.auth-form__switch-link:hover,
+.auth-form__switch-link:focus {
+  color: var(--brand-primary);
+  text-decoration: underline;
+}
+
+.auth-form__switch-link:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.55);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
