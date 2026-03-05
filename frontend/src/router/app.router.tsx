@@ -1,14 +1,16 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { HomePage } from '../features/home/pages/HomePage/HomePage';
 import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
+import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/ResetPasswordPage';
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
 import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPanelPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
 import { SuperheroesPage } from './pages/SuperheroesPage';
-import { NoticiasPage } from './pages/NoticiasPage';
 import { ColaboraPage } from './pages/ColaboraPage';
+import { NewsListPage } from '../features/news/pages/NewsListPage/NewsListPage';
+import { NewsDetailPage } from '../features/news/pages/NewsDetailPage/NewsDetailPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -28,12 +30,20 @@ export const appRouter = createBrowserRouter([
         element: <AuthPage mode="register" />,
       },
       {
+        path: 'auth/reset-password',
+        element: <ResetPasswordPage />,
+      },
+      {
         path: 'superheroes',
         element: <SuperheroesPage />,
       },
       {
         path: 'noticias',
-        element: <NoticiasPage />,
+        element: <NewsListPage />,
+      },
+      {
+        path: 'noticias/:slug',
+        element: <NewsDetailPage />,
       },
       {
         path: 'colabora',

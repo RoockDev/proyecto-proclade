@@ -1,28 +1,84 @@
-.login-page {
+/* ── Auth page layout ── */
+.auth-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bs-light);
+  padding: 2rem 1rem;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(107, 170, 117, 0.07) 0%,
+      rgba(13, 59, 115, 0.05) 50%,
+      rgba(244, 245, 247, 1) 100%
+    );
 }
 
-.login-page__card {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  padding: 2rem;
+.auth-page__container {
   width: 100%;
-  max-width: 450px;
+  max-width: 460px;
 }
 
-.login-page__title {
-  font-size: 1.75rem;
+/* ── Card ── */
+.auth-page__card {
+  background: var(--auth-card-bg);
+  border-radius: var(--auth-card-radius);
+  box-shadow: var(--auth-card-shadow);
+  padding: 2.2rem 2rem;
+}
+
+/* ── Back link ── */
+.auth-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--bs-dark);
-  margin-bottom: 0.5rem;
+  color: var(--brand-muted);
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.login-page__description {
-  color: var(--bs-secondary);
-  margin-bottom: 1.5rem;
+.auth-page__back:hover,
+.auth-page__back:focus {
+  color: var(--brand-secondary);
+  background-color: rgba(13, 59, 115, 0.06);
+}
+
+.auth-page__back:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.55);
+  outline-offset: 2px;
+}
+
+/* ── Heading ── */
+.auth-page__title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--brand-secondary);
+  text-align: center;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.auth-page__description {
+  font-size: 0.95rem;
+  color: var(--brand-muted);
+  text-align: center;
+  margin-bottom: 1.6rem;
+  line-height: 1.5;
+}
+
+/* ── Responsive ── */
+@media (max-width: 575.98px) {
+  .auth-page__card {
+    padding: 1.6rem 1.25rem;
+  }
+
+  .auth-page__title {
+    font-size: 1.35rem;
+  }
 }

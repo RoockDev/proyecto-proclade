@@ -7,6 +7,7 @@ import { saveAuthSession } from '../../utils/auth-session.storage';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
+import { ForgotPasswordModal } from '../ForgotPasswordModal/ForgotPasswordModal';
 import './LoginForm.css';
 
 const GOOGLE_SCRIPT_ID = 'google-identity-services-script';
@@ -65,6 +66,7 @@ export const LoginForm = () => {
   const googleButtonRef = useRef<HTMLDivElement | null>(null);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
   const [googleError, setGoogleError] = useState<string | null>(null);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const [formState, setFormState] = useState<LoginFormState>({
     email: '',
     password: '',
@@ -214,14 +216,15 @@ export const LoginForm = () => {
   };
 
   return (
-    <form className="login-form" onSubmit={handleSubmit} noValidate>
-      <div className="mb-3">
-        <label htmlFor="email" className="form-label">
+    <>
+    <form className="auth-form" onSubmit={handleSubmit} noValidate>
+      <div className="auth-form__field">
+        <label htmlFor="email" className="auth-form__label">
           Correo electrónico
         </label>
         <input
           type="email"
-          className="form-control login-form__input"
+          className="auth-form__input"
           id="email"
           name="email"
           value={formState.email}
@@ -233,13 +236,13 @@ export const LoginForm = () => {
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="password" className="form-label">
+      <div className="auth-form__field">
+        <label htmlFor="password" className="auth-form__label">
           Contraseña
         </label>
         <input
           type="password"
-          className="form-control login-form__input"
+          className="auth-form__input"
           id="password"
           name="password"
           value={formState.password}
@@ -252,20 +255,22 @@ export const LoginForm = () => {
       </div>
 
       {formState.successMessage && (
-        <div className="login-form__success" role="status">
+        <div className="auth-form__feedback auth-form__feedback--success" role="status">
+          <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
           {formState.successMessage}
         </div>
       )}
 
       {formState.error && (
-        <div className="login-form__error" role="alert">
+        <div className="auth-form__feedback auth-form__feedback--error" role="alert">
+          <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
           {formState.error}
         </div>
       )}
 
       <button
         type="submit"
-        className="btn btn-primary login-form__btn mt-3"
+        className="btn-brand-auth auth-form__submit"
         disabled={formState.loading}
       >
         {formState.loading ? (
@@ -275,40 +280,53 @@ export const LoginForm = () => {
               role="status"
               aria-hidden="true"
             ></span>
-            Entrando...
+            Entrando…
           </>
         ) : (
           'Entrar'
         )}
       </button>
 
-      <div className="login-form__divider" role="separator" aria-label="Otras opciones">
+      <div className="auth-form__divider" role="separator" aria-label="Otras opciones">
         <span>o</span>
       </div>
 
       <div
-        className={`login-form__google ${
-          formState.loading ? 'login-form__google--disabled' : ''
+        className={`auth-form__google ${
+          formState.loading ? 'auth-form__google--disabled' : ''
         }`}
       >
         <div ref={googleButtonRef} />
       </div>
 
       {googleError && (
-        <div className="login-form__error mt-2" role="alert">
+        <div className="auth-form__feedback auth-form__feedback--error mt-2" role="alert">
+          <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
           {googleError}
         </div>
       )}
 
-      <p className="login-form__switch mt-3 mb-0 text-center">
-        ¿No estás registrado?{' '}
-        <Link
-          to="/auth/register"
-          className="btn btn-link p-0 align-baseline login-form__switch-link"
+      <p className="auth-form__forgot">
+        <button
+          type="button"
+          className="auth-form__forgot-link"
+          onClick={() => setShowForgotModal(true)}
         >
+          ¿Olvidaste tu contraseña?
+        </button>
+      </p>
+
+      <p className="auth-form__switch">
+        ¿No estás registrado?{' '}
+        <Link to="/auth/register" className="auth-form__switch-link">
           Regístrate
         </Link>
       </p>
     </form>
+
+    {showForgotModal && (
+      <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+    )}
+  </>
   );
 };
