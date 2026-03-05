@@ -42,6 +42,24 @@ Proyecto base para el desarrollo de una plataforma web usando **Docker** como en
 ├── .gitignore
 └── README.md
 
+## 🧾 Documentación automática (HU/PR)
+
+Este repositorio incluye automatización para generar documentación técnica sin usar APIs de pago:
+
+- Workflow automático: `.github/workflows/docs-auto.yml`
+  - Se ejecuta cuando una PR se mergea en `dev`.
+  - Genera/actualiza ficheros en `docs/`.
+  - Abre una PR automática (`docs(auto): ...`) hacia `dev`.
+
+- Workflow manual de histórico: `.github/workflows/docs-bootstrap.yml`
+  - Se lanza desde GitHub Actions (`Run workflow`).
+  - Recorre PRs ya mergeadas a `dev` y genera documentación base.
+
+Salida principal:
+
+- `docs/CHANGELOG.md`: índice de entradas documentadas.
+- `docs/hu/*.md`: documento por HU/PR.
+
 ## ⚙️ Requisitos
 
 Solo necesitas tener instalado:

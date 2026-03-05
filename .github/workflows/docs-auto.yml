@@ -1,0 +1,62 @@
+name: Docs Auto
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-docs:
+    name: Generate docs from merged PR
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.pull_request.merged == true &&
+      !startsWith(github.event.pull_request.title, 'docs(auto):')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate HU documentation
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: node scripts/docs/generate-hu-doc.mjs
+
+      - name: Create pull request with docs changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: docs(auto): actualizar documentación de PR #${{ github.event.pull_request.number }}
+          title: docs(auto): actualizar documentación de PR #${{ github.event.pull_request.number }}
+          body: |
+            PR automática de documentación generada tras merge en `dev`.
+
+            Origen funcional:
+            - PR: #${{ github.event.pull_request.number }}
+            - Título: ${{ github.event.pull_request.title }}
+
+            Checklist de revisión:
+            - [ ] Verificar trazabilidad HU/PR
+            - [ ] Completar decisiones/riesgos si falta contexto
+            - [ ] Confirmar que no hay datos sensibles
+          branch: docs-auto-pr-${{ github.event.pull_request.number }}-${{ github.run_number }}
+          base: dev
+          labels: |
+            documentation
+            automated
+          add-paths: |
+            docs/**
+          delete-branch: true

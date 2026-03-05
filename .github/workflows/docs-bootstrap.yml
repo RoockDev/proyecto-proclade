@@ -1,0 +1,67 @@
+name: Docs Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: Rama base desde la que leer PRs mergeadas
+        required: false
+        default: dev
+        type: string
+      max_prs:
+        description: Máximo de PRs históricas a procesar
+        required: false
+        default: '200'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bootstrap-docs:
+    name: Bootstrap historical docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate docs from merged pull requests
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          INPUT_BASE_BRANCH: ${{ inputs.base_branch }}
+          INPUT_MAX_PRS: ${{ inputs.max_prs }}
+        run: node scripts/docs/bootstrap-history.mjs
+
+      - name: Create pull request with bootstrap docs
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: docs(auto): bootstrap histórico de documentación
+          title: docs(auto): bootstrap histórico de documentación
+          body: |
+            PR automática de bootstrap histórico de documentación.
+
+            Parámetros de ejecución:
+            - base_branch: `${{ inputs.base_branch }}`
+            - max_prs: `${{ inputs.max_prs }}`
+
+            Checklist de revisión:
+            - [ ] Verificar consistencia de HU/PR
+            - [ ] Revisar formato en `docs/CHANGELOG.md`
+            - [ ] Confirmar que no hay duplicados
+          branch: docs-bootstrap-${{ github.run_number }}
+          base: dev
+          labels: |
+            documentation
+            automated
+          add-paths: |
+            docs/**
+          delete-branch: true
