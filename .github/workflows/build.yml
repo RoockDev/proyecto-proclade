@@ -1,0 +1,83 @@
+name: CI Build
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  backend-build:
+    name: Backend build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            backend/.yarn/cache
+            backend/.yarn/unplugged
+            backend/.yarn/build-state.yml
+            backend/.yarn/install-state.gz
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-backend-
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          corepack enable
+          corepack prepare yarn@4.12.0 --activate
+          yarn install --immutable --check-cache
+
+      - name: Generate Prisma Client
+        working-directory: backend
+        run: yarn prisma generate
+
+      - name: Build backend
+        working-directory: backend
+        run: yarn build
+
+  frontend-build:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    needs: backend-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/.yarn/cache
+            frontend/.yarn/unplugged
+            frontend/.yarn/build-state.yml
+            frontend/.yarn/install-state.gz
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-frontend-
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: |
+          corepack enable
+          corepack prepare yarn@4.12.0 --activate
+          yarn install --immutable --check-cache
+
+      - name: Build frontend
+        working-directory: frontend
+        run: yarn build
