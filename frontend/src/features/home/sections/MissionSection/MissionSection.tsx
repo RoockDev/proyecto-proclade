@@ -1,11 +1,11 @@
 import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
-import { MISSION_CARDS } from '../../mocks/home.mocks';
+import { MISSION_CARDS } from '../../content/home.content';
 import { MissionCard } from './parts/MissionCard';
 import { MissionGrid } from './parts/MissionGrid';
 import './MissionSection.css';
 
 export const MissionSection = () => (
-  <section className="mission-section section-padding gradient-warm">
+  <section className="mission-section section-padding gradient-warm reveal-up reveal-delay-2">
     <div className="container">
       <SectionTitle
         title="¿Qué buscamos?"

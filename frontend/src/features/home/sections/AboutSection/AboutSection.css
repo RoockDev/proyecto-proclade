@@ -2,6 +2,11 @@
   background-color: var(--brand-white);
 }
 
+.about-section.section-padding {
+  padding-top: clamp(4.4rem, 8vw, 6rem);
+  padding-bottom: clamp(5rem, 9vw, 6.6rem);
+}
+
 .about-section__title {
   font-size: clamp(2rem, 3vw, 3rem);
   margin-bottom: 1rem;
@@ -14,4 +19,14 @@
   color: var(--brand-muted);
   line-height: 1.7;
   font-size: 1.1rem;
+}
+
+.about-section .section-title {
+  max-width: 66rem;
+  margin-bottom: 0;
+}
+
+.about-section .section-title p {
+  font-size: clamp(1.07rem, 1.5vw, 1.18rem);
+  line-height: 1.75;
 }

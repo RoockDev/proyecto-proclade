@@ -1,4 +1,4 @@
-import heroIllustration from '../../../../../assets/home/hero-illustration.png';
+import heroIllustration from '../../../../../assets/home/logo-hero-2.webp';
 
 export const HeroIllustration = () => (
   <div className="home-hero__illustration">
