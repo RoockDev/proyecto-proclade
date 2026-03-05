@@ -1,14 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+
 :root {
-  --brand-primary: #005c9f;
-  --brand-secondary: #1f3f6b;
-  --brand-accent: #f0c419;
-  --brand-dark: #0f172a;
-  --brand-muted: #64748b;
-  --brand-bg: #f8fafc;
-  --brand-white: #ffffff;
+  /* Paleta cliente */
+  --puch-black: #000000;
+  --puch-white: #ffffff;
+  --puch-silver: #a3a3a3;
+  --puch-indigo: #0d3b73;
+  --puch-green: #6baa75;
+
+  /* Tipografia */
+  --font-heading: 'Sora', 'Trebuchet MS', sans-serif;
+  --font-body: 'Nunito Sans', 'Segoe UI', sans-serif;
+
+  /* Variables semanticas del proyecto */
+  --brand-primary: var(--puch-green);
+  --brand-secondary: var(--puch-indigo);
+  --brand-accent: #7bbc85;
+  --brand-dark: #111827;
+  --brand-muted: #5d6470;
+  --brand-bg: #f4f5f7;
+  --brand-white: var(--puch-white);
   --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --radius-lg: 1.1rem;
+  --shadow-soft: 0 14px 34px rgba(17, 74, 30, 0.12);
 }
 
 * {
@@ -23,10 +37,22 @@ body,
 
 body {
   margin: 0;
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-body);
   color: var(--brand-dark);
   background-color: var(--brand-bg);
-  line-height: 1.5;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
 }
 
 a {
@@ -40,20 +66,29 @@ img {
 }
 
 .section-padding {
-  padding: 4rem 0;
+  padding: clamp(3.5rem, 7vw, 5.2rem) 0;
 }
 
 .gradient-hero {
-  background: linear-gradient(120deg, #0a72c2 0%, #09396a 60%, #031642 100%);
+  background: linear-gradient(
+    125deg,
+    #6baa75 0%,
+    #2f7f6b 45%,
+    var(--puch-indigo) 100%
+  );
   color: var(--brand-white);
 }
 
 .gradient-warm {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(249, 115, 22, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(107, 170, 117, 0.12),
+    rgba(255, 255, 255, 0.9)
+  );
 }
 
 .gradient-teal {
-  background: linear-gradient(135deg, #0f766e, #0e8388);
+  background: linear-gradient(135deg, #4f915b, var(--puch-green));
   color: var(--brand-white);
 }
 
@@ -61,4 +96,53 @@ img {
   max-height: 56px;
   width: auto;
   display: block;
+}
+
+@keyframes puchRevealUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.reveal-up {
+  opacity: 0;
+  animation: puchRevealUp 680ms cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.reveal-delay-1 {
+  animation-delay: 80ms;
+}
+
+.reveal-delay-2 {
+  animation-delay: 140ms;
+}
+
+.reveal-delay-3 {
+  animation-delay: 200ms;
+}
+
+.reveal-delay-4 {
+  animation-delay: 260ms;
+}
+
+.reveal-delay-5 {
+  animation-delay: 320ms;
+}
+
+.reveal-delay-6 {
+  animation-delay: 380ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
 }

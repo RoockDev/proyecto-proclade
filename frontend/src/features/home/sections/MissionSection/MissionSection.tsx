@@ -5,7 +5,7 @@ import { MissionGrid } from './parts/MissionGrid';
 import './MissionSection.css';
 
 export const MissionSection = () => (
-  <section className="mission-section section-padding gradient-warm">
+  <section className="mission-section section-padding gradient-warm reveal-up reveal-delay-2">
     <div className="container">
       <SectionTitle
         title="¿Qué buscamos?"

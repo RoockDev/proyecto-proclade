@@ -1,23 +1,111 @@
 .brand-header {
   background-color: var(--brand-white);
-  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  border-bottom: 1px solid rgba(13, 59, 115, 0.1);
+  box-shadow: 0 3px 14px rgba(13, 59, 115, 0.06);
+}
+
+.brand-header .navbar {
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
 }
 
 .brand-name {
-  color: var(--brand-dark);
-  font-weight: 700;
+  color: var(--brand-secondary);
+  font-size: 1.06rem;
+  font-weight: 800;
 }
 
 .brand-header .nav-link {
   color: var(--brand-dark);
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .brand-header .nav-link:hover,
 .brand-header .nav-link:focus {
-  color: var(--brand-primary);
+  color: var(--brand-secondary);
+  background-color: rgba(13, 59, 115, 0.06);
+}
+
+.brand-header .nav-link.active {
+  color: var(--brand-secondary);
+  background-color: rgba(13, 59, 115, 0.1);
 }
 
 .header-actions {
+  align-items: center;
+  gap: 0.55rem !important;
   margin-left: auto;
+}
+
+.header-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border-radius: 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.45rem 0.95rem;
+}
+
+.header-action-btn--main {
+  color: var(--brand-white);
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #4d9860, #2f7f6b);
+  box-shadow: 0 8px 16px rgba(39, 105, 70, 0.22);
+}
+
+.header-action-btn--main:hover,
+.header-action-btn--main:focus {
+  color: var(--brand-white);
+  background: linear-gradient(135deg, #438a55, #286d5b);
+}
+
+.header-action-btn--donate {
+  color: var(--brand-secondary);
+  border: 1px solid rgba(13, 59, 115, 0.35);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(227, 236, 248, 0.95)
+  );
+}
+
+.header-action-btn--donate:hover,
+.header-action-btn--donate:focus {
+  color: var(--brand-secondary);
+  border-color: rgba(13, 59, 115, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(216, 229, 245, 0.98)
+  );
+}
+
+@media (max-width: 1199.98px) {
+  .brand-header .nav-link {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .brand-header .navbar-collapse {
+    padding-top: 0.8rem;
+  }
+
+  .header-actions {
+    margin-top: 0.6rem;
+    width: 100%;
+  }
+
+  .header-action-btn {
+    flex: 1;
+  }
 }

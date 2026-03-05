@@ -4,21 +4,44 @@
 }
 
 .section-title h2 {
+  display: inline-block;
+  position: relative;
   font-size: clamp(2rem, 3vw, 3rem);
   font-weight: 800;
-  margin-bottom: 0.35rem;
+  margin-bottom: 1.3rem;
+  color: var(--brand-secondary);
+}
+
+.section-title h2::after {
+  content: '';
+  position: absolute;
+  bottom: -0.4rem;
+  width: 72px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-secondary), var(--brand-primary));
 }
 
 .section-title p {
-  margin: 0;
+  margin: 0.25rem auto 0;
   color: var(--brand-muted);
   line-height: 1.6;
+  max-width: 60rem;
 }
 
 .section-title--center {
   text-align: center;
 }
 
+.section-title--center h2::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .section-title--left {
   text-align: left;
+}
+
+.section-title--left h2::after {
+  left: 0;
 }

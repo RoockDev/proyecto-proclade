@@ -18,9 +18,9 @@ import './WhoWeAreSection.css';
 
 export const WhoWeAreSection = () => {
   return (
-    <section className="who-we-are section-padding">
+    <section className="who-we-are section-padding reveal-up reveal-delay-3">
       <div className="container">
-        <SectionTitle title="¿Quiénes somos?" align="left" />
+        <SectionTitle title="¿Quiénes somos?" align="center" />
 
         <div className="who-we-are__intro">
           <p>{WHO_WE_ARE_INTRO}</p>
@@ -62,7 +62,7 @@ export const WhoWeAreSection = () => {
         </div>
 
         <div className="text-center mt-4">
-          <Link to="/superheroes" className="btn btn-brand-outline">
+          <Link to="/superheroes" className="btn btn-brand-gradient">
             Ver todos los superhéroes <i className="bi bi-arrow-right ms-2" />
           </Link>
         </div>

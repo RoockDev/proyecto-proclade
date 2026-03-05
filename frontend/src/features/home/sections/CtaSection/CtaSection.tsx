@@ -3,7 +3,7 @@ import './CtaSection.css';
 
 export const CtaSection = () => {
   return (
-    <section className="home-cta section-padding">
+    <section className="home-cta section-padding reveal-up reveal-delay-6">
       <div className="container text-center">
         <h2 className="home-cta__title">Únete al cambio</h2>
         <p className="home-cta__text">

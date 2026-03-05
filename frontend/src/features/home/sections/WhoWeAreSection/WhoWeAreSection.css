@@ -2,9 +2,16 @@
   background-color: var(--brand-white);
 }
 
+.who-we-are.section-padding {
+  padding-top: clamp(5rem, 8.5vw, 6.6rem);
+}
+
 .who-we-are__intro {
-  max-width: 72rem;
-  margin-bottom: 2rem;
+  max-width: 68rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2.4rem;
+  text-align: center;
 }
 
 .who-we-are__intro p {
@@ -21,6 +28,13 @@
   background-color: var(--brand-white);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+  border: 1px solid rgba(13, 59, 115, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.who-we-are__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 34px rgba(13, 59, 115, 0.15);
 }
 
 .who-we-are__image-wrap {
@@ -58,11 +72,14 @@
 
 .who-we-are__country {
   display: inline-flex;
+  padding: 0.24rem 0.65rem;
+  border-radius: 999px;
   margin-bottom: 0.5rem;
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   color: var(--brand-secondary);
+  background-color: rgba(13, 59, 115, 0.08);
   text-transform: uppercase;
 }
 
@@ -81,43 +98,83 @@
   border-radius: var(--radius-lg);
   background: linear-gradient(
     135deg,
-    rgba(10, 114, 194, 0.08) 0%,
-    rgba(3, 22, 66, 0.08) 100%
+    rgba(13, 59, 115, 0.1) 0%,
+    rgba(107, 170, 117, 0.16) 100%
   );
-  padding: 1.5rem;
-  margin-bottom: 2.5rem;
+  border: 1px solid rgba(13, 59, 115, 0.1);
+  padding: clamp(1.6rem, 2.6vw, 2.25rem);
+  margin-bottom: 3rem;
+  display: grid;
+  gap: 0.65rem;
 }
 
 .who-we-are__join h3 {
-  margin-bottom: 0.75rem;
-  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  color: var(--brand-secondary);
+  text-align: center;
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.95rem, 2.8vw, 2.45rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
-.who-we-are__join p {
-  margin-bottom: 0.75rem;
+.who-we-are__join > p:not(.who-we-are__closing) {
+  text-align: center;
+  max-width: 62rem;
+  margin: 0 auto 0.35rem;
+  font-size: clamp(1.07rem, 1.7vw, 1.2rem);
+  line-height: 1.7;
 }
 
 .who-we-are__join ul {
-  margin: 0 0 0.75rem;
-  padding-left: 1.2rem;
+  list-style: none;
+  max-width: 56rem;
+  margin: 0.35rem auto 1.1rem;
+  padding: 0;
   color: var(--brand-dark);
+  text-align: left;
+}
+
+.who-we-are__join li {
+  position: relative;
+  padding-left: 1.55rem;
+  line-height: 1.55;
+  font-size: 1.05rem;
+}
+
+.who-we-are__join li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.58rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand-secondary), var(--brand-primary));
 }
 
 .who-we-are__join li + li {
-  margin-top: 0.45rem;
+  margin-top: 0.7rem;
 }
 
 .who-we-are__closing {
+  color: var(--brand-secondary);
   font-weight: 700;
+  font-size: 1.08rem;
   margin: 0;
+  text-align: center;
 }
 
 .who-we-are__superheroes-head {
-  margin-bottom: 1.25rem;
+  text-align: center;
+  margin-bottom: 1.8rem;
 }
 
 .who-we-are__superheroes-head h3 {
-  margin-bottom: 0.5rem;
+  color: var(--brand-secondary);
+  margin-bottom: 1.05rem;
+  font-size: clamp(1.95rem, 2.8vw, 2.45rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 .who-we-are__superheroes-head p {
@@ -126,25 +183,36 @@
 }
 
 .who-we-are__hero-card {
-  border: 0;
+  border: 1px solid rgba(13, 59, 115, 0.08);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   background-color: var(--brand-white);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.who-we-are__hero-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 34px rgba(13, 59, 115, 0.16);
 }
 
 .who-we-are__hero-image-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.45rem;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(
     135deg,
-    rgba(240, 196, 25, 0.2),
-    rgba(10, 114, 194, 0.15)
+    rgba(107, 170, 117, 0.22),
+    rgba(13, 59, 115, 0.14)
   );
 }
 
 .who-we-are__hero-image {
   width: 100%;
-  height: 250px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
 }
 
 .who-we-are__hero-content {
@@ -152,6 +220,7 @@
 }
 
 .who-we-are__hero-content h4 {
+  color: var(--brand-secondary);
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
@@ -163,6 +232,36 @@
 }
 
 @media (max-width: 767.98px) {
+  .who-we-are__join {
+    padding: 1.25rem 1rem;
+    gap: 0.55rem;
+  }
+
+  .who-we-are__join h3,
+  .who-we-are__superheroes-head h3 {
+    font-size: clamp(1.65rem, 8vw, 2rem);
+  }
+
+  .who-we-are__join > p:not(.who-we-are__closing) {
+    font-size: 1rem;
+    line-height: 1.58;
+  }
+
+  .who-we-are__join ul {
+    margin-top: 0.15rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .who-we-are__join li {
+    font-size: 0.98rem;
+    line-height: 1.5;
+    padding-left: 1.35rem;
+  }
+
+  .who-we-are__closing {
+    font-size: 1rem;
+  }
+
   .who-we-are__image-wrap,
   .who-we-are__image,
   .who-we-are__image-placeholder {

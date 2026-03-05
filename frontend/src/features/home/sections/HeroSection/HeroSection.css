@@ -13,10 +13,13 @@
 
 .home-hero__badge {
   display: inline-flex;
-  padding: 0.4rem 1rem;
+  padding: 0.45rem 1rem;
   border-radius: 999px;
-  font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(4px);
   margin-bottom: 1rem;
 }
 
@@ -29,7 +32,7 @@
 .home-hero__subtitle {
   font-size: 1.2rem;
   max-width: 40rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.65rem;
   opacity: 0.9;
 }
 
@@ -56,7 +59,48 @@
 }
 
 .home-hero__illustration img {
-  width: 100%;
+  width: min(100%, 650px);
+  margin: 0 auto;
   border-radius: 1.5rem;
   box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.home-hero__illustration {
+  position: relative;
+}
+
+.home-hero__illustration::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+}
+
+@media (min-width: 1200px) {
+  .home-hero__illustration img {
+    width: min(100%, 620px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .home-hero__title {
+    font-size: clamp(2.2rem, 10vw, 2.8rem);
+  }
+
+  .home-hero__subtitle {
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+  }
+
+  .home-hero__card {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .home-hero__illustration::after {
+    inset: -6px;
+  }
 }

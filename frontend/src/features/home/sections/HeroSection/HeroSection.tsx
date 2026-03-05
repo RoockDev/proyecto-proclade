@@ -6,7 +6,7 @@ import { HeroIllustration } from './parts/HeroIllustration';
 
 export const HeroSection = () => {
   return (
-    <section className="home-hero gradient-hero section-padding">
+    <section className="home-hero gradient-hero section-padding reveal-up">
       <div className="container">
         <div className="home-hero__grid">
           <div className="home-hero__content">

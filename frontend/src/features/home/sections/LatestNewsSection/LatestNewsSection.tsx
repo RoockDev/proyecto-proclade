@@ -4,7 +4,7 @@ import './LatestNewsSection.css';
 
 export const LatestNewsSection = () => {
   return (
-    <section className="home-news section-padding">
+    <section className="home-news section-padding reveal-up reveal-delay-5">
       <div className="container">
         <div className="text-center mb-5">
           <h2 className="home-news__title">Últimas noticias</h2>
@@ -48,7 +48,7 @@ export const LatestNewsSection = () => {
         </div>
 
         <div className="text-center mt-4">
-          <Link to="/noticias" className="btn btn-brand-outline">
+          <Link to="/noticias" className="btn btn-brand-gradient">
             Ver todas las noticias <i className="bi bi-arrow-right ms-2" />
           </Link>
         </div>

@@ -3,7 +3,7 @@ import './AboutSection.css';
 
 export const AboutSection = () => {
   return (
-    <section className="about-section section-padding">
+    <section className="about-section section-padding reveal-up reveal-delay-1">
       <div className="container text-center">
         <SectionTitle
           title="¿Qué es Equipo PUCH?"

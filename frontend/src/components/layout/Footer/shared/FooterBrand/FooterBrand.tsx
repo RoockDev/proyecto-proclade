@@ -3,7 +3,9 @@ import './FooterBrand.css';
 
 export const FooterBrand = () => (
   <div className="footer-brand">
-    <img src={logoEquipoPuch} alt="Equipo PUCH" className="footer-brand__logo" />
+    <div className="footer-brand__logo-badge">
+      <img src={logoEquipoPuch} alt="Equipo PUCH" className="footer-brand__logo" />
+    </div>
     <div>
       <p className="footer-brand__title">Equipo PUCH</p>
       <p className="footer-brand__text">
