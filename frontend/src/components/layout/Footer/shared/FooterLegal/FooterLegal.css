@@ -1,0 +1,25 @@
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-legal__links {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .footer-legal {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-legal__links {
+    justify-content: center;
+    width: 100%;
+  }
+}

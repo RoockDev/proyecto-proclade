@@ -115,7 +115,10 @@ export class AuthService {
     });
 
     const { passwordHash, ...safeUser } = user;
-    return this.buildAuthResponse(safeUser, 'Registro completado correctamente');
+    return this.buildAuthResponse(
+      safeUser,
+      'Registro completado correctamente',
+    );
   }
 
   async googleSignIn(googleSignInDto: GoogleSignInDto) {

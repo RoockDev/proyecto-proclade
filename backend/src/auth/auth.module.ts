@@ -10,7 +10,6 @@ import { GoogleAuthService } from './google/google-auth.service';
 import { MailModule } from '../mail/mail.module';
 import { UsersModule } from '../users/users.module';
 
-
 @Module({
   imports: [
     PrismaModule,

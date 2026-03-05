@@ -288,3 +288,39 @@ head -n 8 frontend/yarn.lock
 ```
 
 Debe verse `__metadata` y `version: 8`.
+
+---
+
+## Seeds (Datos de prueba)
+
+El proyecto incluye un sistema de seeds reproducible e idempotente para poblar la base de datos con datos de prueba.
+
+### Ejecutar seeds
+
+
+# Aplicar migraciones a la DB
+```bash
+docker exec proyecto-proclade-backend-1 yarn prisma migrate deploy
+```
+# Poblar datos de prueba (opcional)
+```bash
+docker exec proyecto-proclade-backend-1 yarn prisma:seed
+```
+
+### Datos creados
+
+| Tipo | Email | Contraseña | Rol |
+|------|-------|------------|-----|
+| Admin | admin@proclade.local | Admin123! | ADMIN |
+| Usuario | user@proclade.local | User123! | USER |
+| Batch (20) | test.user.001@test.com ... test.user.020@test.com | Test123! | USER |
+
+### Estructura de seeds
+
+```
+backend/prisma/seeds/
+├── seed.ts             # Orquestador principal
+├── roles.seed.ts       # Seed de roles (ADMIN, USER)
+├── admin-user.seed.ts  # Admin y usuario de pruebas
+└── users-batch.seed.ts # 20 usuarios fake con @faker-js/faker
+```

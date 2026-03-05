@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import type { Prisma } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +26,7 @@ export class UsersService {
     return {
       ...rest,
 
-      roles: roles?.map((r: any) => r.name) || [], 
+      roles: roles?.map((r: any) => r.name) || [],
     };
   }
 
@@ -45,7 +49,7 @@ export class UsersService {
         ...rest,
         passwordHash,
         roles: {
-          connect: rolesToConnect.map(roleName => ({ name: roleName })),
+          connect: rolesToConnect.map((roleName) => ({ name: roleName })),
         },
       },
       include: { roles: true },
@@ -59,7 +63,7 @@ export class UsersService {
       where: { deletedAt: null },
       include: { roles: true },
     });
-    return users.map(u => this.formatUserResponse(u));
+    return users.map((u) => this.formatUserResponse(u));
   }
 
   async findOne(id: number) {
@@ -75,7 +79,9 @@ export class UsersService {
     return this.formatUserResponse(user);
   }
 
-  async findActiveByEmailWithRoles(email: string): Promise<UserWithRoles | null> {
+  async findActiveByEmailWithRoles(
+    email: string,
+  ): Promise<UserWithRoles | null> {
     return this.prisma.user.findFirst({
       where: {
         email,
@@ -98,7 +104,9 @@ export class UsersService {
         where: { email: rest.email, id: { not: id } },
       });
       if (existingEmail) {
-        throw new ConflictException('El correo electrónico ya está en uso por otro usuario');
+        throw new ConflictException(
+          'El correo electrónico ya está en uso por otro usuario',
+        );
       }
     }
 
@@ -109,7 +117,7 @@ export class UsersService {
     if (roles) {
       // usamos el set al no crear la tabla intermedia explícitmanente
       dataToUpdate.roles = {
-        set: roles.map(roleName => ({ name: roleName })),
+        set: roles.map((roleName) => ({ name: roleName })),
       };
     }
 

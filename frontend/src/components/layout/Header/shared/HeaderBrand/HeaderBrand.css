@@ -1,0 +1,11 @@
+.brand-logo-img {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 991.98px) {
+  .brand-logo-img {
+    height: 38px;
+  }
+}

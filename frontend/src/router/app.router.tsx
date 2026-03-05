@@ -7,6 +7,9 @@ import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPane
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
+import { SuperheroesPage } from './pages/SuperheroesPage';
+import { NoticiasPage } from './pages/NoticiasPage';
+import { ColaboraPage } from './pages/ColaboraPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -30,10 +33,21 @@ export const appRouter = createBrowserRouter([
         element: <ResetPasswordPage />,
       },
       {
+        path: 'superheroes',
+        element: <SuperheroesPage />,
+      },
+      {
+        path: 'noticias',
+        element: <NoticiasPage />,
+      },
+      {
+        path: 'colabora',
+        element: <ColaboraPage />,
+      },
+      {
         path: '*',
         element: <NotFoundPage />,
       },
-      
     ],
   },
   {
