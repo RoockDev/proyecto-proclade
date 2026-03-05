@@ -14,6 +14,15 @@ export type GoogleSignInRequestDto = {
   idToken: string;
 };
 
+export type ForgotPasswordRequestDto = {
+  email: string;
+};
+
+export type ResetPasswordRequestDto = {
+  token: string;
+  newPassword: string;
+};
+
 export type AuthUser = {
   id: number;
   email: string;

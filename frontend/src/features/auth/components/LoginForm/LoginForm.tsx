@@ -7,6 +7,7 @@ import { saveAuthSession } from '../../utils/auth-session.storage';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
+import { ForgotPasswordModal } from '../ForgotPasswordModal/ForgotPasswordModal';
 import './LoginForm.css';
 
 const GOOGLE_SCRIPT_ID = 'google-identity-services-script';
@@ -65,6 +66,7 @@ export const LoginForm = () => {
   const googleButtonRef = useRef<HTMLDivElement | null>(null);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
   const [googleError, setGoogleError] = useState<string | null>(null);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const [formState, setFormState] = useState<LoginFormState>({
     email: '',
     password: '',
@@ -300,7 +302,17 @@ export const LoginForm = () => {
         </div>
       )}
 
-      <p className="login-form__switch mt-3 mb-0 text-center">
+      <p className="text-center mt-3 mb-0">
+        <button
+          type="button"
+          className="btn btn-link p-0 login-form__switch-link"
+          onClick={() => setShowForgotModal(true)}
+        >
+          ¿Olvidaste tu contraseña?
+        </button>
+      </p>
+
+      <p className="login-form__switch mt-2 mb-0 text-center">
         ¿No estás registrado?{' '}
         <Link
           to="/auth/register"
@@ -309,6 +321,10 @@ export const LoginForm = () => {
           Regístrate
         </Link>
       </p>
+
+      {showForgotModal && (
+        <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+      )}
     </form>
   );
 };

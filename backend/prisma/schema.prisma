@@ -15,17 +15,19 @@ enum NewsStatus {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  passwordHash String
-  name         String
-  surname      String
-  google       Boolean   @default(false)
-  deletedAt    DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  roles        Role[]    @relation("UserRoles")
-  createdNews  News[]
+  id                       Int       @id @default(autoincrement())
+  email                    String    @unique
+  passwordHash             String
+  name                     String
+  surname                  String
+  google                   Boolean   @default(false)
+  resetPasswordTokenHash   String?
+  resetPasswordExpiresAt   DateTime?
+  deletedAt                DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  roles                    Role[]    @relation("UserRoles")
+  createdNews              News[]
 }
 
 

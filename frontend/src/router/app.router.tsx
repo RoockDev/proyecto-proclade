@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { HomePage } from '../features/home/pages/HomePage/HomePage';
 import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
+import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/ResetPasswordPage';
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
 import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPanelPage';
 import { PublicLayout } from './layouts/PublicLayout';
@@ -26,6 +27,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'auth/register',
         element: <AuthPage mode="register" />,
+      },
+      {
+        path: 'auth/reset-password',
+        element: <ResetPasswordPage />,
       },
       {
         path: 'superheroes',

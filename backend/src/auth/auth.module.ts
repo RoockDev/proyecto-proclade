@@ -7,11 +7,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt_strategy/jwt.strategy';
 import { PrismaModule } from '../prisma/prisma.module';
 import { GoogleAuthService } from './google/google-auth.service';
+import { MailModule } from '../mail/mail.module';
 import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     PrismaModule,
+    MailModule,
     forwardRef(() => UsersModule),
     PassportModule,
     JwtModule.registerAsync({

@@ -59,3 +59,66 @@ Content-Type: application/json
   "email": "email-invalido",
   "password": "{{validPasswordUser}}"
 }
+
+### ─── FORGOT PASSWORD ───────────────────────────────────
+
+### FORGOT PASSWORD OK - usuario local existente (200, mensaje genérico)
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}"
+}
+
+### FORGOT PASSWORD - email inexistente (200, mismo mensaje genérico por seguridad)
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "{{unknownEmail}}"
+}
+
+### FORGOT PASSWORD FAIL - email vacío (400)
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": ""
+}
+
+### FORGOT PASSWORD FAIL - formato inválido (400)
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "email-invalido"
+}
+
+### ─── RESET PASSWORD ────────────────────────────────────
+
+### RESET PASSWORD FAIL - token inválido (400)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "token-invalido-o-expirado",
+  "newPassword": "NuevaPass123!"
+}
+
+### RESET PASSWORD FAIL - contraseña muy corta (400)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "algun-token",
+  "newPassword": "123"
+}
+
+### RESET PASSWORD FAIL - campos vacíos (400)
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "",
+  "newPassword": ""
+}
