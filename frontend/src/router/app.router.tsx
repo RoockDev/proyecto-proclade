@@ -6,9 +6,9 @@ import { AdminPanelPage } from '../features/admin/pages/AdminPanelPage/AdminPane
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
-import { SuperheroesPage } from '../features/home/pages/SuperheroesPage/SuperheroesPage';
-import { NoticiasPage } from '../features/home/pages/NoticiasPage/NoticiasPage';
-import { ColaboraPage } from '../features/home/pages/ColaboraPage/ColaboraPage';
+import { SuperheroesPage } from './pages/SuperheroesPage';
+import { NoticiasPage } from './pages/NoticiasPage';
+import { ColaboraPage } from './pages/ColaboraPage';
 
 export const appRouter = createBrowserRouter([
   {
