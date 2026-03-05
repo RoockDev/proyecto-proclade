@@ -216,6 +216,7 @@ export const LoginForm = () => {
   };
 
   return (
+    <>
     <form className="auth-form" onSubmit={handleSubmit} noValidate>
       <div className="auth-form__field">
         <label htmlFor="email" className="auth-form__label">
@@ -321,10 +322,11 @@ export const LoginForm = () => {
           Regístrate
         </Link>
       </p>
-
-      {showForgotModal && (
-        <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
-      )}
     </form>
+
+    {showForgotModal && (
+      <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />
+    )}
+  </>
   );
 };
