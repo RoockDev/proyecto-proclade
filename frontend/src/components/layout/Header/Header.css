@@ -46,11 +46,17 @@
   align-items: center;
   justify-content: center;
   min-height: 38px;
-  border-radius: 0.7rem;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  padding: 0.45rem 0.95rem;
+  padding: 0.45rem 1rem;
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.header-action-btn:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.55);
+  outline-offset: 2px;
 }
 
 .header-action-btn--main {
@@ -64,6 +70,7 @@
 .header-action-btn--main:focus {
   color: var(--brand-white);
   background: linear-gradient(135deg, #438a55, #286d5b);
+  box-shadow: 0 6px 12px rgba(39, 105, 70, 0.30);
 }
 
 .header-action-btn--donate {

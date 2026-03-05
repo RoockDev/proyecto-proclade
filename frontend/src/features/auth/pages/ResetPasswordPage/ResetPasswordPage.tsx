@@ -1,43 +1,37 @@
 import { useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { ResetPasswordForm } from '../../components/ResetPasswordForm/ResetPasswordForm';
+import '../AuthPage/AuthPage.css';
 
 export const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
 
   return (
-    <main className="login-page">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-6">
-            <div className="login-page__card">
-              <Link to="/auth/login" className="btn btn-link p-0 mb-3 text-decoration-none">
-                <i className="bi bi-arrow-left me-1"></i>
-                Volver al login
+    <main className="auth-page">
+      <div className="auth-page__container">
+        <div className="auth-page__card reveal-up">
+          <Link to="/auth/login" className="auth-page__back">
+            <i className="bi bi-arrow-left" aria-hidden="true"></i>
+            Volver al login
+          </Link>
+
+          <h1 className="auth-page__title">Restablecer contraseña</h1>
+          <p className="auth-page__description">
+            Introduce tu nueva contraseña
+          </p>
+
+          {token ? (
+            <ResetPasswordForm token={token} />
+          ) : (
+            <div className="auth-form__feedback auth-form__feedback--error">
+              <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+              El enlace de recuperación no es válido. Falta el token.
+              <Link to="/auth/login" className="btn-brand-auth auth-form__submit" style={{ marginTop: '0.75rem' }}>
+                Ir al login
               </Link>
-
-              <h1 className="login-page__title text-center">
-                Restablecer contraseña
-              </h1>
-              <p className="login-page__description text-center">
-                Introduce tu nueva contraseña
-              </p>
-
-              {token ? (
-                <ResetPasswordForm token={token} />
-              ) : (
-                <div className="text-center">
-                  <p className="text-danger">
-                    El enlace de recuperación no es válido. Falta el token.
-                  </p>
-                  <Link to="/auth/login" className="btn btn-primary mt-2">
-                    Ir al login
-                  </Link>
-                </div>
-              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </main>

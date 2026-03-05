@@ -58,38 +58,38 @@ export const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
 
   return (
     <div
-      className="forgot-password-modal__backdrop"
+      className="forgot-modal__backdrop"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="forgot-password-title"
     >
-      <div className="forgot-password-modal__content">
+      <div className="forgot-modal__content">
         <button
-          className="forgot-password-modal__close"
+          className="forgot-modal__close"
           onClick={onClose}
           aria-label="Cerrar"
           type="button"
         >
-          &times;
+          <i className="bi bi-x-lg" aria-hidden="true"></i>
         </button>
 
-        <h2 className="forgot-password-modal__title" id="forgot-password-title">
+        <h2 className="forgot-modal__title" id="forgot-password-title">
           ¿Olvidaste tu contraseña?
         </h2>
-        <p className="forgot-password-modal__description">
+        <p className="forgot-modal__description">
           Introduce tu correo electrónico y te enviaremos un enlace para
           restablecer tu contraseña.
         </p>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="mb-3">
-            <label htmlFor="forgot-email" className="form-label">
+          <div className="auth-form__field">
+            <label htmlFor="forgot-email" className="auth-form__label">
               Correo electrónico
             </label>
             <input
               type="email"
-              className="form-control forgot-password-modal__input"
+              className="auth-form__input"
               id="forgot-email"
               value={email}
               onChange={handleChange}
@@ -102,13 +102,15 @@ export const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
           </div>
 
           {successMessage && (
-            <div className="forgot-password-modal__success" role="status">
+            <div className="auth-form__feedback auth-form__feedback--success" role="status">
+              <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
               {successMessage}
             </div>
           )}
 
           {error && (
-            <div className="forgot-password-modal__error" role="alert">
+            <div className="auth-form__feedback auth-form__feedback--error" role="alert">
+              <i className="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
               {error}
             </div>
           )}
@@ -116,7 +118,7 @@ export const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
           {!successMessage ? (
             <button
               type="submit"
-              className="btn btn-primary forgot-password-modal__btn mt-3"
+              className="btn-brand-auth auth-form__submit"
               disabled={loading || !email.trim()}
             >
               {loading ? (
@@ -126,7 +128,7 @@ export const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
                     role="status"
                     aria-hidden="true"
                   ></span>
-                  Enviando...
+                  Enviando…
                 </>
               ) : (
                 'Enviar enlace de recuperación'
@@ -135,7 +137,7 @@ export const ForgotPasswordModal = ({ onClose }: ForgotPasswordModalProps) => {
           ) : (
             <button
               type="button"
-              className="btn btn-outline-secondary forgot-password-modal__btn mt-3"
+              className="forgot-modal__close-btn"
               onClick={onClose}
             >
               Cerrar
