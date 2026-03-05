@@ -38,6 +38,10 @@ jobs:
           corepack prepare yarn@4.12.0 --activate
           yarn install --immutable --check-cache
 
+      - name: Generate Prisma Client
+        working-directory: backend
+        run: yarn prisma generate
+
       - name: Build backend
         working-directory: backend
         run: yarn build
