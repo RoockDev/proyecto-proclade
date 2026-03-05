@@ -1,8 +1,60 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LATEST_NEWS } from '../../mocks/home.news.mock';
+import { getLatestNews } from '../../../news/api/news.api';
+import { NewsGrid } from '../../../news/components/NewsGrid/NewsGrid';
+import { getMockLatestNews } from '../../../news/mocks/news.mocks';
+import type { NewsItem } from '../../../news/types/news.types';
 import './LatestNewsSection.css';
 
+const HOME_NEWS_LIMIT = 3;
+
 export const LatestNewsSection = () => {
+  const [items, setItems] = useState<NewsItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadLatestNews = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage(null);
+
+        const response = await getLatestNews(HOME_NEWS_LIMIT);
+
+        if (!response.success) {
+          throw new Error(response.message || 'No se pudieron cargar las noticias.');
+        }
+
+        if (!isMounted) {
+          return;
+        }
+
+        setItems(response.data ?? []);
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+
+        setItems(getMockLatestNews(HOME_NEWS_LIMIT));
+        setErrorMessage(
+          'No se pudieron cargar las noticias en tiempo real. Mostramos contenido de respaldo temporal.',
+        );
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadLatestNews();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section className="home-news section-padding reveal-up reveal-delay-5">
       <div className="container">
@@ -13,42 +65,28 @@ export const LatestNewsSection = () => {
           </p>
         </div>
 
-        <div className="row g-4">
-          {LATEST_NEWS.map((news) => (
-            <div className="col-md-6 col-lg-4" key={news.id}>
-              <article className="card home-news__card h-100">
-                <img
-                  src={news.image}
-                  className="card-img-top home-news__image"
-                  alt={news.title}
-                />
+        {errorMessage && (
+          <div className="alert alert-warning home-news__alert" role="status">
+            {errorMessage}
+          </div>
+        )}
 
-                <div className="card-body d-flex flex-column">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span className="badge home-news__badge">{news.tag}</span>
-                    <time className="home-news__date" dateTime={news.date}>
-                      {new Date(news.date).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </time>
-                  </div>
-
-                  <h3 className="home-news__card-title">{news.title}</h3>
-                  <p className="home-news__excerpt">{news.excerpt}</p>
-
-                  <Link to={news.to} className="home-news__link mt-auto">
-                    Leer más <i className="bi bi-arrow-right" />
-                  </Link>
-                </div>
-              </article>
-            </div>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="home-news__state" role="status" aria-live="polite">
+            <div className="spinner-border text-secondary" role="presentation" />
+            <p>Cargando noticias...</p>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="home-news__state home-news__state--empty">
+            <i className="bi bi-newspaper" aria-hidden="true" />
+            <p>Próximamente compartiremos nuevas noticias en esta sección.</p>
+          </div>
+        ) : (
+          <NewsGrid items={items} variant="home" />
+        )}
 
         <div className="text-center mt-4">
-          <Link to="/noticias" className="btn btn-brand-gradient">
+          <Link to="/noticias?page=1" className="btn btn-brand-gradient">
             Ver todas las noticias <i className="bi bi-arrow-right ms-2" />
           </Link>
         </div>

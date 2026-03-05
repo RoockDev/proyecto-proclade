@@ -8,8 +8,9 @@ import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { AdminCampaignsPage } from '../features/admin/pages/AdminCampaignsPage/AdminCampaignsPage';
 import { SuperheroesPage } from './pages/SuperheroesPage';
-import { NoticiasPage } from './pages/NoticiasPage';
 import { ColaboraPage } from './pages/ColaboraPage';
+import { NewsListPage } from '../features/news/pages/NewsListPage/NewsListPage';
+import { NewsDetailPage } from '../features/news/pages/NewsDetailPage/NewsDetailPage';
 
 export const appRouter = createBrowserRouter([
   {
@@ -38,7 +39,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'noticias',
-        element: <NoticiasPage />,
+        element: <NewsListPage />,
+      },
+      {
+        path: 'noticias/:slug',
+        element: <NewsDetailPage />,
       },
       {
         path: 'colabora',
