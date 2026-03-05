@@ -36,28 +36,7 @@ export type HomeCounter = {
   suffix?: string;
 };
 
-export type HomeNewsPreview = {
-  id: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  category: string;
-  imageUrl: string | null;
-  imageAlt: string;
-  to: string;
-};
-
 export type StatItem = {
   label: string;
   value: string;
-};
-
-export type NewsItem = {
-  id: string;
-  title: string;
-  date: string;
-  tag: string;
-  excerpt: string;
-  image: string;
-  to: string;
 };
