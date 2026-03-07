@@ -37,10 +37,26 @@ Proyecto base para el desarrollo de una plataforma web usando **Docker** como en
 ├── nginx/
 │   └── default.conf
 │
+├── docs/                   # Documentación técnica y handover
+│   ├── 01-project-overview.md
+│   ├── 02-architecture/
+│   ├── 03-backend/
+│   ├── 04-frontend/
+│   ├── 05-devops/
+│   ├── 06-handover/
+│   ├── 07-quality/
+│   └── adr/
+│
 ├── docker-compose.yml
 ├── .yarnrc.yml
 ├── .gitignore
 └── README.md
+
+## 📘 Documentación de proyecto
+
+La documentación técnica completa para handover está en:
+
+- `docs/README.md`
 
 ## ⚙️ Requisitos
 
