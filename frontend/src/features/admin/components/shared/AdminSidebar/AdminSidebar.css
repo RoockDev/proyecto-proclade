@@ -87,14 +87,19 @@
 }
 
 .admin-sidebar__logout {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
   margin-top: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: transparent;
   color: inherit;
+  font: inherit;
   border-radius: 0.75rem;
   padding: 0.75rem 0.9rem;
   text-align: left;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .admin-sidebar__logout:hover,

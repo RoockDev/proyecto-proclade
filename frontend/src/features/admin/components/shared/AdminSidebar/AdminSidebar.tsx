@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './AdminSidebar.css';
 
 export type AdminNavItem = {
@@ -9,9 +9,10 @@ export type AdminNavItem = {
 
 type AdminSidebarProps = {
   items: AdminNavItem[];
+  onLogout: () => void;
 };
 
-export const AdminSidebar = ({ items }: AdminSidebarProps) => {
+export const AdminSidebar = ({ items, onLogout }: AdminSidebarProps) => {
   return (
     <aside className="admin-sidebar" aria-label="Navegacion del panel">
       <div className="admin-sidebar__brand">
@@ -55,10 +56,10 @@ export const AdminSidebar = ({ items }: AdminSidebarProps) => {
         </ul>
       </nav>
 
-      <Link to="/" className="admin-sidebar__logout" aria-label="Volver a la pagina principal">
+      <button type="button" className="admin-sidebar__logout" onClick={onLogout}>
         <i className="bi bi-box-arrow-left me-2" aria-hidden="true" />
-        Salir
-      </Link>
+        Cerrar sesión
+      </button>
     </aside>
   );
 };
