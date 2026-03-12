@@ -58,9 +58,9 @@ export class UsersService {
     return this.formatUserResponse(user);
   }
 
-  async findAll() {
+  async findAll(includeDeleted = false) {
     const users = await this.prisma.user.findMany({
-      where: { deletedAt: null },
+      where: includeDeleted ? {} : { deletedAt: null },
       include: { roles: true },
     });
     return users.map((u) => this.formatUserResponse(u));
@@ -139,5 +139,24 @@ export class UsersService {
     });
 
     return null;
+  }
+
+  async restore(id: number) {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: { not: null } },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Usuario con ID ${id} no encontrado o no eliminado`,
+      );
+    }
+
+    const restoredUser = await this.prisma.user.update({
+      where: { id },
+      data: { deletedAt: null },
+      include: { roles: true },
+    });
+    return this.formatUserResponse(restoredUser);
   }
 }

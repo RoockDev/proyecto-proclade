@@ -1,0 +1,44 @@
+.dashboard-stat-card {
+  background: var(--brand-white);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(215, 187, 152, 0.6);
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 20px 40px rgba(15, 52, 110, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-stat-card__label {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b5d4c;
+}
+
+.dashboard-stat-card__value {
+  margin: 0.45rem 0 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.dashboard-stat-card__detail {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: #776659;
+}
+
+.dashboard-stat-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 1rem;
+  background: rgba(15, 52, 110, 0.06);
+  color: var(--brand-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 10px 20px rgba(15, 52, 110, 0.15);
+}

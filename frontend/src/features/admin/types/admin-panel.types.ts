@@ -1,5 +1,4 @@
 export type AdminMetricKey =
-  | 'activeCampaigns'
   | 'pendingRequests'
   | 'pendingProposals'
   | 'unreadMessages';
@@ -42,23 +41,12 @@ export type AdminListBlock = {
   items: AdminDashboardListItem[];
 };
 
-export type AdminQuickActionVariant = 'solid' | 'outline';
-
-export type AdminQuickAction = {
-  id: string;
-  label: string;
-  icon: string;
-  variant: AdminQuickActionVariant;
-  target?: string;
-};
-
-export type AdminCampaignStatus = Extract<AdminStatusCode, 'ACTIVA' | 'FINALIZADA'>;
-
-export type AdminCampaign = {
-  id: string;
-  title: string;
-  category: string;
-  status: AdminCampaignStatus;
-  raisedAmount: number;
-  goalAmount: number;
+export type AdminUser = {
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  roles: string[];
+  deletedAt?: string | null;
+  updatedAt: string;
 };
