@@ -1,0 +1,13 @@
+.admin-dashboard-page {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+}
+
+.admin-dashboard-page > * {
+  width: 100%;
+}
