@@ -1,17 +1,6 @@
-import type {
-  AdminCampaign,
-  AdminListBlock,
-  AdminMetric,
-  AdminQuickAction,
-} from '../types/admin-panel.types';
+import type { AdminListBlock, AdminMetric } from '../types/admin-panel.types';
 
 export const adminMetricsMock: AdminMetric[] = [
-  {
-    key: 'activeCampaigns',
-    label: 'Campañas Activas',
-    value: 3,
-    accent: 'primary',
-  },
   {
     key: 'pendingRequests',
     label: 'Solicitudes Pendientes',
@@ -100,72 +89,5 @@ export const adminListBlocksMock: AdminListBlock[] = [
         status: 'RECHAZADO',
       },
     ],
-  },
-];
-
-export const adminQuickActionsMock: AdminQuickAction[] = [
-  {
-    id: 'new-campaign',
-    label: 'Nueva Campaña',
-    icon: 'bi bi-plus-lg',
-    variant: 'solid',
-    target: '/admin/campanas/nueva',
-  },
-  {
-    id: 'new-news',
-    label: 'Nueva Noticia',
-    icon: 'bi bi-plus-lg',
-    variant: 'outline',
-    target: '/admin/noticias/nueva',
-  },
-  {
-    id: 'view-requests',
-    label: 'Ver Solicitudes',
-    icon: 'bi bi-inbox',
-    variant: 'outline',
-    target: '/admin/solicitudes',
-  },
-];
-
-export const adminCampaignsQuickActionMock: AdminQuickAction = {
-  id: 'new-campaign-toolbar',
-  label: 'Nueva Campaña',
-  icon: 'bi bi-plus-lg',
-  variant: 'solid',
-  target: '/admin/campanas/nueva',
-};
-
-export const adminCampaignsMock: AdminCampaign[] = [
-  {
-    id: 'campaign-1',
-    title: 'Educacion para Todos',
-    category: 'Educacion',
-    status: 'ACTIVA',
-    raisedAmount: 9800,
-    goalAmount: 15000,
-  },
-  {
-    id: 'campaign-2',
-    title: 'Agua Limpia',
-    category: 'Infraestructura',
-    status: 'ACTIVA',
-    raisedAmount: 18500,
-    goalAmount: 25000,
-  },
-  {
-    id: 'campaign-3',
-    title: 'Salud Comunitaria',
-    category: 'Salud',
-    status: 'FINALIZADA',
-    raisedAmount: 12000,
-    goalAmount: 12000,
-  },
-  {
-    id: 'campaign-4',
-    title: 'Huertos Escolares',
-    category: 'Medio Ambiente',
-    status: 'ACTIVA',
-    raisedAmount: 3200,
-    goalAmount: 8000,
   },
 ];
