@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
@@ -29,8 +30,9 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query('includeDeleted') includeDeleted?: string) {
+    const include = includeDeleted === 'true';
+    return this.usersService.findAll(include);
   }
 
   @Get(':id')
@@ -49,5 +51,10 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Post(':id/restore')
+  restore(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.restore(id);
   }
 }

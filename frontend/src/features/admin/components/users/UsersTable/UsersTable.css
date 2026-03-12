@@ -1,0 +1,52 @@
+.users-table {
+  background: var(--brand-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(13, 59, 115, 0.1);
+  overflow: hidden;
+  box-shadow: 0 18px 30px rgba(15, 52, 110, 0.08);
+}
+
+.users-table__actions {
+  display: inline-flex;
+  gap: 0.45rem;
+}
+
+.users-table__actions button {
+  border: none;
+  background: rgba(15, 52, 110, 0.06);
+  color: var(--brand-secondary);
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
+}
+
+.users-table__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  background: rgba(15, 52, 110, 0.06);
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.users-table__icon-button i {
+  font-size: 1.1rem;
+}
+
+.users-table__icon-button--tool:hover {
+  background: rgba(15, 59, 115, 0.12);
+  color: var(--brand-primary);
+}
+
+.users-table__icon-button--delete:hover {
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+.users-table__icon-button--reactivate:hover {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0284c7;
+}
