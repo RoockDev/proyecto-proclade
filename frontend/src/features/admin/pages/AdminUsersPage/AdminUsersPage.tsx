@@ -9,7 +9,7 @@ import {
   reactivateUser,
   updateUser,
 } from '../../api/users.api';
-import type { AdminUser, CreateUserPayload, UpdateUserPayload } from '../../types/users.types';
+import type { AdminUser } from '../../types/users.types';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useUserConfirmation } from '../../hooks/useUserConfirmation';
 import { useUsersList } from '../../hooks/useUsersList';

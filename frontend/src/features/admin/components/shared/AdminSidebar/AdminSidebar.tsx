@@ -9,10 +9,10 @@ export type AdminNavItem = {
 
 type AdminSidebarProps = {
   items: AdminNavItem[];
-  onLogout: () => void;
+  onGoHome: () => void;
 };
 
-export const AdminSidebar = ({ items, onLogout }: AdminSidebarProps) => {
+export const AdminSidebar = ({ items, onGoHome }: AdminSidebarProps) => {
   return (
     <aside className="admin-sidebar" aria-label="Navegacion del panel">
       <div className="admin-sidebar__brand">
@@ -56,9 +56,9 @@ export const AdminSidebar = ({ items, onLogout }: AdminSidebarProps) => {
         </ul>
       </nav>
 
-      <button type="button" className="admin-sidebar__logout" onClick={onLogout}>
-        <i className="bi bi-box-arrow-left me-2" aria-hidden="true" />
-        Cerrar sesión
+      <button type="button" className="admin-sidebar__logout" onClick={onGoHome}>
+        <i className="bi bi-house-door me-2" aria-hidden="true" />
+        Volver a página
       </button>
     </aside>
   );

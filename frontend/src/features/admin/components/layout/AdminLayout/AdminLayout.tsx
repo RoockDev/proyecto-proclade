@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  clearAuthSession,
   getAuthSession,
   subscribeToAuthSession,
   userHasAdminRole,
@@ -54,14 +53,13 @@ export const AdminLayout = () => {
     : '';
 
   const title = useMemo(() => getAdminTitle(location.pathname), [location.pathname]);
-  const handleLogout = () => {
-    clearAuthSession();
+  const handleGoHome = () => {
     navigate('/', { replace: true });
   };
 
   return (
     <div className="admin-layout">
-      <AdminSidebar items={navItems} onLogout={handleLogout} />
+      <AdminSidebar items={navItems} onGoHome={handleGoHome} />
 
       <div className="admin-layout__main">
         <AdminTopbar
