@@ -7,7 +7,7 @@ type AdminButtonProps = {
   variant?: AdminButtonVariant;
   icon?: ReactNode;
   loading?: boolean;
-} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const AdminButton = ({
   variant = 'solid',
