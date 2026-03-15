@@ -21,17 +21,18 @@ const navItems: HeaderNavItem[] = [
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
+  const [session, setSession] = useState(() => getAuthSession());
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthSession(() => {
-      setSessionUser(getAuthSession().user);
+      setSession(getAuthSession());
     });
 
     return unsubscribe;
   }, []);
 
-  const isAdmin = userHasAdminRole(sessionUser);
+  const isAuthenticated = Boolean(session.accessToken);
+  const isAdmin = userHasAdminRole(session.user);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -55,7 +56,11 @@ export const Header = () => {
 
           <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="mainNav">
             <HeaderNav items={navItems} onLinkClick={closeMenu} />
-            <HeaderActions isAdmin={isAdmin} onClose={closeMenu} />
+            <HeaderActions
+              isAuthenticated={isAuthenticated}
+              isAdmin={isAdmin}
+              onClose={closeMenu}
+            />
           </div>
         </div>
       </nav>

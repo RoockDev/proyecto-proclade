@@ -94,6 +94,19 @@
   );
 }
 
+.header-action-btn--logout {
+  color: #8a1d1d;
+  border: 1px solid rgba(138, 29, 29, 0.35);
+  background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+}
+
+.header-action-btn--logout:hover,
+.header-action-btn--logout:focus {
+  color: #7a1717;
+  border-color: rgba(138, 29, 29, 0.55);
+  background: linear-gradient(135deg, #ffecec, #ffdede);
+}
+
 @media (max-width: 1199.98px) {
   .brand-header .nav-link {
     padding-left: 0.55rem;
