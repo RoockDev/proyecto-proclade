@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
+  clearAuthSession,
   getAuthSession,
   subscribeToAuthSession,
   userHasAdminRole,
@@ -20,6 +22,7 @@ const navItems: HeaderNavItem[] = [
 ];
 
 export const Header = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
 
@@ -32,9 +35,15 @@ export const Header = () => {
   }, []);
 
   const isAdmin = userHasAdminRole(sessionUser);
+  const isAuthenticated = Boolean(sessionUser);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
+  const handleLogout = () => {
+    clearAuthSession();
+    closeMenu();
+    navigate('/', { replace: true });
+  };
 
   return (
     <header className="brand-header sticky-top">
@@ -55,7 +64,12 @@ export const Header = () => {
 
           <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="mainNav">
             <HeaderNav items={navItems} onLinkClick={closeMenu} />
-            <HeaderActions isAdmin={isAdmin} onClose={closeMenu} />
+            <HeaderActions
+              isAdmin={isAdmin}
+              isAuthenticated={isAuthenticated}
+              onClose={closeMenu}
+              onLogout={handleLogout}
+            />
           </div>
         </div>
       </nav>
