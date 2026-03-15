@@ -1,65 +1,57 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { clearAuthSession } from '../../../../../features/auth/utils/auth-session.storage';
+import { Link } from 'react-router-dom';
 
 type HeaderActionsProps = {
-  isAuthenticated: boolean;
   isAdmin: boolean;
+  isAuthenticated: boolean;
   onClose: () => void;
+  onLogout: () => void;
 };
 
 export const HeaderActions = ({
-  isAuthenticated,
   isAdmin,
+  isAuthenticated,
   onClose,
-}: HeaderActionsProps) => {
-  const navigate = useNavigate();
+  onLogout,
+}: HeaderActionsProps) => (
+  <div className="d-flex gap-2 header-actions">
+    <a
+      href="https://www.fundacionproclade.org/dona/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="btn header-action-btn header-action-btn--donate"
+    >
+      Donar
+    </a>
 
-  const handleLogout = () => {
-    clearAuthSession();
-    onClose();
-    navigate('/', { replace: true });
-  };
+    {isAuthenticated ? (
+      <>
+        {isAdmin ? (
+          <Link
+            to="/admin"
+            className="btn header-action-btn header-action-btn--main"
+            onClick={onClose}
+          >
+            Panel Admin
+          </Link>
+        ) : null}
 
-  return (
-    <div className="d-flex gap-2 header-actions">
-      <a
-        href="https://www.fundacionproclade.org/dona/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn header-action-btn header-action-btn--donate"
-      >
-        Donar
-      </a>
-
-      {!isAuthenticated && (
-        <Link
-          to="/auth/login"
-          className="btn header-action-btn header-action-btn--main"
-          onClick={onClose}
-        >
-          Acceso
-        </Link>
-      )}
-
-      {isAuthenticated && isAdmin && (
-        <Link
-          to="/admin"
-          className="btn header-action-btn header-action-btn--main"
-          onClick={onClose}
-        >
-          Panel Admin
-        </Link>
-      )}
-
-      {isAuthenticated && (
         <button
           type="button"
           className="btn header-action-btn header-action-btn--logout"
-          onClick={handleLogout}
+          onClick={onLogout}
         >
+          <i className="bi bi-box-arrow-right me-1" aria-hidden="true" />
           Cerrar sesión
         </button>
-      )}
-    </div>
-  );
-};
+      </>
+    ) : (
+      <Link
+        to="/auth/login"
+        className="btn header-action-btn header-action-btn--main"
+        onClick={onClose}
+      >
+        Acceso
+      </Link>
+    )}
+  </div>
+);

@@ -65,7 +65,6 @@ export const AdminLayout = () => {
     ? session.user.roles[0].charAt(0).toUpperCase() +
       session.user.roles[0].slice(1).toLowerCase()
     : '';
-
   const title = getAdminTitle(location.pathname);
 
   return (

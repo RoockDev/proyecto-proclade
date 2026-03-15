@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './AdminSidebar.css';
 
 export type AdminNavItem = {
@@ -55,10 +55,10 @@ export const AdminSidebar = ({ items }: AdminSidebarProps) => {
         </ul>
       </nav>
 
-      <Link to="/" className="admin-sidebar__logout" aria-label="Volver a la pagina principal">
-        <i className="bi bi-box-arrow-left me-2" aria-hidden="true" />
-        Salir
-      </Link>
+      <NavLink to="/" className="admin-sidebar__logout">
+        <i className="bi bi-house-door me-2" aria-hidden="true" />
+        Volver a página
+      </NavLink>
     </aside>
   );
 };
