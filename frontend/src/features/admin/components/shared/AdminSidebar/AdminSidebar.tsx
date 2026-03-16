@@ -9,10 +9,9 @@ export type AdminNavItem = {
 
 type AdminSidebarProps = {
   items: AdminNavItem[];
-  onGoHome: () => void;
 };
 
-export const AdminSidebar = ({ items, onGoHome }: AdminSidebarProps) => {
+export const AdminSidebar = ({ items }: AdminSidebarProps) => {
   return (
     <aside className="admin-sidebar" aria-label="Navegacion del panel">
       <div className="admin-sidebar__brand">
@@ -56,10 +55,10 @@ export const AdminSidebar = ({ items, onGoHome }: AdminSidebarProps) => {
         </ul>
       </nav>
 
-      <button type="button" className="admin-sidebar__logout" onClick={onGoHome}>
+      <NavLink to="/" className="admin-sidebar__logout">
         <i className="bi bi-house-door me-2" aria-hidden="true" />
         Volver a página
-      </button>
+      </NavLink>
     </aside>
   );
 };

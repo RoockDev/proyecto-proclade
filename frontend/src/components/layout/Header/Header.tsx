@@ -24,18 +24,18 @@ const navItems: HeaderNavItem[] = [
 export const Header = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
+  const [session, setSession] = useState(() => getAuthSession());
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthSession(() => {
-      setSessionUser(getAuthSession().user);
+      setSession(getAuthSession());
     });
 
     return unsubscribe;
   }, []);
 
-  const isAdmin = userHasAdminRole(sessionUser);
-  const isAuthenticated = Boolean(sessionUser);
+  const isAdmin = userHasAdminRole(session.user);
+  const isAuthenticated = Boolean(session.accessToken);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);

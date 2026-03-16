@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   getAuthSession,
   subscribeToAuthSession,
@@ -34,32 +34,42 @@ const getAdminTitle = (pathname: string): string => {
 
 export const AdminLayout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
+  const [session, setSession] = useState(() => getAuthSession());
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthSession(() => {
-      setSessionUser(getAuthSession().user);
+      setSession(getAuthSession());
     });
 
     return unsubscribe;
   }, []);
 
-  const isAdmin = userHasAdminRole(sessionUser);
-  const topbarEmail = sessionUser?.email ?? '';
-  const topbarRole = sessionUser?.roles?.[0]
-    ? sessionUser.roles[0].charAt(0).toUpperCase() +
-      sessionUser.roles[0].slice(1).toLowerCase()
-    : '';
+  const isAuthenticated = Boolean(session.accessToken);
+  if (!isAuthenticated) {
+    const requestedPath = `${location.pathname}${location.search}`;
+    const params = new URLSearchParams();
+    params.set('redirectTo', requestedPath);
 
-  const title = useMemo(() => getAdminTitle(location.pathname), [location.pathname]);
-  const handleGoHome = () => {
-    navigate('/', { replace: true });
-  };
+    return (
+      <Navigate
+        to={`/auth/login?${params.toString()}`}
+        replace
+        state={{ redirectTo: requestedPath }}
+      />
+    );
+  }
+
+  const isAdmin = userHasAdminRole(session.user);
+  const topbarEmail = session.user?.email ?? '';
+  const topbarRole = session.user?.roles?.[0]
+    ? session.user.roles[0].charAt(0).toUpperCase() +
+      session.user.roles[0].slice(1).toLowerCase()
+    : '';
+  const title = getAdminTitle(location.pathname);
 
   return (
     <div className="admin-layout">
-      <AdminSidebar items={navItems} onGoHome={handleGoHome} />
+      <AdminSidebar items={navItems} />
 
       <div className="admin-layout__main">
         <AdminTopbar
