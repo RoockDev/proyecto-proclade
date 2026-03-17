@@ -3,6 +3,9 @@
   border-radius: 1.75rem;
   padding: clamp(1.5rem, 3vw, 2.75rem);
   box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .admin-news-page__header {
@@ -30,4 +33,19 @@
   margin: 0;
   max-width: 60ch;
   color: #3f4f63;
+}
+
+.admin-news-page__feedback {
+  margin: 0;
+  color: #5f3d00;
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.admin-news-page__state {
+  margin: 0;
+  color: #3f4f63;
+  font-weight: 600;
 }

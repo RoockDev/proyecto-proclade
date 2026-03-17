@@ -1,0 +1,7 @@
+.news-toolbar {
+  width: 100%;
+}
+
+.news-toolbar__new {
+  min-width: 170px;
+}
