@@ -14,3 +14,23 @@ export type AdminNewsItem = {
   deletedAt: string | null;
   createdById: number;
 };
+
+export type CreateAdminNewsPayload = {
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl?: string;
+  status?: AdminNewsStatus;
+};
+
+export type UpdateAdminNewsPayload = Partial<CreateAdminNewsPayload> & {
+  id: number;
+};
+
+export type AdminNewsFormData = {
+  title: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  status: AdminNewsStatus;
+};

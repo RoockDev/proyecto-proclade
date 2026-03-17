@@ -47,3 +47,40 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.news-table__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.news-table__icon-button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.news-table__icon-button i {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.news-table__icon-button:hover {
+  transform: translateY(-1px);
+}
+
+.news-table__icon-button--tool {
+  color: #0d3b73;
+  background: rgba(13, 59, 115, 0.12);
+}
+
+.news-table__icon-button--delete {
+  color: #8a1f2f;
+  background: rgba(138, 31, 47, 0.14);
+}
