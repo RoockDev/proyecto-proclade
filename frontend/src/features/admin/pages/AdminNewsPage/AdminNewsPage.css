@@ -1,0 +1,33 @@
+.admin-news-page {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+}
+
+.admin-news-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-news-page__eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #51657e;
+}
+
+.admin-news-page__title {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 2.35rem);
+  color: #122447;
+}
+
+.admin-news-page__description {
+  margin: 0;
+  max-width: 60ch;
+  color: #3f4f63;
+}
