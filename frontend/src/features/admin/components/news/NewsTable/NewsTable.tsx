@@ -25,11 +25,23 @@ const buildImageUrl = (imageUrl: string | null): string | null => {
   }
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+  const normalizedBaseUrl = apiBaseUrl.endsWith('/')
+    ? apiBaseUrl.slice(0, -1)
+    : apiBaseUrl;
+
   if (imageUrl.startsWith('/')) {
-    return `${apiBaseUrl}${imageUrl}`;
+    if (
+      normalizedBaseUrl.startsWith('/') &&
+      imageUrl.startsWith(`${normalizedBaseUrl}/`)
+    ) {
+      return imageUrl;
+    }
+
+    return `${normalizedBaseUrl}${imageUrl}`;
   }
 
-  return `${apiBaseUrl}/${imageUrl}`;
+  return `${normalizedBaseUrl}/${imageUrl}`;
 };
 
 const NewsImageCell = ({ item }: { item: AdminNewsItem }) => {

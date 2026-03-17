@@ -9,7 +9,9 @@ type NewsFormProps = {
   formData: AdminNewsFormData;
   feedback?: string | null;
   isProcessing: boolean;
+  isUploadingImage: boolean;
   onFieldChange: (field: keyof AdminNewsFormData, value: string) => void;
+  onImageUpload: (file: File) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onReset: () => void;
   onClose: () => void;
@@ -26,7 +28,9 @@ export const NewsForm = ({
   formData,
   feedback,
   isProcessing,
+  isUploadingImage,
   onFieldChange,
+  onImageUpload,
   onSubmit,
   onReset,
   onClose,
@@ -88,8 +92,27 @@ export const NewsForm = ({
                   type="text"
                   value={formData.imageUrl}
                   onChange={(event) => onFieldChange('imageUrl', event.target.value)}
-                  placeholder="/uploads/news/mi-imagen.jpg o https://..."
+                  placeholder="/api/uploads/news/mi-imagen.jpg o https://..."
                 />
+              </label>
+
+              <label className="news-form-card__full">
+                Subir imagen
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  onChange={(event) => {
+                    const selectedFile = event.target.files?.[0];
+                    if (selectedFile) {
+                      onImageUpload(selectedFile);
+                    }
+                    event.target.value = '';
+                  }}
+                  disabled={isUploadingImage}
+                />
+                <span className="news-form-card__hint">
+                  JPG, PNG, WEBP o GIF. Máximo 5MB.
+                </span>
               </label>
 
               <label className="news-form-card__full">
@@ -122,12 +145,15 @@ export const NewsForm = ({
                 className="news-form-card__primary"
                 loading={isProcessing}
                 disabled={
+                  isUploadingImage ||
                   !formData.title.trim() ||
                   !formData.excerpt.trim() ||
                   !formData.content.trim()
                 }
               >
-                {isProcessing
+                {isUploadingImage
+                  ? 'Subiendo imagen...'
+                  : isProcessing
                   ? 'Guardando...'
                   : formMode === 'create'
                     ? 'Crear noticia'

@@ -55,3 +55,21 @@ export const deleteAdminNews = async (id: number) => {
 
   return handleResponse(response);
 };
+
+export const uploadAdminNewsImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await api.post<ApiResponse<{ imageUrl: string }>>(
+    '/admin/news/upload-image',
+    formData,
+    {
+      headers: {
+        ...authHeaders(),
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return handleResponse(response);
+};

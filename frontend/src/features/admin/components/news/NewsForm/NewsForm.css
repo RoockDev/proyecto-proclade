@@ -88,6 +88,11 @@
   width: 100%;
 }
 
+.news-form-card__hint {
+  font-size: 0.78rem;
+  color: #5e6f83;
+}
+
 .news-form-card__grid textarea {
   resize: vertical;
   min-height: 84px;

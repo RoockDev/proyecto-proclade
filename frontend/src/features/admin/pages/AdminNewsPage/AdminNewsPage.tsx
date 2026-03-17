@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useState } from 'react';
 import {
   createAdminNews,
   deleteAdminNews,
+  uploadAdminNewsImage,
   updateAdminNews,
 } from '../../api/news-admin.api';
 import { NewsForm } from '../../components/news/NewsForm/NewsForm';
@@ -64,6 +65,7 @@ export const AdminNewsPage = () => {
   const [selectedNews, setSelectedNews] = useState<AdminNewsItem | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pendingDeleteNews, setPendingDeleteNews] = useState<AdminNewsItem | null>(
     null,
@@ -143,6 +145,7 @@ export const AdminNewsPage = () => {
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
+    setIsUploadingImage(false);
     resetFormState();
     setFeedback(null);
   };
@@ -159,8 +162,34 @@ export const AdminNewsPage = () => {
     setFeedback(null);
   };
 
+  const handleImageUpload = async (file: File) => {
+    setIsUploadingImage(true);
+    setFeedback(null);
+
+    try {
+      const response = await uploadAdminNewsImage(file);
+      const uploadedImageUrl = response.data?.imageUrl ?? null;
+
+      if (response.success && uploadedImageUrl) {
+        setFormData((prev) => ({ ...prev, imageUrl: uploadedImageUrl }));
+        setFeedback('Imagen subida correctamente.');
+      } else {
+        setFeedback(response.message || 'No se pudo subir la imagen.');
+      }
+    } catch {
+      setFeedback('No se pudo subir la imagen.');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
   const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isUploadingImage) {
+      setFeedback('Espera a que termine la subida de imagen.');
+      return;
+    }
 
     const validationError = validateNewsForm(formData);
     if (validationError) {
@@ -209,7 +238,9 @@ export const AdminNewsPage = () => {
         formData={formData}
         feedback={isFormOpen ? feedback : null}
         isProcessing={isProcessing}
+        isUploadingImage={isUploadingImage}
         onFieldChange={handleFieldChange}
+        onImageUpload={handleImageUpload}
         onSubmit={handleSubmitForm}
         onReset={handleResetForm}
         onClose={handleCloseForm}
