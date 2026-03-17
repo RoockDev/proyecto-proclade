@@ -1,4 +1,10 @@
-import { type FormEvent, useCallback, useState } from 'react';
+import {
+  type FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   createAdminNews,
   deleteAdminNews,
@@ -83,6 +89,23 @@ export const AdminNewsPage = () => {
     search,
     setSearch,
   } = useAdminNewsList({ onError: handleNewsError });
+  const rowsPerPage = 7;
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(filteredNews.length / rowsPerPage));
+  const paginatedNews = useMemo(
+    () => filteredNews.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredNews, page, rowsPerPage],
+  );
+
+  useEffect(() => {
+    setPage(0);
+  }, [filteredNews.length, search]);
+
+  useEffect(() => {
+    if (page >= totalPages) {
+      setPage(totalPages - 1);
+    }
+  }, [page, totalPages]);
 
   const resetFormState = () => {
     setFormData(initialFormState);
@@ -271,10 +294,39 @@ export const AdminNewsPage = () => {
       ) : null}
 
       <NewsTable
-        news={filteredNews}
+        news={paginatedNews}
         onEdit={handleEditNews}
         onDelete={handleRequestDelete}
       />
+
+      <div className="news-pagination">
+        <div className="news-pagination__info">
+          Mostrando {filteredNews.length === 0 ? 0 : page * rowsPerPage + 1}-
+          {Math.min(filteredNews.length, (page + 1) * rowsPerPage)} de{' '}
+          {filteredNews.length}
+        </div>
+        <div className="news-pagination__controls">
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.max(0, prev - 1))}
+            disabled={page === 0}
+            aria-label="Página anterior"
+          >
+            ←
+          </button>
+          <span>
+            {page + 1} de {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
+            disabled={page >= totalPages - 1}
+            aria-label="Página siguiente"
+          >
+            →
+          </button>
+        </div>
+      </div>
 
       <ConfirmModal
         isOpen={Boolean(pendingDeleteNews)}

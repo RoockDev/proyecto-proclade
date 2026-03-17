@@ -121,7 +121,7 @@ export const NewsForm = ({
                   value={formData.excerpt}
                   onChange={(event) => onFieldChange('excerpt', event.target.value)}
                   placeholder="Resumen breve de al menos 40 caracteres"
-                  rows={3}
+                  rows={2}
                   required
                 />
               </label>
@@ -132,7 +132,7 @@ export const NewsForm = ({
                   value={formData.content}
                   onChange={(event) => onFieldChange('content', event.target.value)}
                   placeholder="Contenido completo de la noticia"
-                  rows={7}
+                  rows={5}
                   required
                 />
               </label>
