@@ -1,22 +1,23 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { static as serveStatic } from 'express';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const uploadsDirectory = join(process.cwd(), 'uploads');
 
   if (!existsSync(uploadsDirectory)) {
     mkdirSync(uploadsDirectory, { recursive: true });
   }
 
-  app.use('/uploads', serveStatic(uploadsDirectory));
-
+  app.useStaticAssets(uploadsDirectory, {
+    prefix: '/uploads',
+  });
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

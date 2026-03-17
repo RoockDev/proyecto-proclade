@@ -14,6 +14,12 @@ enum NewsStatus {
   PUBLISHED
 }
 
+enum SuperheroStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
 model User {
   id                       Int       @id @default(autoincrement())
   email                    String    @unique
@@ -28,6 +34,7 @@ model User {
   updatedAt                DateTime  @updatedAt
   roles                    Role[]    @relation("UserRoles")
   createdNews              News[]
+  createdSuperheroes       Superhero[]
 }
 
 
@@ -52,6 +59,24 @@ model News {
   deletedAt   DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id])
+}
+
+model Superhero {
+  id          Int             @id @default(autoincrement())
+  name        String
+  slug        String          @unique
+  description String          @db.Text
+  quote       String?
+  country     String?
+  imageUrl    String?
+  sortOrder   Int             @default(0)
+  status      SuperheroStatus @default(DRAFT)
+  createdById Int
+  deletedAt   DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   createdBy User @relation(fields: [createdById], references: [id])
 }

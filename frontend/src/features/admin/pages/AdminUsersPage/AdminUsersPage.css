@@ -3,3 +3,36 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
+.users-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
+}
+
+.users-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.users-pagination__controls button {
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.users-pagination__controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.users-pagination__controls span {
+  min-width: 80px;
+  text-align: center;
+}

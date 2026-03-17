@@ -1,4 +1,5 @@
-import { type FormEvent, useCallback, useRef, useState } from 'react';
+﻿import type { FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AxiosError } from 'axios';
 import { UsersForm } from '../../components/users/UsersForm/UsersForm';
 import { UsersTable } from '../../components/users/UsersTable/UsersTable';
@@ -20,6 +21,8 @@ const initialFormState = {
   surname: '',
   email: '',
   roles: 'ADMIN',
+  password: '',
+  confirmPassword: '',
 };
 
 export const AdminUsersPage = () => {
@@ -42,6 +45,24 @@ export const AdminUsersPage = () => {
     viewFilter,
     setViewFilter,
   } = useUsersList({ onError: handleUsersError });
+
+  const rowsPerPage = 7;
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage));
+  const paginatedUsers = useMemo(
+    () => filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredUsers, page, rowsPerPage],
+  );
+
+  useEffect(() => {
+    setPage(0);
+  }, [filteredUsers.length, search, viewFilter]);
+
+  useEffect(() => {
+    if (page >= totalPages) {
+      setPage(totalPages - 1);
+    }
+  }, [page, totalPages]);
 
   const normalizeRoles = (value: string) =>
     value
@@ -66,9 +87,21 @@ export const AdminUsersPage = () => {
     const trimmedName = formData.name.trim();
     const trimmedSurname = formData.surname.trim();
     const trimmedEmail = formData.email.trim();
+    const trimmedPassword = formData.password.trim();
+    const trimmedConfirm = formData.confirmPassword.trim();
 
     if (!trimmedName || !trimmedSurname || !trimmedEmail) {
       setFeedback('Completa nombre, apellido y email.');
+      return;
+    }
+
+    if (formMode === 'create' && !trimmedPassword) {
+      setFeedback('Introduce una contraseña para el usuario.');
+      return;
+    }
+
+    if (trimmedPassword && trimmedPassword !== trimmedConfirm) {
+      setFeedback('Las contraseñas no coinciden.');
       return;
     }
 
@@ -90,7 +123,7 @@ export const AdminUsersPage = () => {
               surname: trimmedSurname,
               email: trimmedEmail,
               roles,
-              password: 'ChangeMe123!',
+              password: trimmedPassword,
             })
           : await updateUser({
               id: userToUpdate!.id,
@@ -98,10 +131,11 @@ export const AdminUsersPage = () => {
               surname: trimmedSurname,
               email: trimmedEmail,
               roles,
+              ...(trimmedPassword ? { password: trimmedPassword } : {}),
             });
 
       if (response.success) {
-        setFeedback(formMode === 'create' ? 'Usuario creado con éxito.' : 'Usuario actualizado.');
+        setFeedback(formMode === 'create' ? 'Usuario creado con Éxito.' : 'Usuario actualizado.');
         setFormData(initialFormState);
         setFormMode('create');
         setSelectedUser(null);
@@ -130,6 +164,8 @@ export const AdminUsersPage = () => {
       surname: user.surname,
       email: user.email,
       roles: user.roles.length ? user.roles[0] : 'USER',
+      password: '',
+      confirmPassword: '',
     });
     setFeedback(null);
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -229,11 +265,39 @@ export const AdminUsersPage = () => {
       />
 
       <UsersTable
-        users={filteredUsers}
+        users={paginatedUsers}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onReactivate={requestReactivate}
       />
+
+      <div className="users-pagination">
+        <div className="users-pagination__info">
+          Mostrando {filteredUsers.length === 0 ? 0 : page * rowsPerPage + 1}-
+          {Math.min(filteredUsers.length, (page + 1) * rowsPerPage)} de {filteredUsers.length}
+        </div>
+        <div className="users-pagination__controls">
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.max(0, prev - 1))}
+            disabled={page === 0}
+            aria-label="Página anterior"
+          >
+            ←
+          </button>
+          <span>
+            {page + 1} de {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
+            disabled={page >= totalPages - 1}
+            aria-label="Página siguiente"
+          >
+            →
+          </button>
+        </div>
+      </div>
 
       <ConfirmModal
         isOpen={Boolean(reactivateConfirmation.pendingUser)}
@@ -241,7 +305,7 @@ export const AdminUsersPage = () => {
         description={
           reactivateConfirmation.pendingUser ? (
             <>
-              ¿Estás seguro de que quieres reactivar a{' '}
+              Â¿EstÃ¡s seguro de que quieres reactivar a{' '}
               <strong>
                 {reactivateConfirmation.pendingUser.name} {reactivateConfirmation.pendingUser.surname}
               </strong>
@@ -249,7 +313,7 @@ export const AdminUsersPage = () => {
             </>
           ) : undefined
         }
-        confirmLabel="Sí, reactivar"
+        confirmLabel="SÃ­, reactivar"
         cancelLabel="Cancelar"
         onConfirm={() => reactivateConfirmation.confirm(handleReactivate)}
         onCancel={reactivateConfirmation.cancelConfirmation}
@@ -262,15 +326,15 @@ export const AdminUsersPage = () => {
         description={
           deleteConfirmation.pendingUser ? (
             <>
-              ¿Quieres eliminar al{' '}
+              Â¿Quieres eliminar al{' '}
               <strong>
                 {deleteConfirmation.pendingUser.name} {deleteConfirmation.pendingUser.surname}
               </strong>
-              ? Esta acción marcará el usuario como eliminado.
+              ? Esta acciÃ³n marcarÃ¡ el usuario como eliminado.
             </>
           ) : undefined
         }
-        confirmLabel="Sí, eliminar"
+        confirmLabel="SÃ­, eliminar"
         cancelLabel="Cancelar"
         onConfirm={() => deleteConfirmation.confirm(confirmDelete)}
         onCancel={deleteConfirmation.cancelConfirmation}
