@@ -80,3 +80,15 @@ model Superhero {
 
   createdBy User @relation(fields: [createdById], references: [id])
 }
+
+model Region {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  address   String
+  email     String   @unique
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([deletedAt])
+}
