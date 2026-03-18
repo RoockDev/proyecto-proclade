@@ -1,0 +1,13 @@
+.regions-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.regions-grid--empty {
+  border: 1px dashed rgba(13, 59, 115, 0.28);
+  border-radius: 0.9rem;
+  padding: 1.25rem;
+  color: #4a6079;
+  background: rgba(255, 255, 255, 0.65);
+}

@@ -1,0 +1,78 @@
+.region-card {
+  background: #fff;
+  border: 1px solid rgba(18, 36, 71, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgba(15, 52, 110, 0.09);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.region-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.region-card__header h3 {
+  margin: 0;
+  color: #122447;
+  font-size: 1.05rem;
+}
+
+.region-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(13, 59, 115, 0.12);
+  color: #0d3b73;
+  font-size: 0.77rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+}
+
+.region-card__details {
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.region-card__details dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #617084;
+}
+
+.region-card__details dd {
+  margin: 0.15rem 0 0;
+  color: #23384f;
+  word-break: break-word;
+}
+
+.region-card__actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+.region-card__action {
+  border: none;
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.region-card__action--edit {
+  background: rgba(13, 59, 115, 0.12);
+  color: #0d3b73;
+}
+
+.region-card__action--delete {
+  background: rgba(138, 31, 47, 0.14);
+  color: #8a1f2f;
+}
