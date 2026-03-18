@@ -5,6 +5,7 @@ import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/Rese
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
 import { AdminDashboardPage } from '../features/admin/pages/AdminDashboardPage/AdminDashboardPage';
 import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPage';
+import { AdminRegionsPage } from '../features/admin/pages/AdminRegionsPage/AdminRegionsPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
 import { AdminSectionPage } from '../features/admin/pages/AdminSectionPage/AdminSectionPage';
 import { PublicLayout } from './layouts/PublicLayout';
@@ -87,7 +88,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'delegaciones',
-        element: <AdminSectionPage section="Delegaciones" />,
+        element: <AdminRegionsPage />,
       },
       {
         path: 'usuarios',

@@ -1,0 +1,127 @@
+.region-form-card {
+  background: #fff;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(215, 187, 152, 0.6);
+  padding: 1rem;
+  box-shadow: 0 18px 35px rgba(15, 52, 110, 0.12);
+}
+
+.region-form-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+}
+
+.region-form-card__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: #6b5d4c;
+  text-transform: uppercase;
+}
+
+.region-form-card__header h2 {
+  margin: 0.3rem 0 0;
+  font-size: 1.25rem;
+  color: var(--brand-dark);
+}
+
+.region-form-card__close {
+  border-radius: 999px;
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--brand-secondary);
+  padding: 0.38rem 0.8rem;
+  font-weight: 600;
+}
+
+.region-form-card__feedback {
+  margin: 0 0 0.9rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 225, 181, 0.5);
+  color: #6b5d4c;
+  font-weight: 600;
+}
+
+.region-form-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.region-form-card__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.83rem;
+  color: #53443a;
+  font-weight: 600;
+}
+
+.region-form-card__form input {
+  border: 1px solid rgba(207, 207, 207, 0.9);
+  border-radius: 0.72rem;
+  padding: 0.58rem 0.8rem;
+  font-size: 0.93rem;
+  font-family: inherit;
+  background: #fff;
+}
+
+.region-form-card__form input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(107, 170, 117, 0.2);
+}
+
+.region-form-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.region-form-card__primary {
+  min-width: 170px;
+}
+
+.region-form-card__secondary {
+  min-width: 140px;
+}
+
+.region-form-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4vh;
+  z-index: 999;
+}
+
+.region-form-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 52, 93, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+.region-form-modal__content {
+  position: relative;
+  width: min(560px, 90vw);
+  margin: 0 1rem;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .region-form-card__actions {
+    flex-direction: column;
+  }
+
+  .region-form-modal__content {
+    width: min(560px, 94vw);
+    margin: 0 0.5rem;
+  }
+}

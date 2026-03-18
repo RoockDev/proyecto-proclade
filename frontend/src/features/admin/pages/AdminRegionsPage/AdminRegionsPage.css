@@ -1,0 +1,92 @@
+.admin-regions-page {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.admin-regions-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.admin-regions-page__eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #51657e;
+}
+
+.admin-regions-page__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  color: #122447;
+}
+
+.admin-regions-page__description {
+  margin: 0;
+  max-width: 60ch;
+  color: #3f4f63;
+}
+
+.admin-regions-page__feedback {
+  margin: 0;
+  color: #5f3d00;
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.admin-regions-page__state {
+  margin: 0;
+  color: #3f4f63;
+  font-weight: 600;
+}
+
+.regions-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
+}
+
+.regions-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.regions-pagination__controls button {
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.regions-pagination__controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.regions-pagination__controls span {
+  min-width: 80px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .regions-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+}

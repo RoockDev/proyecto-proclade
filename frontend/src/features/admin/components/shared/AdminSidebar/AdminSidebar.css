@@ -2,15 +2,16 @@
   width: 260px;
   background: linear-gradient(
     180deg,
-    var(--brand-primary) 0%,
-    #0a78c2 55%,
-    var(--brand-secondary) 100%
+    #6baa75 0%,
+    #4a9960 48%,
+    #2f7f6b 100%
   );
   color: var(--brand-white);
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08);
 }
 
 .admin-sidebar__brand {
