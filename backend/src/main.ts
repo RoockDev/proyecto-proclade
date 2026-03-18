@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { existsSync, mkdirSync } from 'node:fs';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
@@ -8,7 +9,13 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+  const uploadsDirectory = join(process.cwd(), 'uploads');
+
+  if (!existsSync(uploadsDirectory)) {
+    mkdirSync(uploadsDirectory, { recursive: true });
+  }
+
+  app.useStaticAssets(uploadsDirectory, {
     prefix: '/uploads',
   });
   app.enableCors({

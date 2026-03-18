@@ -4,6 +4,7 @@ import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/ResetPasswordPage';
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
 import { AdminDashboardPage } from '../features/admin/pages/AdminDashboardPage/AdminDashboardPage';
+import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
 import { AdminSectionPage } from '../features/admin/pages/AdminSectionPage/AdminSectionPage';
 import { PublicLayout } from './layouts/PublicLayout';
@@ -66,7 +67,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'noticias',
-        element: <AdminSectionPage section="Noticias" />,
+        element: <AdminNewsPage />,
       },
       {
         path: 'retos',

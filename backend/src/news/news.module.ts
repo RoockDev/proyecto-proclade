@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { AdminNewsController } from './admin-news.controller';
+import { NewsImageStorageService } from './news-image-storage.service';
 import { NewsController } from './news.controller';
 import { NewsService } from './news.service';
 
 @Module({
   imports: [PrismaModule, AuthModule],
   controllers: [NewsController, AdminNewsController],
-  providers: [NewsService],
+  providers: [NewsService, NewsImageStorageService],
 })
 export class NewsModule {}
