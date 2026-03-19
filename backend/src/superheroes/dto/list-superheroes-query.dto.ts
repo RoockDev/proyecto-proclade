@@ -1,13 +1,6 @@
 import { Type } from 'class-transformer';
 import { SuperheroStatus } from 'generated/prisma/client';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class ListSuperheroesQueryDto {
   @IsOptional()

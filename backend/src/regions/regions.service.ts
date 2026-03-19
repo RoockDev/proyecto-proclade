@@ -18,7 +18,9 @@ type RegionWithBooksCount = Region & {
 export class RegionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllForAdmin(query: ListRegionsQueryDto): Promise<RegionWithBooksCount[]> {
+  async findAllForAdmin(
+    query: ListRegionsQueryDto,
+  ): Promise<RegionWithBooksCount[]> {
     const where: Prisma.RegionWhereInput = {
       deletedAt: null,
     };
@@ -46,12 +48,27 @@ export class RegionsService {
       orderBy: {
         name: 'asc',
       },
+      include: {
+        _count: {
+          select: { humanBooks: { where: { deletedAt: null } } },
+        },
+      },
     });
 
     return regions.map((region) => ({
       ...region,
-      booksCount: 0,
+      booksCount: region._count.humanBooks,
     }));
+  }
+
+  async findOptions() {
+    const regions = await this.prisma.region.findMany({
+      where: { deletedAt: null },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true },
+    });
+
+    return regions;
   }
 
   async create(createRegionDto: CreateRegionDto) {

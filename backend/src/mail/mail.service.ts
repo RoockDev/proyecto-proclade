@@ -27,10 +27,7 @@ export class MailService {
     });
   }
 
-  async sendResetPasswordEmail(
-    email: string,
-    token: string,
-  ): Promise<void> {
+  async sendResetPasswordEmail(email: string, token: string): Promise<void> {
     const resetLink = `${this.frontendUrl}/auth/reset-password?token=${token}`;
 
     const mailOptions = {
