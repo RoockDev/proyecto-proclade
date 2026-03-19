@@ -21,14 +21,19 @@ const handleResponse = <T>(response: AxiosResponse<ApiResponse<T>>) => response.
 const buildFormData = (payload: Partial<CreateSuperheroPayload>) => {
   const formData = new FormData();
 
-  if (payload.name) formData.append('name', payload.name);
-  if (payload.description) formData.append('description', payload.description);
-  if (payload.quote) formData.append('quote', payload.quote);
-  if (payload.country) formData.append('country', payload.country);
-  if (payload.status) formData.append('status', payload.status);
-  if (typeof payload.sortOrder === 'number') {
-    formData.append('sortOrder', payload.sortOrder.toString());
-  }
+  const appendIfDefined = (key: string, value: string | number | undefined) => {
+    if (value === undefined) {
+      return;
+    }
+    formData.append(key, String(value));
+  };
+
+  appendIfDefined('name', payload.name);
+  appendIfDefined('description', payload.description);
+  appendIfDefined('quote', payload.quote);
+  appendIfDefined('country', payload.country);
+  appendIfDefined('status', payload.status);
+  appendIfDefined('sortOrder', payload.sortOrder);
 
   if (payload.image) {
     formData.append('image', payload.image);
@@ -37,12 +42,10 @@ const buildFormData = (payload: Partial<CreateSuperheroPayload>) => {
   return formData;
 };
 
-const multipartHeaders = () => {
-  const headers = authHeaders();
-  const { 'Content-Type': _contentType, ...rest } = headers;
-  void _contentType;
-  return rest;
-};
+const multipartHeaders = () => ({
+  ...authHeaders(),
+  'Content-Type': 'multipart/form-data',
+});
 
 export const listAdminSuperheroes = async (params: AdminSuperheroesListParams = {}) => {
   const response = await api.get<ApiResponse<AdminSuperheroesListData>>('/admin/superheroes', {
