@@ -9,6 +9,7 @@ import {
   MaxLength,
   Min,
   MinLength,
+  Allow,
 } from 'class-validator';
 
 export class CreateSuperheroDto {
@@ -46,4 +47,8 @@ export class CreateSuperheroDto {
   @IsOptional()
   @IsString({ message: 'La imagen debe ser un texto válido' })
   imageUrl?: string;
+
+  @IsOptional()
+  @Allow()
+  image?: unknown;
 }
