@@ -1,0 +1,12 @@
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.challenges-grid__empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 3rem 1rem;
+  font-size: 0.95rem;
+}
