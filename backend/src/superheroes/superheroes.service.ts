@@ -110,6 +110,12 @@ export class SuperheroesService {
             mode: 'insensitive',
           },
         },
+        {
+          country: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
       ];
     }
 
