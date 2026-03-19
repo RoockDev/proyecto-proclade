@@ -67,9 +67,7 @@ const superheroFileFilter = (_req: Request, file, cb) => {
   }
 
   cb(
-    new BadRequestException(
-      'Solo se permiten imágenes PNG, JPEG o WEBP',
-    ),
+    new BadRequestException('Solo se permiten imágenes PNG, JPEG o WEBP'),
     false,
   );
 };

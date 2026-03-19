@@ -30,6 +30,11 @@ export class AdminRegionsController {
     return this.regionsService.findAllForAdmin(query);
   }
 
+  @Get('options')
+  findOptions() {
+    return this.regionsService.findOptions();
+  }
+
   @Post()
   create(@Body() createRegionDto: CreateRegionDto) {
     return this.regionsService.create(createRegionDto);

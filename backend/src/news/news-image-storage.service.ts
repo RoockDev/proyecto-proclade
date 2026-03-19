@@ -30,7 +30,9 @@ const ALLOWED_IMAGE_MIME_TYPES = new Set([
 
 @Injectable()
 export class NewsImageStorageService {
-  async saveNewsImage(file: UploadedNewsImageFile | undefined): Promise<string> {
+  async saveNewsImage(
+    file: UploadedNewsImageFile | undefined,
+  ): Promise<string> {
     if (!file) {
       throw new BadRequestException('Debes adjuntar una imagen');
     }
