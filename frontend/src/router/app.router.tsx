@@ -4,6 +4,7 @@ import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/ResetPasswordPage';
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
 import { AdminDashboardPage } from '../features/admin/pages/AdminDashboardPage/AdminDashboardPage';
+import { AdminHumanBooksPage } from '../features/admin/pages/AdminHumanBooksPage/AdminHumanBooksPage';
 import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPage';
 import { AdminRegionsPage } from '../features/admin/pages/AdminRegionsPage/AdminRegionsPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
@@ -77,7 +78,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'libros',
-        element: <AdminSectionPage section="Libros Humanos" />,
+        element: <AdminHumanBooksPage />,
       },
       {
         path: 'superheroes',

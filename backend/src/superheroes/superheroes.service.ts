@@ -26,7 +26,9 @@ type SuperheroListData = {
 export class SuperheroesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllPublished(query: ListSuperheroesQueryDto): Promise<SuperheroListData> {
+  async findAllPublished(
+    query: ListSuperheroesQueryDto,
+  ): Promise<SuperheroListData> {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 8;
     const skip = (page - 1) * pageSize;
@@ -39,10 +41,7 @@ export class SuperheroesService {
     const [items, total] = await Promise.all([
       this.prisma.superhero.findMany({
         where,
-        orderBy: [
-          { sortOrder: 'asc' },
-          { createdAt: 'desc' },
-        ],
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
         skip,
         take: pageSize,
       }),
@@ -76,7 +75,9 @@ export class SuperheroesService {
     return superhero;
   }
 
-  async findAllForAdmin(query: ListSuperheroesQueryDto): Promise<SuperheroListData> {
+  async findAllForAdmin(
+    query: ListSuperheroesQueryDto,
+  ): Promise<SuperheroListData> {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 10;
     const skip = (page - 1) * pageSize;
@@ -211,8 +212,7 @@ export class SuperheroesService {
       updateData.status = updateSuperheroDto.status;
     }
 
-    const finalImageUrl =
-      imageUrl ?? updateSuperheroDto.imageUrl ?? undefined;
+    const finalImageUrl = imageUrl ?? updateSuperheroDto.imageUrl ?? undefined;
 
     if (finalImageUrl !== undefined) {
       updateData.imageUrl = finalImageUrl;
