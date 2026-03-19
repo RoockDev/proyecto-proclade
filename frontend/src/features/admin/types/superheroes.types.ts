@@ -28,6 +28,7 @@ export type AdminSuperheroesListParams = {
   pageSize?: number;
   search?: string;
   status?: SuperheroStatus;
+  deleted?: boolean;
 };
 
 export type CreateSuperheroPayload = {
