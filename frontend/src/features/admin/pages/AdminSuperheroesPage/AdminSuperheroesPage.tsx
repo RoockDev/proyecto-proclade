@@ -14,6 +14,7 @@ import {
 import { useAdminSuperheroesList } from '../../hooks/useAdminSuperheroesList';
 import type { AdminSuperheroRow, SuperheroStatus } from '../../types/superheroes.types';
 import { SuperheroFormModal } from '../../components/superheroes/SuperheroFormModal/SuperheroFormModal';
+import { resolveHeroImageUrl } from '../../utils/resolveHeroImageUrl';
 import './AdminSuperheroesPage.css';
 
 type NotificationType = 'success' | 'error';
@@ -139,7 +140,7 @@ export const AdminSuperheroesPage = () => {
       sortOrder: hero.sortOrder.toString(),
       status: hero.status,
     });
-    setImagePreview(hero.imageUrl ?? null);
+    setImagePreview(resolveHeroImageUrl(hero.imageUrl ?? null) ?? null);
     setIsFormOpen(true);
   };
 
@@ -174,7 +175,7 @@ export const AdminSuperheroesPage = () => {
       setGeneratedPreviewUrl(previewUrl);
       setImagePreview(previewUrl);
     } else {
-      setImagePreview(selectedHero?.imageUrl ?? null);
+      setImagePreview(resolveHeroImageUrl(selectedHero?.imageUrl ?? null) ?? null);
     }
   };
 
@@ -227,6 +228,7 @@ export const AdminSuperheroesPage = () => {
     } catch (error) {
       console.error('Error al guardar superhéroe', error);
       const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Backend response:', axiosError.response?.data);
       const errorMessage =
         axiosError.response?.data?.message ?? 'No se pudo guardar el superhéroe.';
       showNotification(errorMessage, 'error');
