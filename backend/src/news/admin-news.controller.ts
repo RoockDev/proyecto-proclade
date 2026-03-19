@@ -8,15 +8,24 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt_strategy/jwt-auth.guard';
 import { Roles } from '../auth/roles/roles.decorator';
 import { RolesGuard } from '../auth/roles/roles.guard';
 import { RoleName } from '../common/types/role-name.enum';
 import { CreateNewsDto } from './dto/create-news.dto';
+import {
+  NewsImageStorageService,
+  type UploadedNewsImageFile,
+} from './news-image-storage.service';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { NewsService } from './news.service';
+
+const MAX_NEWS_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 type RequestWithUser = {
   user: {
@@ -28,7 +37,10 @@ type RequestWithUser = {
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(RoleName.ADMIN)
 export class AdminNewsController {
-  constructor(private readonly newsService: NewsService) {}
+  constructor(
+    private readonly newsService: NewsService,
+    private readonly newsImageStorageService: NewsImageStorageService,
+  ) {}
 
   @Get()
   findAllForAdmin() {
@@ -41,6 +53,23 @@ export class AdminNewsController {
     @Req() request: RequestWithUser,
   ) {
     return this.newsService.create(createNewsDto, request.user.id);
+  }
+
+  @Post('upload-image')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: MAX_NEWS_IMAGE_SIZE_BYTES,
+      },
+    }),
+  )
+  async uploadImage(@UploadedFile() file: UploadedNewsImageFile) {
+    const imageUrl = await this.newsImageStorageService.saveNewsImage(file);
+
+    return {
+      message: 'Imagen subida correctamente',
+      imageUrl,
+    };
   }
 
   @Patch(':id')
