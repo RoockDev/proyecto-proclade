@@ -81,9 +81,16 @@ export class SuperheroesService {
     const pageSize = query.pageSize ?? 10;
     const skip = (page - 1) * pageSize;
 
-    const where: Prisma.SuperheroWhereInput = {
-      deletedAt: null,
-    };
+    const where: Prisma.SuperheroWhereInput = {};
+    const deletedFlag = query.deleted === true;
+
+    if (deletedFlag) {
+      where.deletedAt = {
+        not: null,
+      };
+    } else {
+      where.deletedAt = null;
+    }
 
     if (query.status) {
       where.status = query.status;
@@ -237,6 +244,30 @@ export class SuperheroesService {
     };
   }
 
+  async restore(id: number) {
+    const superhero = await this.findAnyById(id);
+
+    if (superhero.deletedAt === null) {
+      return {
+        message: 'Superhéroe ya está activo',
+        superhero,
+      };
+    }
+
+    const restored = await this.prisma.superhero.update({
+      where: { id },
+      data: {
+        deletedAt: null,
+        status: SuperheroStatus.DRAFT,
+      },
+    });
+
+    return {
+      message: 'Superhéroe reactivado correctamente',
+      superhero: restored,
+    };
+  }
+
   async remove(id: number) {
     await this.findActiveById(id);
 
@@ -257,6 +288,20 @@ export class SuperheroesService {
       where: {
         id,
         deletedAt: null,
+      },
+    });
+
+    if (!superhero) {
+      throw new NotFoundException(`Superhéroe con id ${id} no encontrado`);
+    }
+
+    return superhero;
+  }
+
+  private async findAnyById(id: number): Promise<Superhero> {
+    const superhero = await this.prisma.superhero.findUnique({
+      where: {
+        id,
       },
     });
 

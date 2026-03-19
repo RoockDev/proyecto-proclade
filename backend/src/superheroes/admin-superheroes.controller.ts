@@ -135,6 +135,11 @@ export class AdminSuperheroesController {
     return this.superheroesService.updateStatus(id, updateStatusDto);
   }
 
+  @Patch(':id/restore')
+  restore(@Param('id', ParseIntPipe) id: number) {
+    return this.superheroesService.restore(id);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.superheroesService.remove(id);
