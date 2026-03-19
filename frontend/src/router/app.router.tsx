@@ -9,6 +9,7 @@ import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPa
 import { AdminRegionsPage } from '../features/admin/pages/AdminRegionsPage/AdminRegionsPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
 import { AdminSectionPage } from '../features/admin/pages/AdminSectionPage/AdminSectionPage';
+import { AdminSuperheroesPage } from '../features/admin/pages/AdminSuperheroesPage/AdminSuperheroesPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { SuperheroesPage } from './pages/SuperheroesPage';
@@ -80,8 +81,8 @@ export const appRouter = createBrowserRouter([
         element: <AdminHumanBooksPage />,
       },
       {
-        path: 'heroes',
-        element: <AdminSectionPage section="Superheroes" />,
+        path: 'superheroes',
+        element: <AdminSuperheroesPage />,
       },
       {
         path: 'superheroes-reales',

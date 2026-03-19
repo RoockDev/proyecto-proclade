@@ -13,6 +13,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -100,7 +101,14 @@ export class AdminSuperheroesController {
   @Post()
   @UseInterceptors(FileInterceptor('image', superheroUploadOptions))
   create(
-    @Body() createSuperheroDto: CreateSuperheroDto,
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    )
+    createSuperheroDto: CreateSuperheroDto,
     @Req() request: RequestWithUser,
     @UploadedFile() file?: MulterFile,
   ) {
@@ -115,7 +123,15 @@ export class AdminSuperheroesController {
   @UseInterceptors(FileInterceptor('image', superheroUploadOptions))
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSuperheroDto: UpdateSuperheroDto,
+    @Body(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: false,
+        skipMissingProperties: true,
+      }),
+    )
+    updateSuperheroDto: UpdateSuperheroDto,
     @UploadedFile() file?: MulterFile,
   ) {
     return this.superheroesService.update(
@@ -131,6 +147,11 @@ export class AdminSuperheroesController {
     @Body() updateStatusDto: UpdateSuperheroStatusDto,
   ) {
     return this.superheroesService.updateStatus(id, updateStatusDto);
+  }
+
+  @Patch(':id/restore')
+  restore(@Param('id', ParseIntPipe) id: number) {
+    return this.superheroesService.restore(id);
   }
 
   @Delete(':id')

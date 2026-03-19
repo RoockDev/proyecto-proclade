@@ -1,0 +1,134 @@
+.superheroes-table__name-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.superheroes-table__name-cell img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.superheroes-table__avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.08);
+  display: inline-block;
+}
+
+.superheroes-table__slug {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.superheroes-table__actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.superheroes-table__action {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border 0.2s ease;
+}
+
+.superheroes-table__action:hover {
+  border-color: #9ca3af;
+  background: #f3f4f6;
+}
+
+.superheroes-table__action--primary {
+  border-color: #0ea5e9;
+  color: #0ea5e9;
+}
+
+.superheroes-table__action--primary:hover {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+.superheroes-table__action--danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.superheroes-table__action--danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+.superheroes-table__action--success {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+.superheroes-table__action--success:hover {
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.superheroes-table__icon-button {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 16px;
+  background: #f5f6fb;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-primary);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  transition: transform 140ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.superheroes-table__icon-button i {
+  font-size: 1.25rem;
+}
+
+.superheroes-table__icon-button:hover,
+.superheroes-table__icon-button:focus-visible {
+  transform: translateY(-1px);
+  background: #e9ecf6;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+}
+
+.superheroes-table__icon-button--visibility {
+  color: #0ea5e9;
+}
+
+ .superheroes-table__icon-button--danger {
+   color: #ef4444;
+ }
+
+.superheroes-table__icon-button--visibility:hover {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0ea5e9;
+}
+
+.superheroes-table__icon-button--danger:hover {
+  background: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+.superheroes-table__icon-button--reactivate:hover {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0284c7;
+}
+
+.superheroes-table--deleted tbody tr {
+  background: #f8fafc;
+}
+
+.superheroes-table--deleted tbody td {
+  color: #475569;
+}

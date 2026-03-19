@@ -6,26 +6,18 @@
   box-shadow: 0 20px 40px rgba(15, 52, 110, 0.12);
 }
 
+.users-form-card__header h2 {
+  margin: 0.35rem 0;
+  font-size: clamp(1.6rem, 2.6vw, 2rem);
+  color: var(--brand-dark);
+}
+
 .users-form-card__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
-}
-
-.users-form-card__eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: #6b5d4c;
-  text-transform: uppercase;
-}
-
-.users-form-card__header h2 {
-  margin: 0.35rem 0;
-  font-size: clamp(1.6rem, 2.6vw, 2rem);
-  color: var(--brand-dark);
 }
 
 .users-form-card__close {
@@ -102,6 +94,22 @@
 
 .users-form-input-eye:hover {
   color: var(--brand-primary);
+}
+
+.users-form-card__toggle-password {
+  margin-top: 0.5rem;
+  border: none;
+  background: none;
+  color: var(--brand-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.users-form-card__toggle-password:hover {
+  color: #0d3b73;
 }
 
 .users-form-input-wrapper {

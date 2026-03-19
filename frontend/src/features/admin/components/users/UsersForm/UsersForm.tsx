@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AdminButton } from '../../shared/AdminButton/AdminButton';
 import './UsersForm.css';
 
@@ -39,6 +39,21 @@ export const UsersForm = ({
 }: UsersFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPasswordFields, setShowPasswordFields] = useState(formMode === 'create');
+  const prevShowPasswordFields = useRef(showPasswordFields);
+
+  useEffect(() => {
+    setShowPasswordFields(formMode === 'create');
+  }, [formMode]);
+
+  useEffect(() => {
+    if (!showPasswordFields && prevShowPasswordFields.current) {
+      onFieldChange('password', '');
+      onFieldChange('confirmPassword', '');
+    }
+
+    prevShowPasswordFields.current = showPasswordFields;
+  }, [showPasswordFields, onFieldChange]);
 
   if (!isOpen) {
     return null;
@@ -47,9 +62,9 @@ export const UsersForm = ({
   const baseFields: Array<keyof UsersFormData> = ['name', 'surname', 'email', 'roles'];
   const passwordFields: Array<keyof UsersFormData> = ['password', 'confirmPassword'];
   const visibleFields =
-    formMode === 'create'
+    formMode === 'create' || showPasswordFields
       ? [...baseFields, ...passwordFields]
-      : [...baseFields, ...(formData.password ? passwordFields : [])];
+      : baseFields;
 
   const getFieldLabel = (field: keyof UsersFormData) => {
     switch (field) {
@@ -92,9 +107,18 @@ export const UsersForm = ({
         <div className="users-form-card">
           <div className="users-form-card__header">
             <div>
-              <p className="users-form-card__eyebrow">Gestión de usuarios</p>
               <h2>{formMode === 'create' ? 'Crear usuario' : 'Editar usuario'}</h2>
-              <p>Completa los datos y guarda para sincronizar con el backend.</p>
+              {formMode === 'edit' && (
+                <button
+                  type="button"
+                  className="users-form-card__toggle-password"
+                  onClick={() => {
+                    setShowPasswordFields((prev) => !prev);
+                  }}
+                >
+                  {showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña'}
+                </button>
+              )}
             </div>
             <button type="button" className="users-form-card__close" onClick={onClose}>
               Cerrar

@@ -27,10 +27,30 @@
   border-color: rgba(220, 38, 38, 0.2);
 }
 
-.admin-status-badge--publicado {
-  background: rgba(0, 92, 159, 0.12);
-  color: var(--brand-primary);
-  border-color: rgba(0, 92, 159, 0.2);
+.admin-status-badge--publicado,
+.admin-status-badge--activa,
+.admin-status-badge--aprobado {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+  border-color: rgba(22, 163, 74, 0.22);
+}
+
+.admin-status-badge--draft {
+  background: rgba(55, 65, 81, 0.08);
+  color: #1e293b;
+  border-color: rgba(55, 65, 81, 0.24);
+}
+
+.admin-status-badge--hidden {
+  background: rgba(251, 191, 36, 0.12);
+  color: #92400e;
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+.admin-status-badge--borrado {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .admin-status-badge--finalizada {

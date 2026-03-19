@@ -14,15 +14,34 @@
 .admin-data-table td {
   padding: 0.95rem 1rem;
   border-bottom: 1px solid #eef2f7;
+  border-right: 1px solid #eef2f7;
   text-align: left;
+}
+
+.admin-data-table th:last-child,
+.admin-data-table td:last-child {
+  border-right: none;
 }
 
 .admin-data-table th {
   font-weight: 600;
   background: #f9fafb;
+  text-align: center;
+}
+
+.admin-data-table td {
+  text-align: center;
 }
 
 .admin-data-table__empty {
   text-align: center;
   color: #6b7280;
+}
+
+.admin-data-table__actions-column,
+.admin-data-table__actions-cell {
+  min-width: 200px;
+  width: 200px;
+  max-width: 200px;
+  white-space: nowrap;
 }
