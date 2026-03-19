@@ -7,38 +7,66 @@
 }
 
 .users-table__actions {
-  display: inline-flex;
+  display: flex;
   gap: 0.45rem;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  padding-inline: 0.35rem;
 }
 
-.users-table__actions button {
-  border: none;
-  background: rgba(15, 52, 110, 0.06);
-  color: var(--brand-secondary);
-  padding: 0.45rem 0.75rem;
-  border-radius: 0.8rem;
-  font-weight: 600;
+.users-table td:last-child {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
 }
 
 .users-table__icon-button {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 16px;
+  background: #f5f6fb;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  padding: 0;
-  background: rgba(15, 52, 110, 0.06);
-  border-radius: 999px;
-  transition: background 0.2s ease, color 0.2s ease;
+  color: var(--brand-primary);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  transition: transform 140ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .users-table__icon-button i {
   font-size: 1.1rem;
 }
 
+.users-table__icon-button:hover,
+.users-table__icon-button:focus-visible {
+  transform: translateY(-1px);
+  background: #e9ecf6;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+}
+
+.users-table__icon-button--visibility {
+  color: #0ea5e9;
+}
+
+.users-table__icon-button--visibility:hover {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0ea5e9;
+}
+
+.users-table__icon-button--tool {
+  color: #16a34a;
+}
+
 .users-table__icon-button--tool:hover {
-  background: rgba(15, 59, 115, 0.12);
-  color: var(--brand-primary);
+  background: rgba(16, 163, 74, 0.12);
+  color: #15803d;
+}
+
+.users-table__icon-button--delete {
+  color: #ef4444;
 }
 
 .users-table__icon-button--delete:hover {

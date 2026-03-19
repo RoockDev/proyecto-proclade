@@ -6,6 +6,7 @@ import { AdminLayout } from '../features/admin/components/layout/AdminLayout/Adm
 import { AdminDashboardPage } from '../features/admin/pages/AdminDashboardPage/AdminDashboardPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
 import { AdminSectionPage } from '../features/admin/pages/AdminSectionPage/AdminSectionPage';
+import { AdminSuperheroesPage } from '../features/admin/pages/AdminSuperheroesPage/AdminSuperheroesPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { SuperheroesPage } from './pages/SuperheroesPage';
@@ -77,8 +78,8 @@ export const appRouter = createBrowserRouter([
         element: <AdminSectionPage section="Libros Humanos" />,
       },
       {
-        path: 'heroes',
-        element: <AdminSectionPage section="Superheroes" />,
+        path: 'superheroes',
+        element: <AdminSuperheroesPage />,
       },
       {
         path: 'superheroes-reales',

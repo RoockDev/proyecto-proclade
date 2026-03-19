@@ -18,7 +18,10 @@ export type AdminStatusCode =
   | 'RECHAZADO'
   | 'PUBLICADO'
   | 'ACTIVA'
-  | 'FINALIZADA';
+  | 'FINALIZADA'
+  | 'DRAFT'
+  | 'HIDDEN'
+  | 'BORRADO';
 
 export type AdminListItemStatus = Extract<
   AdminStatusCode,

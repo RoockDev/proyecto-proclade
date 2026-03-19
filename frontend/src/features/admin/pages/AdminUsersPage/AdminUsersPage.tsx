@@ -16,6 +16,12 @@ import { useUserConfirmation } from '../../hooks/useUserConfirmation';
 import { useUsersList } from '../../hooks/useUsersList';
 import './AdminUsersPage.css';
 
+type NotificationType = 'success' | 'error';
+type NotificationState = {
+  message: string;
+  type: NotificationType;
+};
+
 const initialFormState = {
   name: '',
   surname: '',
@@ -33,9 +39,19 @@ export const AdminUsersPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const formRef = useRef<HTMLDivElement | null>(null);
+  const [notification, setNotification] = useState<NotificationState | null>(null);
+  const showNotification = useCallback((message: string, type: NotificationType) => {
+    setNotification({ message, type });
+  }, []);
   const reactivateConfirmation = useUserConfirmation();
   const deleteConfirmation = useUserConfirmation();
-  const handleUsersError = useCallback((message: string) => setFeedback(message), []);
+  const handleUsersError = useCallback(
+    (message: string) => {
+      setFeedback(message);
+      showNotification(message, 'error');
+    },
+    [showNotification],
+  );
 
   const {
     filteredUsers,
@@ -46,7 +62,7 @@ export const AdminUsersPage = () => {
     setViewFilter,
   } = useUsersList({ onError: handleUsersError });
 
-  const rowsPerPage = 7;
+  const rowsPerPage = 6;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage));
   const paginatedUsers = useMemo(
@@ -57,6 +73,20 @@ export const AdminUsersPage = () => {
   useEffect(() => {
     setPage(0);
   }, [filteredUsers.length, search, viewFilter]);
+
+  useEffect(() => {
+    if (!notification) {
+      return undefined;
+    }
+
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [notification]);
 
   useEffect(() => {
     if (page >= totalPages) {
@@ -116,44 +146,55 @@ export const AdminUsersPage = () => {
     setFeedback(null);
 
     try {
-      const response =
-        formMode === 'create'
-          ? await createUser({
-              name: trimmedName,
-              surname: trimmedSurname,
-              email: trimmedEmail,
-              roles,
-              password: trimmedPassword,
-            })
-          : await updateUser({
-              id: userToUpdate!.id,
-              name: trimmedName,
-              surname: trimmedSurname,
-              email: trimmedEmail,
-              roles,
-              ...(trimmedPassword ? { password: trimmedPassword } : {}),
-            });
+        const response =
+          formMode === 'create'
+            ? await createUser({
+                name: trimmedName,
+                surname: trimmedSurname,
+                email: trimmedEmail,
+                roles,
+                password: trimmedPassword,
+              })
+            : await updateUser({
+                id: userToUpdate!.id,
+                name: trimmedName,
+                surname: trimmedSurname,
+                email: trimmedEmail,
+                roles,
+                ...(trimmedPassword ? { password: trimmedPassword } : {}),
+             });
 
-      if (response.success) {
-        setFeedback(formMode === 'create' ? 'Usuario creado con Éxito.' : 'Usuario actualizado.');
-        setFormData(initialFormState);
-        setFormMode('create');
-        setSelectedUser(null);
-        await refreshUsers();
-      } else {
-        setFeedback(response.message || 'No se pudo guardar el usuario.');
+        if (response.success) {
+          const successMessage =
+            formMode === 'create' ? 'Usuario creado con éxito.' : 'Usuario actualizado con éxito.';
+          setFeedback(successMessage);
+          showNotification(successMessage, 'success');
+          setFormData(initialFormState);
+          setFormMode('create');
+          setSelectedUser(null);
+          setIsFormOpen(false);
+          await refreshUsers();
+        } else {
+          const errorMessage = response.message || 'No se pudo guardar el usuario.';
+          setFeedback(errorMessage);
+          showNotification(errorMessage, 'error');
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 409) {
+          const conflictMsg =
+            'Ya existe un usuario con ese email. Reactiva el existente o usa otro email.';
+          setFeedback(conflictMsg);
+          showNotification(conflictMsg, 'error');
+        } else {
+          console.error('Error al guardar usuario', error);
+          const genericError = 'Error al intentar guardar el usuario.';
+          setFeedback(genericError);
+          showNotification(genericError, 'error');
+        }
+      } finally {
+        setIsProcessing(false);
       }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response?.status === 409) {
-        setFeedback('Ya existe un usuario con ese email. Reactiva el existente o usa otro email.');
-      } else {
-        console.error('Error al guardar usuario', error);
-        setFeedback('Error al intentar guardar el usuario.');
-      }
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
   const handleEdit = (user: AdminUser) => {
@@ -182,14 +223,20 @@ export const AdminUsersPage = () => {
     try {
       const response = await deleteUser(user.id);
       if (response.success) {
-        setFeedback('Usuario eliminado.');
+        const deleteMessage = 'Usuario eliminado.';
+        setFeedback(deleteMessage);
+        showNotification(deleteMessage, 'success');
         await refreshUsers();
       } else {
-        setFeedback(response.message || 'No se pudo eliminar el usuario.');
+        const deleteError = response.message || 'No se pudo eliminar el usuario.';
+        setFeedback(deleteError);
+        showNotification(deleteError, 'error');
       }
     } catch (error) {
       console.error('Error al eliminar usuario', error);
-      setFeedback('No se pudo eliminar el usuario.');
+      const deleteError = 'No se pudo eliminar el usuario.';
+      setFeedback(deleteError);
+      showNotification(deleteError, 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -201,14 +248,20 @@ export const AdminUsersPage = () => {
     try {
       const response = await reactivateUser(user.id);
       if (response.success) {
-        setFeedback('Usuario reactivado.');
+        const reactivateMessage = 'Usuario reactivado.';
+        setFeedback(reactivateMessage);
+        showNotification(reactivateMessage, 'success');
         await refreshUsers();
       } else {
-        setFeedback(response.message || 'No se pudo reactivar el usuario.');
+        const reactivateError = response.message || 'No se pudo reactivar el usuario.';
+        setFeedback(reactivateError);
+        showNotification(reactivateError, 'error');
       }
     } catch (error) {
       console.error('Error al reactivar usuario', error);
-      setFeedback('No se pudo reactivar el usuario.');
+      const reactivateError = 'No se pudo reactivar el usuario.';
+      setFeedback(reactivateError);
+      showNotification(reactivateError, 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -235,8 +288,19 @@ export const AdminUsersPage = () => {
     setFeedback(null);
   };
 
-  return (
-    <section className="admin-users-page">
+    return (
+      <section className="admin-users-page">
+      {notification && (
+        <div
+          className={`admin-users-page__notification admin-users-page__notification--${notification.type}`}
+          role="status"
+        >
+          <span className="admin-users-page__notification-icon">
+            {notification.type === 'success' ? '✓' : '⚠'}
+          </span>
+          <span className="admin-users-page__notification-message">{notification.message}</span>
+        </div>
+      )}
       <div ref={formRef}>
         <UsersForm
         isOpen={isFormOpen}
@@ -257,7 +321,7 @@ export const AdminUsersPage = () => {
         onNew={handleCreateNew}
         filters={[
           { label: 'Activos', value: 'active' },
-          { label: 'Eliminados', value: 'deleted' },
+          { label: 'Desactivados', value: 'deleted' },
           { label: 'Todos', value: 'all' },
         ]}
         currentFilter={viewFilter}
@@ -305,7 +369,7 @@ export const AdminUsersPage = () => {
         description={
           reactivateConfirmation.pendingUser ? (
             <>
-              Â¿EstÃ¡s seguro de que quieres reactivar a{' '}
+              ¿Estás seguro de que quieres reactivar a{' '}
               <strong>
                 {reactivateConfirmation.pendingUser.name} {reactivateConfirmation.pendingUser.surname}
               </strong>
@@ -313,7 +377,7 @@ export const AdminUsersPage = () => {
             </>
           ) : undefined
         }
-        confirmLabel="SÃ­, reactivar"
+        confirmLabel= "Sí, reactivar"
         cancelLabel="Cancelar"
         onConfirm={() => reactivateConfirmation.confirm(handleReactivate)}
         onCancel={reactivateConfirmation.cancelConfirmation}
@@ -326,15 +390,15 @@ export const AdminUsersPage = () => {
         description={
           deleteConfirmation.pendingUser ? (
             <>
-              Â¿Quieres eliminar al{' '}
+              ¿Quieres eliminar al{' '}
               <strong>
                 {deleteConfirmation.pendingUser.name} {deleteConfirmation.pendingUser.surname}
               </strong>
-              ? Esta acciÃ³n marcarÃ¡ el usuario como eliminado.
+              ? Esta acción marcará el usuario como eliminado.
             </>
           ) : undefined
         }
-        confirmLabel="SÃ­, eliminar"
+        confirmLabel="Sí, eliminar"
         cancelLabel="Cancelar"
         onConfirm={() => deleteConfirmation.confirm(confirmDelete)}
         onCancel={deleteConfirmation.cancelConfirmation}
