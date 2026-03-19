@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react';
 import { AdminButton } from '../../shared/AdminButton/AdminButton';
+import { useEffect, useId, useState } from 'react';
 import './SuperheroFormModal.css';
 import type { SuperheroStatus } from '../../../types/superheroes.types';
 
@@ -37,6 +38,15 @@ export const SuperheroFormModal = ({
   onSubmit,
   onReset,
 }: SuperheroFormModalProps) => {
+  const [selectedFilename, setSelectedFilename] = useState<string | null>(null);
+  const fileInputId = useId();
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedFilename(null);
+    }
+  }, [isOpen]);
+
   if (!isOpen) {
     return null;
   }
@@ -97,14 +107,26 @@ export const SuperheroFormModal = ({
                   onChange={(event) => onFieldChange('sortOrder', event.target.value)}
                 />
               </label>
-              <label className="superhero-form-card__file">
-                Imagen
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={(event) => onImageChange(event.target.files?.[0] ?? null)}
-                />
+              <label className="superhero-form-card__file" htmlFor={fileInputId}>
+                <span>Imagen</span>
+                <div className="superhero-form-card__file-control">
+                  <span className="superhero-form-card__file-trigger">Seleccionar archivo</span>
+                  <span className="superhero-form-card__file-name" title={selectedFilename || undefined}>
+                    {selectedFilename ?? (imagePreview ? 'Imagen actual' : 'No se ha seleccionado imagen')}
+                  </span>
+                </div>
               </label>
+              <input
+                id={fileInputId}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="superhero-form-card__file-input"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+                  setSelectedFilename(file?.name ?? null);
+                  onImageChange(file);
+                }}
+              />
               <div className="superhero-form-card__preview superhero-form-card__full">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Vista previa" />
