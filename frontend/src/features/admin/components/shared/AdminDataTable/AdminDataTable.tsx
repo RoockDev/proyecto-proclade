@@ -5,6 +5,8 @@ export type AdminTableColumn<T> = {
   key: string;
   header: string;
   cell: (row: T) => ReactNode;
+  headerClassName?: string;
+  cellClassName?: string;
 };
 
 type AdminDataTableProps<T> = {
@@ -26,7 +28,9 @@ export const AdminDataTable = <T,>({
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.key}>{column.header}</th>
+              <th key={column.key} className={column.headerClassName}>
+                {column.header}
+              </th>
             ))}
           </tr>
         </thead>
@@ -36,7 +40,9 @@ export const AdminDataTable = <T,>({
             rows.map((row) => (
               <tr key={getRowKey(row)}>
                 {columns.map((column) => (
-                  <td key={column.key}>{column.cell(row)}</td>
+                  <td key={column.key} className={column.cellClassName}>
+                    {column.cell(row)}
+                  </td>
                 ))}
               </tr>
             ))

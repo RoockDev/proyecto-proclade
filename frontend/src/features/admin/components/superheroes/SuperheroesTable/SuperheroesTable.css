@@ -28,7 +28,8 @@
 .superheroes-table__actions {
   display: flex;
   gap: 0.45rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 .superheroes-table__action {

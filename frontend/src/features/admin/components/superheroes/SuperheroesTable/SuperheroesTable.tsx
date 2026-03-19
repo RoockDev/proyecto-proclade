@@ -1,5 +1,6 @@
 import { AdminDataTable, type AdminTableColumn } from '../../shared/AdminDataTable/AdminDataTable';
 import { AdminStatusBadge } from '../../shared/AdminStatusBadge/AdminStatusBadge';
+import { resolveHeroImageUrl } from '../../../utils/resolveHeroImageUrl';
 import type { AdminStatusCode } from '../../../types/admin-panel.types';
 import type { AdminSuperheroRow, SuperheroStatus } from '../../../types/superheroes.types';
 import './SuperheroesTable.css';
@@ -33,7 +34,7 @@ export const SuperheroesTable = ({
       cell: (hero) => (
         <div className="superheroes-table__name-cell">
           {hero.imageUrl ? (
-            <img src={hero.imageUrl} alt={hero.name} loading="lazy" />
+            <img src={resolveHeroImageUrl(hero.imageUrl)} alt={hero.name} loading="lazy" />
           ) : (
             <span className="superheroes-table__avatar-placeholder" aria-hidden="true" />
           )}
@@ -72,6 +73,8 @@ export const SuperheroesTable = ({
     {
       key: 'actions',
       header: 'Acciones',
+      headerClassName: 'admin-data-table__actions-column',
+      cellClassName: 'admin-data-table__actions-cell',
       cell: (hero) => (
         <div className="superheroes-table__actions">
           {!hero.deletedAt ? (

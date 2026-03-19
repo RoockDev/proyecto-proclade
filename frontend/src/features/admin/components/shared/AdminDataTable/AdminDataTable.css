@@ -37,3 +37,11 @@
   text-align: center;
   color: #6b7280;
 }
+
+.admin-data-table__actions-column,
+.admin-data-table__actions-cell {
+  min-width: 200px;
+  width: 200px;
+  max-width: 200px;
+  white-space: nowrap;
+}
