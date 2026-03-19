@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { ChallengesModule } from './challenges/challenges.module';
 import { HumanBooksModule } from './human-books/human-books.module';
 import { NewsModule } from './news/news.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
     RegionsModule,
     SuperheroesModule,
     HumanBooksModule,
+    ChallengesModule,
   ],
   controllers: [],
   providers: [],

@@ -3,6 +3,7 @@ import { HomePage } from '../features/home/pages/HomePage/HomePage';
 import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage/ResetPasswordPage';
 import { AdminLayout } from '../features/admin/components/layout/AdminLayout/AdminLayout';
+import { AdminChallengesPage } from '../features/admin/pages/AdminChallengesPage/AdminChallengesPage';
 import { AdminDashboardPage } from '../features/admin/pages/AdminDashboardPage/AdminDashboardPage';
 import { AdminHumanBooksPage } from '../features/admin/pages/AdminHumanBooksPage/AdminHumanBooksPage';
 import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPage';
@@ -74,7 +75,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'retos',
-        element: <AdminSectionPage section="Retos" />,
+        element: <AdminChallengesPage />,
       },
       {
         path: 'libros',
