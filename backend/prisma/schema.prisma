@@ -117,3 +117,17 @@ model HumanBook {
   @@index([deletedAt])
   @@index([regionId])
 }
+
+model Challenge {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String    @db.Text
+  targetAmount  Int
+  currentAmount Int       @default(0)
+  isActive      Boolean   @default(true)
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([deletedAt])
+}
