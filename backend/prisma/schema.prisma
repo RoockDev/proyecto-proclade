@@ -20,6 +20,21 @@ enum SuperheroStatus {
   HIDDEN
 }
 
+enum ChatChannel {
+  WEB
+}
+
+enum ChatMessageRole {
+  USER
+  BOT
+}
+
+enum ChatReplyType {
+  DIRECT_ANSWER
+  CLARIFICATION
+  FALLBACK
+}
+
 model User {
   id                       Int       @id @default(autoincrement())
   email                    String    @unique
@@ -36,6 +51,8 @@ model User {
   createdNews              News[]
   createdSuperheroes       Superhero[]
   createdHumanBooks        HumanBook[]
+  chatSessions             ChatSession[]
+  resolvedUnresolved       UnresolvedQuestion[] @relation("UnresolvedResolvedBy")
 }
 
 
@@ -130,4 +147,107 @@ model Challenge {
   updatedAt     DateTime  @updatedAt
 
   @@index([deletedAt])
+}
+
+model ChatbotIntent {
+  id             Int                 @id @default(autoincrement())
+  code           String              @unique
+  name           String
+  description    String              @db.Text
+  priority       Int                 @default(0)
+  isActive       Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  phrases        ChatbotIntentPhrase[]
+  knowledgeItems KnowledgeItem[]
+
+  @@index([isActive])
+  @@index([priority])
+}
+
+model ChatbotIntentPhrase {
+  id        Int           @id @default(autoincrement())
+  intentId  Int
+  text      String
+  language  String        @default("es")
+  weight    Float         @default(1)
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  intent    ChatbotIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+
+  @@unique([intentId, text, language])
+  @@index([intentId])
+  @@index([isActive])
+}
+
+model KnowledgeItem {
+  id                Int            @id @default(autoincrement())
+  intentId          Int?
+  questionCanonical String         @unique
+  answer            String         @db.Text
+  tags              Json
+  route             String?
+  ctaLinks          Json
+  isActive          Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  intent            ChatbotIntent? @relation(fields: [intentId], references: [id], onDelete: SetNull)
+
+  @@index([intentId])
+  @@index([isActive])
+}
+
+model ChatSession {
+  id            Int           @id @default(autoincrement())
+  sessionKey    String        @unique
+  userId        Int?
+  channel       ChatChannel   @default(WEB)
+  startedAt     DateTime      @default(now())
+  lastMessageAt DateTime      @default(now())
+  isClosed      Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  messages      ChatMessage[]
+
+  @@index([userId])
+  @@index([isClosed])
+}
+
+model ChatMessage {
+  id                 Int             @id @default(autoincrement())
+  sessionId          Int
+  role               ChatMessageRole
+  messageText        String          @db.Text
+  normalizedText     String?
+  detectedIntentCode String?
+  replyType          ChatReplyType?
+  confidence         Float?
+  meta               Json?
+  createdAt          DateTime        @default(now())
+  session            ChatSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@index([detectedIntentCode])
+  @@index([replyType])
+}
+
+model UnresolvedQuestion {
+  id             Int       @id @default(autoincrement())
+  normalizedText String    @unique
+  sampleText     String    @db.Text
+  pageContext    String?
+  firstSeenAt    DateTime  @default(now())
+  lastSeenAt     DateTime  @default(now())
+  occurrences    Int       @default(1)
+  resolvedAt     DateTime?
+  resolvedById   Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  resolvedBy     User?     @relation("UnresolvedResolvedBy", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([occurrences])
+  @@index([resolvedAt])
+  @@index([lastSeenAt])
 }
