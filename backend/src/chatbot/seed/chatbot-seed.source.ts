@@ -1,0 +1,626 @@
+import type {
+  ChatbotSeedIntent,
+  ChatbotSeedIntentPhrase,
+  ChatbotSeedKnowledgeItem,
+} from './chatbot-seed.types';
+
+export const CHATBOT_SEED_INTENTS: ChatbotSeedIntent[] = [
+  {
+    code: 'EQUIPO_PUCH_OVERVIEW',
+    name: 'Que es Equipo PUCH',
+    description: 'Informacion general de la campana y objetivo ODS 2.',
+    priority: 100,
+    isActive: true,
+  },
+  {
+    code: 'UNIRSE_EQUIPO_PUCH',
+    name: 'Como unirse al equipo',
+    description: 'Formas de participar y sensibilizar.',
+    priority: 95,
+    isActive: true,
+  },
+  {
+    code: 'PROYECTOS_INTERNACIONALES',
+    name: 'Proyectos internacionales',
+    description: 'India, Burkina Faso y Haiti/Republica Dominicana.',
+    priority: 90,
+    isActive: true,
+  },
+  {
+    code: 'DONAR',
+    name: 'Donaciones',
+    description: 'Donacion en enlace oficial de Fundacion PROCLADE.',
+    priority: 120,
+    isActive: true,
+  },
+  {
+    code: 'COLABORAR',
+    name: 'Colaborar y voluntariado',
+    description: 'Participacion, red solidaria y apoyo economico.',
+    priority: 85,
+    isActive: true,
+  },
+  {
+    code: 'NOTICIAS',
+    name: 'Noticias del proyecto',
+    description: 'Informacion de la seccion de noticias.',
+    priority: 85,
+    isActive: true,
+  },
+  {
+    code: 'SUPERHEROES',
+    name: 'Superheroes PUCH',
+    description: 'Historias y testimonios del equipo PUCH.',
+    priority: 80,
+    isActive: true,
+  },
+  {
+    code: 'RETOS_SOLIDARIOS',
+    name: 'Retos solidarios',
+    description: 'Retos de colaboracion vinculados a hambre cero.',
+    priority: 75,
+    isActive: true,
+  },
+  {
+    code: 'BIBLIOTECAS_HUMANAS',
+    name: 'Bibliotecas humanas',
+    description: 'Proyecto educativo Personas que cuentan y te cuentan.',
+    priority: 88,
+    isActive: true,
+  },
+  {
+    code: 'DELEGACIONES',
+    name: 'Delegaciones',
+    description: 'Zonas y delegaciones del proyecto bibliotecas humanas.',
+    priority: 70,
+    isActive: true,
+  },
+  {
+    code: 'CONTACTO',
+    name: 'Contacto',
+    description: 'Canales de contacto y horario.',
+    priority: 65,
+    isActive: true,
+  },
+];
+
+export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'que es equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'que significa puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'que hace equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'de que trata personas unidas contra el hambre',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'UNIRSE_EQUIPO_PUCH',
+    text: 'como unirme al equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'UNIRSE_EQUIPO_PUCH',
+    text: 'como participar en equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'UNIRSE_EQUIPO_PUCH',
+    text: 'quiero ayudar en la campana',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'UNIRSE_EQUIPO_PUCH',
+    text: 'como puedo sensibilizar',
+    language: 'es',
+    weight: 0.8,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'donde trabaja equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'proyectos en india burkina faso haiti',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'que hacen en india',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'que hacen en burkina faso',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'que hacen en haiti republica dominicana',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'DONAR',
+    text: 'como donar',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'quiero donar',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'donde hacer una donacion',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'como aportar dinero',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'COLABORAR',
+    text: 'como colaborar',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'COLABORAR',
+    text: 'quiero hacer voluntariado',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'COLABORAR',
+    text: 'como participar en la red solidaria',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'NOTICIAS',
+    text: 'ultimas noticias',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'donde ver noticias',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'noticias del equipo puch',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'quienes son los superheroes',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'superheroe india',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'superheroe burkina faso',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'superheroe haiti republica dominicana',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'que retos hay',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'reto economico',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'una granja en 30 dias',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'BIBLIOTECAS_HUMANAS',
+    text: 'que son las bibliotecas humanas',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'BIBLIOTECAS_HUMANAS',
+    text: 'personas que cuentan y te cuentan',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'BIBLIOTECAS_HUMANAS',
+    text: 'libros humanos',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'delegaciones',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'asturias cantabria la rioja zaragoza castilla y leon madrid',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+
+  {
+    intentCode: 'CONTACTO',
+    text: 'contacto',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'correo y telefono',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'horario de atencion',
+    language: 'es',
+    weight: 0.8,
+    isActive: true,
+  },
+];
+
+export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    questionCanonical: 'que es equipo puch',
+    answer:
+      'Equipo PUCH significa Personas Unidas Contra el Hambre. Es una campana de sensibilizacion y accion social impulsada junto a Fundacion PROCLADE para avanzar hacia el ODS 2 Hambre Cero.',
+    tags: ['equipo puch', 'ods 2', 'hambre cero', 'fundacion proclade'],
+    route: '/',
+    ctaLinks: [{ label: 'Ir a inicio', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'UNIRSE_EQUIPO_PUCH',
+    questionCanonical: 'como unirse al equipo puch',
+    answer:
+      'Unirse al Equipo PUCH significa sensibilizar y contar historias invisibilizadas, formar parte de una red solidaria y apoyar economicamente proyectos contra el hambre.',
+    tags: ['unirse', 'participar', 'sensibilizar', 'red solidaria'],
+    route: '/',
+    ctaLinks: [{ label: 'Ver seccion de inicio', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    questionCanonical: 'en que paises trabaja equipo puch',
+    answer:
+      'Actualmente se trabaja en India, Burkina Faso y Haiti/Republica Dominicana con proyectos de soberania y seguridad alimentaria, formacion y fortalecimiento comunitario.',
+    tags: ['india', 'burkina faso', 'haiti', 'republica dominicana'],
+    route: '/',
+    ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    questionCanonical: 'que hacen en india',
+    answer:
+      'En India se apoya a mujeres Dalit con ganaderia, formacion en gestion economica y liderazgo, y talleres familiares para reforzar igualdad y convivencia.',
+    tags: ['india', 'dalit', 'ganaderia', 'liderazgo'],
+    route: '/',
+    ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    questionCanonical: 'que hacen en burkina faso',
+    answer:
+      'En Koudougou se crean huertas agroecologicas con riego solar, pozos de agua y granjas comunitarias, con formacion para mujeres y jovenes.',
+    tags: ['burkina faso', 'koudougou', 'huertas', 'riego solar'],
+    route: '/',
+    ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    questionCanonical: 'que hacen en haiti y republica dominicana',
+    answer:
+      'En Enriquillo y zonas de frontera se combina ayuda humanitaria inmediata con formacion para autosuficiencia y seguridad alimentaria.',
+    tags: [
+      'haiti',
+      'republica dominicana',
+      'enriquillo',
+      'seguridad alimentaria',
+    ],
+    route: '/',
+    ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    questionCanonical: 'como donar',
+    answer:
+      'La donacion se realiza en la pagina oficial de Fundacion PROCLADE, donde puedes donar por distintos metodos de pago.',
+    tags: ['donar', 'donacion', 'aporte', 'proclade'],
+    route: '/colabora',
+    ctaLinks: [
+      {
+        label: 'Ir a donar en PROCLADE',
+        to: 'https://www.fundacionproclade.org/dona/',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    questionCanonical: 'ejemplos de impacto de una donacion',
+    answer:
+      'Ejemplos orientativos de impacto: con 100 euros se puede apoyar la compra de una cabra para una mujer Dalit en India; con 20 euros, semillas para huertas en Burkina Faso; con 40 euros, apoyo alimentario en Enriquillo.',
+    tags: ['impacto', '100 euros', '20 euros', '40 euros'],
+    route: '/colabora',
+    ctaLinks: [
+      {
+        label: 'Donar ahora',
+        to: 'https://www.fundacionproclade.org/dona/',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'COLABORAR',
+    questionCanonical: 'como colaborar sin donar',
+    answer:
+      'Tambien puedes colaborar sensibilizando, difundiendo historias, participando en acciones comunitarias y sumandote a la red solidaria del proyecto.',
+    tags: ['colaborar', 'voluntariado', 'sensibilizar', 'difusion'],
+    route: '/colabora',
+    ctaLinks: [{ label: 'Ver seccion Colabora', to: '/colabora' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'COLABORAR',
+    questionCanonical: 'formulario de colaboracion',
+    answer:
+      'La pagina de colaboracion se esta ampliando progresivamente. Mientras tanto, puedes dejar tu interes de colaboracion a traves de los canales de contacto del proyecto.',
+    tags: ['formulario', 'contacto', 'colaboracion'],
+    route: '/colabora',
+    ctaLinks: [
+      { label: 'Ir a Colabora', to: '/colabora' },
+      { label: 'Ver contacto', to: '/contacto' },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    questionCanonical: 'donde ver noticias del proyecto',
+    answer:
+      'Puedes consultar las noticias del proyecto en la seccion Noticias. Ahi veras publicaciones recientes, avances y testimonios.',
+    tags: ['noticias', 'actualidad', 'publicaciones'],
+    route: '/noticias',
+    ctaLinks: [{ label: 'Ir a Noticias', to: '/noticias' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    questionCanonical: 'que tipo de noticias publican',
+    answer:
+      'Se publican avances de proyectos, acciones educativas, voluntariado, cooperacion y testimonios relacionados con hambre cero.',
+    tags: ['avances', 'proyectos', 'voluntariado', 'cooperacion'],
+    route: '/noticias',
+    ctaLinks: [{ label: 'Ver noticias publicadas', to: '/noticias' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    questionCanonical: 'quienes son los superheroes puch',
+    answer:
+      'Los superheroes PUCH representan a personas comprometidas que luchan contra el hambre desde sus comunidades. No son personajes de ficcion aislados, sino simbolos de accion real y colectiva.',
+    tags: ['superheroes', 'equipo puch', 'testimonios'],
+    route: '/superheroes',
+    ctaLinks: [{ label: 'Ver Superheroes', to: '/superheroes' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    questionCanonical: 'superheroes por pais',
+    answer:
+      'En la comunicacion del proyecto hay referencias especificas a superheroes vinculados a India, Burkina Faso y Haiti/Republica Dominicana, mostrando acciones reales en cada territorio.',
+    tags: ['india', 'burkina faso', 'haiti', 'testimonios'],
+    route: '/superheroes',
+    ctaLinks: [{ label: 'Abrir seccion de Superheroes', to: '/superheroes' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    questionCanonical: 'que retos solidarios hay',
+    answer:
+      'Uno de los retos definidos es Una granja en 30 dias, orientado a recaudar fondos para fortalecer autosuficiencia alimentaria en frontera de Haiti y Republica Dominicana.',
+    tags: ['retos', 'granja en 30 dias', 'recaudacion'],
+    route: '/colabora',
+    ctaLinks: [{ label: 'Ver Colabora', to: '/colabora' }],
+    isActive: true,
+  },
+  {
+    intentCode: 'BIBLIOTECAS_HUMANAS',
+    questionCanonical: 'que son las bibliotecas humanas',
+    answer:
+      'El proyecto Personas que cuentan y te cuentan impulsa una Biblioteca Humana donde se comparten historias reales para sensibilizar sobre las causas del hambre y promover compromiso ciudadano.',
+    tags: [
+      'bibliotecas humanas',
+      'personas que cuentan',
+      'educacion para el desarrollo',
+    ],
+    route: null,
+    ctaLinks: [
+      {
+        label: 'Delegaciones PROCLADE',
+        to: 'https://www.fundacionproclade.org/delegaciones/',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'BIBLIOTECAS_HUMANAS',
+    questionCanonical: 'que son los libros humanos',
+    answer:
+      'Los libros humanos son personas que comparten su experiencia en primera persona sobre alimentacion, cooperacion y cambio social. En la plataforma se gestionan como recursos con su contenido asociado.',
+    tags: ['libros humanos', 'recursos', 'testimonios'],
+    route: null,
+    ctaLinks: [
+      {
+        label: 'Ver delegaciones',
+        to: 'https://www.fundacionproclade.org/delegaciones/',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'DELEGACIONES',
+    questionCanonical: 'que delegaciones participan',
+    answer:
+      'En la propuesta de bibliotecas humanas se contemplan delegaciones en Asturias, Cantabria, La Rioja, Zaragoza, Castilla y Leon y Madrid.',
+    tags: [
+      'delegaciones',
+      'asturias',
+      'cantabria',
+      'la rioja',
+      'zaragoza',
+      'castilla y leon',
+      'madrid',
+    ],
+    route: null,
+    ctaLinks: [
+      {
+        label: 'Ver delegaciones PROCLADE',
+        to: 'https://www.fundacionproclade.org/delegaciones/',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    questionCanonical: 'como contactar',
+    answer:
+      'Puedes contactar por correo en equipo@equipopuch.org o info@fundacionproclade.org. Tambien hay telefono de contacto +34 91 000 00 00 en la informacion visible de la web.',
+    tags: ['contacto', 'correo', 'telefono', 'horario'],
+    route: null,
+    ctaLinks: [
+      {
+        label: 'Escribir a equipo@equipopuch.org',
+        to: 'mailto:equipo@equipopuch.org',
+      },
+      {
+        label: 'Escribir a info@fundacionproclade.org',
+        to: 'mailto:info@fundacionproclade.org',
+      },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    questionCanonical: 'horario de atencion',
+    answer:
+      'El horario visible actualmente es de lunes a viernes de 09:00 a 18:00. Si necesitas una respuesta formal, usa los canales de correo para dejar tu solicitud.',
+    tags: ['horario', 'atencion', 'lunes a viernes'],
+    route: null,
+    ctaLinks: [
+      {
+        label: 'Enviar correo de contacto',
+        to: 'mailto:equipo@equipopuch.org',
+      },
+    ],
+    isActive: true,
+  },
+];
