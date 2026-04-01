@@ -15,6 +15,14 @@ export type ChatbotReplyData = {
   ctaLinks: ChatbotCtaLink[];
 };
 
+export type ScoreBreakdown = {
+  keywordScore: number;
+  fuzzyScore: number;
+  semanticScore: number;
+  contextScore: number;
+  finalScore: number;
+};
+
 export type KnowledgeCandidate = {
   id: number;
   intentCode: string | null;
@@ -29,4 +37,23 @@ export type KnowledgeCandidate = {
 export type ScoredCandidate = {
   candidate: KnowledgeCandidate;
   score: number;
+  scoreBreakdown: ScoreBreakdown;
+};
+
+export type MatchingSessionContext = {
+  lastDetectedIntentCode: string | null;
+  lastMessageAt: Date | null;
+  startedAt: Date | null;
+};
+
+export type MatchingThresholds = {
+  directAnswer: number;
+  clarification: number;
+};
+
+export type MatchingWeights = {
+  keyword: number;
+  fuzzy: number;
+  semantic: number;
+  context: number;
 };

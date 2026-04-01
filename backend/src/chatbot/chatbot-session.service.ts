@@ -7,6 +7,7 @@ import {
 } from 'generated/prisma/client';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../prisma/prisma.service';
+import type { MatchingSessionContext } from './types/chatbot.types';
 
 @Injectable()
 export class ChatbotSessionService {
@@ -76,5 +77,39 @@ export class ChatbotSessionService {
       where: { id: sessionId },
       data: { lastMessageAt: new Date() },
     });
+  }
+
+  async getSessionContext(sessionId: number): Promise<MatchingSessionContext> {
+    const [session, lastDetectedIntentMessage] = await Promise.all([
+      this.prisma.chatSession.findUnique({
+        where: { id: sessionId },
+        select: {
+          startedAt: true,
+          lastMessageAt: true,
+        },
+      }),
+      this.prisma.chatMessage.findFirst({
+        where: {
+          sessionId,
+          role: ChatMessageRole.BOT,
+          detectedIntentCode: {
+            not: null,
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          detectedIntentCode: true,
+        },
+      }),
+    ]);
+
+    return {
+      lastDetectedIntentCode:
+        lastDetectedIntentMessage?.detectedIntentCode ?? null,
+      lastMessageAt: session?.lastMessageAt ?? null,
+      startedAt: session?.startedAt ?? null,
+    };
   }
 }
