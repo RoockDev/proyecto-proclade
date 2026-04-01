@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
 import { ChallengesModule } from './challenges/challenges.module';
 import { HumanBooksModule } from './human-books/human-books.module';
 import { NewsModule } from './news/news.module';
@@ -19,6 +20,7 @@ import { UsersModule } from './users/users.module';
     PrismaModule,
     UsersModule,
     NewsModule,
+    ChatbotModule,
     RegionsModule,
     SuperheroesModule,
     HumanBooksModule,
