@@ -7,6 +7,7 @@ import { KnowledgeBaseService } from './knowledge-base.service';
 import { UnresolvedQuestionService } from './unresolved-question.service';
 import type {
   ChatbotReplyData,
+  ChatbotSuggestionsData,
   MatchingThresholds,
   ScoredCandidate,
 } from './types/chatbot.types';
@@ -115,6 +116,55 @@ export class ChatbotOrchestratorService {
     };
   }
 
+  async getSuggestions(payload: {
+    sessionId?: string;
+    pageContext?: string;
+    limit?: number;
+  }) {
+    const safeLimit = Math.max(1, Math.min(payload.limit ?? 4, 8));
+    const session = payload.sessionId
+      ? await this.chatbotSessionService.findOpenSessionByKey(payload.sessionId)
+      : null;
+
+    const lastDetectedIntentCode = session
+      ? await this.chatbotSessionService.getLastDetectedIntentCode(session.id)
+      : null;
+
+    const candidates = await this.knowledgeBaseService.getCandidates();
+    const uniqueSuggestions = this.buildSuggestions({
+      candidates,
+      limit: safeLimit,
+      pageContext: payload.pageContext,
+      lastDetectedIntentCode,
+    });
+
+    const data: ChatbotSuggestionsData = {
+      sessionId: session?.sessionKey ?? payload.sessionId ?? null,
+      pageContext: payload.pageContext ?? null,
+      suggestions: uniqueSuggestions,
+    };
+
+    return {
+      message: 'Sugerencias del chatbot obtenidas correctamente',
+      ...data,
+    };
+  }
+
+  async registerFeedback(payload: {
+    sessionId: string;
+    messageId: number;
+    helpful: boolean;
+  }) {
+    await this.chatbotSessionService.registerFeedback(payload);
+
+    return {
+      message: 'Feedback del chatbot registrado correctamente',
+      sessionId: payload.sessionId,
+      messageId: payload.messageId,
+      helpful: payload.helpful,
+    };
+  }
+
   private buildReply(
     sessionId: string,
     bestMatch: ScoredCandidate | undefined,
@@ -163,6 +213,75 @@ export class ChatbotOrchestratorService {
       .filter((item) => item.score > 0.2)
       .slice(0, 3)
       .map((item) => item.candidate.questionCanonical);
+  }
+
+  private buildSuggestions(input: {
+    candidates: ScoredCandidate['candidate'][];
+    pageContext?: string;
+    lastDetectedIntentCode: string | null;
+    limit: number;
+  }) {
+    const ranked = input.candidates
+      .map((candidate) => {
+        let score = 0;
+
+        if (
+          input.lastDetectedIntentCode &&
+          candidate.intentCode === input.lastDetectedIntentCode
+        ) {
+          score += 2;
+        }
+
+        if (this.pageContextMatchesRoute(input.pageContext, candidate.route)) {
+          score += 1;
+        }
+
+        if (candidate.ctaLinks.length > 0) {
+          score += 0.2;
+        }
+
+        return {
+          text: candidate.questionCanonical,
+          score,
+        };
+      })
+      .sort((left, right) => right.score - left.score);
+
+    const uniqueByText = new Set<string>();
+    const suggestions: string[] = [];
+
+    for (const item of ranked) {
+      if (uniqueByText.has(item.text)) {
+        continue;
+      }
+
+      uniqueByText.add(item.text);
+      suggestions.push(item.text);
+
+      if (suggestions.length >= input.limit) {
+        break;
+      }
+    }
+
+    return suggestions;
+  }
+
+  private pageContextMatchesRoute(
+    pageContext: string | undefined,
+    route: string | null,
+  ) {
+    if (!pageContext || !route) {
+      return false;
+    }
+
+    const normalizedPage = `/${pageContext.replace(/^\/+/, '').trim()}`;
+    const normalizedRoute = `/${route.replace(/^\/+/, '').trim()}`;
+
+    return (
+      normalizedPage === normalizedRoute ||
+      normalizedPage.startsWith(normalizedRoute) ||
+      normalizedRoute.startsWith(normalizedPage)
+    );
   }
 
   private normalizeText(text: string) {

@@ -57,3 +57,9 @@ export type MatchingWeights = {
   semantic: number;
   context: number;
 };
+
+export type ChatbotSuggestionsData = {
+  sessionId: string | null;
+  pageContext: string | null;
+  suggestions: string[];
+};
