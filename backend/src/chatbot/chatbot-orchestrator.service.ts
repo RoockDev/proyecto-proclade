@@ -86,18 +86,22 @@ export class ChatbotOrchestratorService {
       candidateId: bestMatch?.candidate.id ?? null,
     };
 
-    await this.chatbotSessionService.saveBotMessage(session.id, {
-      messageText: reply.answer,
-      detectedIntentCode: reply.detectedIntentCode,
-      replyType: reply.replyType,
-      confidence: reply.confidence,
-      meta,
-    });
+    const botMessage = await this.chatbotSessionService.saveBotMessage(
+      session.id,
+      {
+        messageText: reply.answer,
+        detectedIntentCode: reply.detectedIntentCode,
+        replyType: reply.replyType,
+        confidence: reply.confidence,
+        meta,
+      },
+    );
 
     await this.chatbotSessionService.touchSession(session.id);
 
     return {
       message: 'Respuesta del chatbot generada correctamente',
+      messageId: botMessage.id,
       ...reply,
     };
   }

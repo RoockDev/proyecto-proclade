@@ -7,6 +7,7 @@ export type ChatbotCtaLink = {
 
 export type ChatbotReplyData = {
   sessionId: string;
+  messageId?: number;
   replyType: ChatReplyType;
   answer: string;
   confidence: number;
