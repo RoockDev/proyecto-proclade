@@ -22,8 +22,8 @@ export const ChallengesToolbar = ({
       />
     }
     actionsSlot={
-      <AdminButton variant="solid" onClick={onNew}>
-        Nuevo reto
+      <AdminButton variant="solid" className="admin-toolbar__new" onClick={onNew}>
+        Nuevo
       </AdminButton>
     }
   />

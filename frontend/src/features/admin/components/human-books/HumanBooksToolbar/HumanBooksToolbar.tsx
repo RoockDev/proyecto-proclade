@@ -24,8 +24,8 @@ export const HumanBooksToolbar = ({
         />
       }
       actionsSlot={
-        <AdminButton variant="solid" className="human-books-toolbar__new" onClick={onNew}>
-          Nuevo libro humano
+        <AdminButton variant="solid" className="human-books-toolbar__new admin-toolbar__new" onClick={onNew}>
+          Nuevo
         </AdminButton>
       }
     />

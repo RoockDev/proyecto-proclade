@@ -26,10 +26,10 @@ export const RegionsToolbar = ({
       actionsSlot={
         <AdminButton
           variant="solid"
-          className="regions-toolbar__new"
+          className="regions-toolbar__new admin-toolbar__new"
           onClick={onNew}
         >
-          Nueva delegación
+          Nuevo
         </AdminButton>
       }
     />

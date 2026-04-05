@@ -24,13 +24,13 @@ export const NewsToolbar = ({
         />
       }
       actionsSlot={
-        <AdminButton
-          variant="solid"
-          className="news-toolbar__new"
-          onClick={onNew}
-        >
-          Nueva noticia
-        </AdminButton>
+      <AdminButton
+        variant="solid"
+        className="news-toolbar__new admin-toolbar__new"
+        onClick={onNew}
+      >
+        Nuevo
+      </AdminButton>
       }
     />
   </div>

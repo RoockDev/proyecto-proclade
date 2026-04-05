@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 import type { FormEvent } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   createAdminChallenge,
   updateAdminChallenge,
@@ -56,6 +56,25 @@ export const AdminChallengesPage = () => {
   const { filteredChallenges, isFetching, refresh, search, setSearch } =
     useAdminChallengesList({ onError: handleListError });
 
+  const rowsPerPage = 3;
+  const [page, setPage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(filteredChallenges.length / rowsPerPage));
+  const paginatedChallenges = useMemo(
+    () =>
+      filteredChallenges.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredChallenges, page, rowsPerPage],
+  );
+
+  useEffect(() => {
+    setPage(0);
+  }, [filteredChallenges.length, search]);
+
+  useEffect(() => {
+    if (page >= totalPages) {
+      setPage(totalPages - 1);
+    }
+  }, [page, totalPages]);
+
   useEffect(() => {
     if (!notification) return undefined;
     const timer = setTimeout(() => setNotification(null), 2500);
@@ -90,6 +109,10 @@ export const AdminChallengesPage = () => {
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
+    resetForm();
+  };
+
+  const handleResetForm = () => {
     resetForm();
   };
 
@@ -218,35 +241,50 @@ export const AdminChallengesPage = () => {
     }
   };
 
+  const handleToggleActive = async (challenge: AdminChallenge) => {
+    setIsProcessing(true);
+    const nextState = !challenge.isActive;
+
+    try {
+      const response = await updateAdminChallenge({
+        id: challenge.id,
+        isActive: nextState,
+      });
+
+      if (response.success) {
+        showNotification(
+          response.message || `Reto ${nextState ? 'activado' : 'ocultado'}.`,
+          'success',
+        );
+        await refresh();
+      } else {
+        showNotification(response.message || 'No se pudo cambiar el estado.', 'error');
+      }
+    } catch {
+      showNotification('No se pudo cambiar el estado.', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <section className="admin-challenges-page">
       {notification && (
         <div
-          className={`admin-challenges-page__notification admin-challenges-page__notification--${notification.type}`}
+          className={`admin-challenges-page__feedback-badge admin-challenges-page__feedback-badge--${notification.type}`}
           role="status"
         >
-          <span className="admin-challenges-page__notification-icon" aria-hidden="true">
-            {notification.type === 'success' ? '✓' : '⚠'}
-          </span>
-          <span className="admin-challenges-page__notification-message">
-            {notification.message}
-          </span>
+          <i
+            className={`bi ${
+              notification.type === 'success'
+                ? 'bi-check-circle-fill'
+                : 'bi-x-circle-fill'
+            } admin-challenges-page__feedback-badge-icon`}
+            aria-hidden="true"
+          />
+          {notification.message}
         </div>
       )}
-
-      <header className="admin-challenges-page__header">
-        <p className="admin-challenges-page__eyebrow">Panel de administración</p>
-        <h1 className="admin-challenges-page__title">Gestión de retos</h1>
-        <p className="admin-challenges-page__description">
-          Crea, edita y gestiona los retos solidarios del proyecto.
-        </p>
-      </header>
-
-      <ChallengesToolbar
-        search={search}
-        onSearchChange={setSearch}
-        onNew={handleNew}
-      />
 
       <ChallengeForm
         isOpen={isFormOpen}
@@ -257,18 +295,55 @@ export const AdminChallengesPage = () => {
         onFieldChange={handleFieldChange}
         onSubmit={handleFormSubmit}
         onClose={handleCloseForm}
+        onReset={handleResetForm}
       />
 
-      {isFetching ? (
-        <p className="admin-challenges-page__loading">Cargando retos...</p>
-      ) : (
-        <ChallengesGrid
-          challenges={filteredChallenges}
-          onEdit={handleEdit}
-          onUpdateAmount={handleRequestUpdateAmount}
-          onDelete={handleRequestDelete}
+      <div className="admin-challenges-page__panel">
+        <ChallengesToolbar
+          search={search}
+          onSearchChange={setSearch}
+          onNew={handleNew}
         />
-      )}
+        {isFetching ? (
+          <p className="admin-challenges-page__loading">Cargando retos...</p>
+        ) : (
+          <ChallengesGrid
+            challenges={paginatedChallenges}
+            onEdit={handleEdit}
+            onUpdateAmount={handleRequestUpdateAmount}
+            onDelete={handleRequestDelete}
+            onToggleActive={handleToggleActive}
+          />
+        )}
+
+        <div className="challenges-pagination">
+          <div className="challenges-pagination__info">
+            Mostrando {filteredChallenges.length === 0 ? 0 : page * rowsPerPage + 1}-
+            {Math.min(filteredChallenges.length, (page + 1) * rowsPerPage)} de {filteredChallenges.length}
+          </div>
+          <div className="challenges-pagination__controls">
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.max(0, prev - 1))}
+              disabled={page === 0}
+              aria-label="Página anterior"
+            >
+              ←
+            </button>
+            <span>
+              {page + 1} de {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
+              disabled={page >= totalPages - 1}
+              aria-label="Página siguiente"
+            >
+              →
+            </button>
+          </div>
+        </div>
+      </div>
 
       <UpdateAmountModal
         isOpen={Boolean(pendingAmount)}

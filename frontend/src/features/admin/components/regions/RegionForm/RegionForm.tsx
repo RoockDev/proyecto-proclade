@@ -37,7 +37,6 @@ export const RegionForm = ({
         <div className="region-form-card">
           <div className="region-form-card__header">
             <div>
-              <p className="region-form-card__eyebrow">Gestión de delegaciones</p>
               <h2>{formMode === 'create' ? 'Nueva delegación' : 'Editar delegación'}</h2>
             </div>
             <button type="button" className="region-form-card__close" onClick={onClose}>

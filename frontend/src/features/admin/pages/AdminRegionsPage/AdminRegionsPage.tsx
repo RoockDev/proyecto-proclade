@@ -10,6 +10,9 @@ import type {
   CreateRegionPayload,
   RegionFormData,
 } from '../../types/regions.types';
+
+type NotificationType = 'success' | 'error';
+type NotificationState = { message: string; type: NotificationType };
 import './AdminRegionsPage.css';
 
 const initialFormState: RegionFormData = {
@@ -49,6 +52,7 @@ export const AdminRegionsPage = () => {
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedRegion, setSelectedRegion] = useState<AdminRegion | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [notification, setNotification] = useState<NotificationState | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pendingDeleteRegion, setPendingDeleteRegion] = useState<AdminRegion | null>(
@@ -60,6 +64,10 @@ export const AdminRegionsPage = () => {
     [],
   );
 
+  const showNotification = useCallback((message: string, type: NotificationType) => {
+    setNotification({ message, type });
+  }, []);
+
   const {
     filteredRegions,
     isFetching,
@@ -68,7 +76,7 @@ export const AdminRegionsPage = () => {
     setSearch,
   } = useRegionsList({ onError: handleRegionError });
 
-  const rowsPerPage = 8;
+  const rowsPerPage = 4;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredRegions.length / rowsPerPage));
   const paginatedRegions = useMemo(
@@ -86,6 +94,15 @@ export const AdminRegionsPage = () => {
       setPage(totalPages - 1);
     }
   }, [page, totalPages]);
+
+  useEffect(() => {
+    if (!notification) {
+      return undefined;
+    }
+
+    const timer = setTimeout(() => setNotification(null), 2000);
+    return () => clearTimeout(timer);
+  }, [notification]);
 
   const resetFormState = () => {
     setFormData(initialFormState);
@@ -130,13 +147,19 @@ export const AdminRegionsPage = () => {
     try {
       const response = await deleteRegion(pendingDeleteRegion.id);
       if (response.success) {
-        setFeedback(response.message || 'Delegación eliminada correctamente.');
+        const deleteMessage = response.message || 'Delegación eliminada correctamente.';
+        setFeedback(deleteMessage);
+        showNotification(deleteMessage, 'success');
         await refreshRegions();
       } else {
-        setFeedback(response.message || 'No se pudo eliminar la delegación.');
+        const deleteError = response.message || 'No se pudo eliminar la delegación.';
+        setFeedback(deleteError);
+        showNotification(deleteError, 'error');
       }
     } catch {
-      setFeedback('No se pudo eliminar la delegación.');
+      const deleteError = 'No se pudo eliminar la delegación.';
+      setFeedback(deleteError);
+      showNotification(deleteError, 'error');
     } finally {
       setIsProcessing(false);
       setPendingDeleteRegion(null);
@@ -187,15 +210,21 @@ export const AdminRegionsPage = () => {
             });
 
       if (response.success) {
-        setFeedback(response.message || 'Operación realizada correctamente.');
+        const successMessage = response.message || 'Operación realizada correctamente.';
+        showNotification(successMessage, 'success');
+        setFeedback(successMessage);
         await refreshRegions();
         setIsFormOpen(false);
         resetFormState();
       } else {
-        setFeedback(response.message || 'No se pudo guardar la delegación.');
+        const errorMessage = response.message || 'No se pudo guardar la delegación.';
+        setFeedback(errorMessage);
+        showNotification(errorMessage, 'error');
       }
     } catch {
-      setFeedback('Error al guardar la delegación.');
+      const errorMessage = 'Error al guardar la delegación.';
+      setFeedback(errorMessage);
+      showNotification(errorMessage, 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -203,6 +232,22 @@ export const AdminRegionsPage = () => {
 
   return (
     <section className="admin-regions-page">
+      {notification && (
+        <div
+          className={`admin-regions-page__feedback-badge admin-regions-page__feedback-badge--${notification.type}`}
+          role="status"
+        >
+          <i
+            className={`bi ${
+              notification.type === 'success'
+                ? 'bi-check-circle-fill'
+                : 'bi-x-circle-fill'
+            } admin-regions-page__feedback-badge-icon`}
+            aria-hidden="true"
+          />
+          {notification.message}
+        </div>
+      )}
       <RegionForm
         isOpen={isFormOpen}
         formMode={formMode}
@@ -215,25 +260,11 @@ export const AdminRegionsPage = () => {
         onClose={handleCloseForm}
       />
 
-      <header className="admin-regions-page__header">
-        <p className="admin-regions-page__eyebrow">Panel de administración</p>
-        <h1 className="admin-regions-page__title">Gestión de delegaciones</h1>
-        <p className="admin-regions-page__description">
-          Administra nombre, contacto y visibilidad de delegaciones.
-        </p>
-      </header>
-
       <RegionsToolbar
         search={search}
         onSearchChange={setSearch}
         onNew={handleCreateRegion}
       />
-
-      {feedback && !isFormOpen ? (
-        <p className="admin-regions-page__feedback" role="status">
-          {feedback}
-        </p>
-      ) : null}
 
       {isFetching ? (
         <p className="admin-regions-page__state">Cargando delegaciones...</p>

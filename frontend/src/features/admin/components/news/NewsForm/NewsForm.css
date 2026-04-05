@@ -1,11 +1,12 @@
 .news-form-card {
   background: #fff;
-  border-radius: 1.25rem;
+  border-radius: 1rem;
   border: 1px solid rgba(215, 187, 152, 0.6);
-  padding: clamp(0.95rem, 1.8vw, 1.3rem);
-  box-shadow: 0 20px 40px rgba(15, 52, 110, 0.12);
-  max-height: min(82vh, 760px);
-  overflow-y: auto;
+  padding: clamp(0.75rem, 1.6vw, 1.05rem);
+  box-shadow: 0 16px 25px rgba(15, 52, 110, 0.12);
+  max-height: none;
+  overflow-y: visible;
+  width: min(580px, 90vw);
 }
 
 .news-form-card__header {
@@ -16,17 +17,9 @@
   margin-bottom: 1rem;
 }
 
-.news-form-card__eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: #6b5d4c;
-  text-transform: uppercase;
-}
-
 .news-form-card__header h2 {
-  margin: 0.35rem 0;
-  font-size: clamp(1.25rem, 2.15vw, 1.7rem);
+  margin: 0.2rem 0;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
   color: var(--brand-dark);
 }
 
@@ -60,15 +53,15 @@
 
 .news-form-card__grid {
   display: grid;
-  gap: 0.7rem;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 }
 
 .news-form-card__grid label {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  font-size: 0.85rem;
+  gap: 0.25rem;
+  font-size: 0.82rem;
   color: #53443a;
   font-weight: 600;
 }
@@ -82,8 +75,8 @@
 .news-form-card__grid textarea {
   border: 1px solid rgba(207, 207, 207, 0.9);
   border-radius: 0.8rem;
-  padding: 0.65rem 0.85rem;
-  font-size: 0.95rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
   font-family: inherit;
   background: #fff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -97,7 +90,7 @@
 
 .news-form-card__grid textarea {
   resize: vertical;
-  min-height: 72px;
+  min-height: 60px;
 }
 
 .news-form-card__grid input:focus,
@@ -150,7 +143,7 @@
 
 .news-form-modal__content {
   position: relative;
-  width: min(600px, 88vw);
+  width: min(600px, 92vw);
   margin: 0 1rem;
   z-index: 1;
 }

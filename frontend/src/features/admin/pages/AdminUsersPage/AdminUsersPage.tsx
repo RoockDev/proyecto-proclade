@@ -62,7 +62,7 @@ export const AdminUsersPage = () => {
     setViewFilter,
   } = useUsersList({ onError: handleUsersError });
 
-  const rowsPerPage = 6;
+  const rowsPerPage = 5;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage));
   const paginatedUsers = useMemo(
@@ -287,123 +287,125 @@ export const AdminUsersPage = () => {
     setFormData(initialFormState);
     setFeedback(null);
   };
-
     return (
       <section className="admin-users-page">
-      {notification && (
-        <div
-          className={`admin-users-page__notification admin-users-page__notification--${notification.type}`}
-          role="status"
-        >
-          <span className="admin-users-page__notification-icon">
-            {notification.type === 'success' ? '✓' : '⚠'}
-          </span>
-          <span className="admin-users-page__notification-message">{notification.message}</span>
+        {notification && (
+          <div
+            className={`admin-users-page__notification admin-users-page__notification--${notification.type}`}
+            role="status"
+          >
+            <span className="admin-users-page__notification-icon">
+              {notification.type === 'success' ? '✓' : '⚠'}
+            </span>
+            <span className="admin-users-page__notification-message">{notification.message}</span>
+          </div>
+        )}
+
+        <div className="admin-users-page__panel">
+          <UsersToolbar
+            search={search}
+            onSearchChange={setSearch}
+            onNew={handleCreateNew}
+            filters={[
+              { label: 'Activos', value: 'active' },
+              { label: 'Desactivados', value: 'deleted' },
+              { label: 'Todos', value: 'all' },
+            ]}
+            currentFilter={viewFilter}
+            onFilterChange={handleFilterChange}
+          />
+
+          <UsersTable
+            users={paginatedUsers}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onReactivate={requestReactivate}
+          />
+
+          <div className="users-pagination">
+            <div className="users-pagination__info">
+              Mostrando {filteredUsers.length === 0 ? 0 : page * rowsPerPage + 1}-
+              {Math.min(filteredUsers.length, (page + 1) * rowsPerPage)} de {filteredUsers.length}
+            </div>
+            <div className="users-pagination__controls">
+              <button
+                type="button"
+                onClick={() => setPage((prev) => Math.max(0, prev - 1))}
+                disabled={page === 0}
+                aria-label="Página anterior"
+              >
+                ←
+              </button>
+              <span>
+                {page + 1} de {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
+                disabled={page >= totalPages - 1}
+                aria-label="Página siguiente"
+              >
+                →
+              </button>
+            </div>
+          </div>
         </div>
-      )}
-      <div ref={formRef}>
-        <UsersForm
-        isOpen={isFormOpen}
-        formMode={formMode}
-        formData={formData}
-        feedback={feedback}
-        isProcessing={isProcessing}
-        onFieldChange={handleFieldChange}
-          onSubmit={handleFormSubmit}
-          onReset={handleCreateNew}
-          onClose={handleCloseForm}
+
+        <div ref={formRef}>
+          <UsersForm
+            isOpen={isFormOpen}
+            formMode={formMode}
+            formData={formData}
+            feedback={feedback}
+            isProcessing={isProcessing}
+            onFieldChange={handleFieldChange}
+            onSubmit={handleFormSubmit}
+            onReset={handleCreateNew}
+            onClose={handleCloseForm}
+          />
+        </div>
+
+        <ConfirmModal
+          isOpen={Boolean(reactivateConfirmation.pendingUser)}
+          title="Reactivar usuario"
+          description={
+            reactivateConfirmation.pendingUser ? (
+              <>
+                ¿Estás seguro de que quieres reactivar a{' '}
+                <strong>
+                  {reactivateConfirmation.pendingUser.name} {reactivateConfirmation.pendingUser.surname}
+                </strong>
+                ?
+              </>
+            ) : undefined
+          }
+          confirmLabel="Sí, reactivar"
+          cancelLabel="Cancelar"
+          onConfirm={() => reactivateConfirmation.confirm(handleReactivate)}
+          onCancel={reactivateConfirmation.cancelConfirmation}
+          isProcessing={isProcessing}
         />
-      </div>
 
-      <UsersToolbar
-        search={search}
-        onSearchChange={setSearch}
-        onNew={handleCreateNew}
-        filters={[
-          { label: 'Activos', value: 'active' },
-          { label: 'Desactivados', value: 'deleted' },
-          { label: 'Todos', value: 'all' },
-        ]}
-        currentFilter={viewFilter}
-        onFilterChange={handleFilterChange}
-      />
-
-      <UsersTable
-        users={paginatedUsers}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onReactivate={requestReactivate}
-      />
-
-      <div className="users-pagination">
-        <div className="users-pagination__info">
-          Mostrando {filteredUsers.length === 0 ? 0 : page * rowsPerPage + 1}-
-          {Math.min(filteredUsers.length, (page + 1) * rowsPerPage)} de {filteredUsers.length}
-        </div>
-        <div className="users-pagination__controls">
-          <button
-            type="button"
-            onClick={() => setPage((prev) => Math.max(0, prev - 1))}
-            disabled={page === 0}
-            aria-label="Página anterior"
-          >
-            ←
-          </button>
-          <span>
-            {page + 1} de {totalPages}
-          </span>
-          <button
-            type="button"
-            onClick={() => setPage((prev) => Math.min(totalPages - 1, prev + 1))}
-            disabled={page >= totalPages - 1}
-            aria-label="Página siguiente"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
-      <ConfirmModal
-        isOpen={Boolean(reactivateConfirmation.pendingUser)}
-        title="Reactivar usuario"
-        description={
-          reactivateConfirmation.pendingUser ? (
-            <>
-              ¿Estás seguro de que quieres reactivar a{' '}
-              <strong>
-                {reactivateConfirmation.pendingUser.name} {reactivateConfirmation.pendingUser.surname}
-              </strong>
-              ?
-            </>
-          ) : undefined
-        }
-        confirmLabel= "Sí, reactivar"
-        cancelLabel="Cancelar"
-        onConfirm={() => reactivateConfirmation.confirm(handleReactivate)}
-        onCancel={reactivateConfirmation.cancelConfirmation}
-        isProcessing={isProcessing}
-      />
-
-      <ConfirmModal
-        isOpen={Boolean(deleteConfirmation.pendingUser)}
-        title="Eliminar usuario"
-        description={
-          deleteConfirmation.pendingUser ? (
-            <>
-              ¿Quieres eliminar al{' '}
-              <strong>
-                {deleteConfirmation.pendingUser.name} {deleteConfirmation.pendingUser.surname}
-              </strong>
-              ? Esta acción marcará el usuario como eliminado.
-            </>
-          ) : undefined
-        }
-        confirmLabel="Sí, eliminar"
-        cancelLabel="Cancelar"
-        onConfirm={() => deleteConfirmation.confirm(confirmDelete)}
-        onCancel={deleteConfirmation.cancelConfirmation}
-        isProcessing={isProcessing}
-      />
-    </section>
-  );
-};
+        <ConfirmModal
+          isOpen={Boolean(deleteConfirmation.pendingUser)}
+          title="Eliminar usuario"
+          description={
+            deleteConfirmation.pendingUser ? (
+              <>
+                ¿Quieres eliminar al{' '}
+                <strong>
+                  {deleteConfirmation.pendingUser.name} {deleteConfirmation.pendingUser.surname}
+                </strong>
+                ? Esta acción marcará el usuario como eliminado.
+              </>
+            ) : undefined
+          }
+          confirmLabel="Sí, eliminar"
+          cancelLabel="Cancelar"
+          onConfirm={() => deleteConfirmation.confirm(confirmDelete)}
+          onCancel={deleteConfirmation.cancelConfirmation}
+          isProcessing={isProcessing}
+        />
+      </section>
+    );
+  };

@@ -56,9 +56,7 @@ export const HumanBooksForm = ({
         <div className="human-books-form-card">
           <div className="human-books-form-card__header">
             <div>
-              <p className="human-books-form-card__eyebrow">Gestión de libros humanos</p>
               <h2>{formMode === 'create' ? 'Crear libro humano' : 'Editar libro humano'}</h2>
-              <p>Completa los datos y adjunta el PDF para guardar el recurso.</p>
             </div>
             <button type="button" className="human-books-form-card__close" onClick={onClose}>
               Cerrar
