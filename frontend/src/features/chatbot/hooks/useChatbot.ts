@@ -22,8 +22,8 @@ const CHATBOT_WELCOME_MESSAGE: ChatUiMessage = {
   createdAt: new Date().toISOString(),
   suggestions: [
     '¿Cómo puedo donar?',
-    '¿Qué es Equipo PUCH?',
-    'Enséñame las últimas noticias',
+    'Quiero solicitar información',
+    '¿Cómo puedo colaborar sin donar?',
   ],
 };
 
