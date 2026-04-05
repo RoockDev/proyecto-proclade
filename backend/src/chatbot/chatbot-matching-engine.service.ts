@@ -113,6 +113,15 @@ const SPANISH_STOPWORDS = new Set<string>([
   'ya',
 ]);
 
+const DOMAIN_PHRASE_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/\bsuper\s+errores\b/g, 'superheroes'],
+  [/\bsuper\s+heroes\b/g, 'superheroes'],
+  [/\bsuper\s+heroe\b/g, 'superheroe'],
+  [/\bequipo\s+patch\b/g, 'equipo puch'],
+  [/\bequipo\s+punch\b/g, 'equipo puch'],
+  [/\bbiblioteca\s+humana\b/g, 'bibliotecas humanas'],
+];
+
 @Injectable()
 export class ChatbotMatchingEngineService {
   private semanticArtifactsCache: SemanticArtifacts | null = null;
@@ -122,13 +131,20 @@ export class ChatbotMatchingEngineService {
   ) {}
 
   scoreCandidates = (input: ScoreCandidatesInput): ScoredCandidate[] => {
-    const queryTokens = this.tokenize(input.normalizedMessage, true);
+    const rawNormalizedMessage = this.normalizeText(input.normalizedMessage);
+    const candidateVocabulary = this.buildCandidateVocabulary(input.candidates);
+    const queryTokens = this.normalizeQueryTokens(
+      this.tokenize(rawNormalizedMessage, true),
+      candidateVocabulary,
+    );
+    const correctedNormalizedMessage = queryTokens.join(' ').trim();
     const artifacts = this.getSemanticArtifacts(input.candidates);
 
     return input.candidates
       .map((candidate) => {
         const scoreBreakdown = this.computeScoreBreakdown({
-          normalizedMessage: input.normalizedMessage,
+          normalizedMessage: rawNormalizedMessage,
+          correctedNormalizedMessage,
           queryTokens,
           candidate,
           pageContext: input.pageContext,
@@ -156,6 +172,7 @@ export class ChatbotMatchingEngineService {
 
   private computeScoreBreakdown = (input: {
     normalizedMessage: string;
+    correctedNormalizedMessage: string;
     queryTokens: string[];
     candidate: KnowledgeCandidate;
     pageContext?: string;
@@ -168,6 +185,7 @@ export class ChatbotMatchingEngineService {
     );
     const fuzzyScore = this.computeFuzzyScore(
       input.normalizedMessage,
+      input.correctedNormalizedMessage,
       input.queryTokens,
       input.candidate,
     );
@@ -229,6 +247,7 @@ export class ChatbotMatchingEngineService {
 
   private computeFuzzyScore = (
     normalizedMessage: string,
+    correctedNormalizedMessage: string,
     queryTokens: string[],
     candidate: KnowledgeCandidate,
   ) => {
@@ -241,17 +260,20 @@ export class ChatbotMatchingEngineService {
     }
 
     const candidateSimilarities = candidateTexts.map((candidateText) => {
-      const jaroWinkler = this.jaroWinklerSimilarity(
+      const jaroWinklerBase = this.jaroWinklerSimilarity(
         normalizedMessage,
         candidateText,
       );
+      const jaroWinklerCorrected = correctedNormalizedMessage
+        ? this.jaroWinklerSimilarity(correctedNormalizedMessage, candidateText)
+        : 0;
       const candidateTokens = this.tokenize(candidateText, true);
       const tokenLevenshtein = this.tokenLevenshteinSimilarity(
         queryTokens,
         candidateTokens,
       );
 
-      return Math.max(jaroWinkler, tokenLevenshtein);
+      return Math.max(jaroWinklerBase, jaroWinklerCorrected, tokenLevenshtein);
     });
 
     let fuzzyScore = Math.max(...candidateSimilarities);
@@ -418,11 +440,10 @@ export class ChatbotMatchingEngineService {
 
     for (const [token, frequency] of frequencyByToken.entries()) {
       const idf = idfByToken.get(token);
-      if (!idf) {
-        continue;
+      if (idf) {
+        const termFrequency = frequency / tokens.length;
+        vector.set(token, termFrequency * idf);
       }
-      const termFrequency = frequency / tokens.length;
-      vector.set(token, termFrequency * idf);
     }
 
     return vector;
@@ -543,19 +564,20 @@ export class ChatbotMatchingEngineService {
     for (let leftIndex = 0; leftIndex < left.length; leftIndex += 1) {
       const start = Math.max(0, leftIndex - maxDistance);
       const end = Math.min(leftIndex + maxDistance + 1, right.length);
+      let didMatchCharacter = false;
 
       for (let rightIndex = start; rightIndex < end; rightIndex += 1) {
-        if (rightMatches[rightIndex]) {
-          continue;
-        }
-        if (left[leftIndex] !== right[rightIndex]) {
-          continue;
-        }
+        const canMatchIndex =
+          !didMatchCharacter &&
+          !rightMatches[rightIndex] &&
+          left[leftIndex] === right[rightIndex];
 
-        leftMatches[leftIndex] = true;
-        rightMatches[rightIndex] = true;
-        matchCount += 1;
-        break;
+        if (canMatchIndex) {
+          leftMatches[leftIndex] = true;
+          rightMatches[rightIndex] = true;
+          matchCount += 1;
+          didMatchCharacter = true;
+        }
       }
     }
 
@@ -567,19 +589,17 @@ export class ChatbotMatchingEngineService {
     let rightIndex = 0;
 
     for (let leftIndex = 0; leftIndex < left.length; leftIndex += 1) {
-      if (!leftMatches[leftIndex]) {
-        continue;
-      }
+      if (leftMatches[leftIndex]) {
+        while (!rightMatches[rightIndex]) {
+          rightIndex += 1;
+        }
 
-      while (!rightMatches[rightIndex]) {
+        if (left[leftIndex] !== right[rightIndex]) {
+          transpositions += 1;
+        }
+
         rightIndex += 1;
       }
-
-      if (left[leftIndex] !== right[rightIndex]) {
-        transpositions += 1;
-      }
-
-      rightIndex += 1;
     }
 
     const transpositionCount = transpositions / 2;
@@ -591,15 +611,19 @@ export class ChatbotMatchingEngineService {
 
     let commonPrefixLength = 0;
     const maxPrefix = 4;
+    let hasPrefixMismatch = false;
     for (
       let index = 0;
       index < Math.min(maxPrefix, left.length, right.length);
       index += 1
     ) {
-      if (left[index] !== right[index]) {
-        break;
+      const isSamePrefixCharacter = left[index] === right[index];
+
+      if (!hasPrefixMismatch && isSamePrefixCharacter) {
+        commonPrefixLength += 1;
+      } else {
+        hasPrefixMismatch = true;
       }
-      commonPrefixLength += 1;
     }
 
     const jaroWinkler = jaro + commonPrefixLength * 0.1 * (1 - jaro);
@@ -692,13 +716,138 @@ export class ChatbotMatchingEngineService {
   };
 
   private normalizeText = (text: string) => {
-    return text
+    const normalizedBase = text
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9 ]+/g, ' ')
       .replace(/\s+/g, ' ');
+
+    return this.applyDomainPhraseReplacements(normalizedBase);
+  };
+
+  private applyDomainPhraseReplacements = (text: string) => {
+    let output = text;
+
+    for (const [pattern, replacement] of DOMAIN_PHRASE_REPLACEMENTS) {
+      output = output.replace(pattern, replacement);
+    }
+
+    return output;
+  };
+
+  private buildCandidateVocabulary = (candidates: KnowledgeCandidate[]) => {
+    const vocabulary = new Set<string>();
+
+    for (const candidate of candidates) {
+      const content = [
+        candidate.questionCanonical,
+        ...candidate.phrases,
+        ...candidate.tags,
+      ].join(' ');
+      const tokens = this.tokenize(this.normalizeText(content), true);
+
+      for (const token of tokens) {
+        if (token.length >= 3) {
+          vocabulary.add(token);
+        }
+      }
+    }
+
+    return vocabulary;
+  };
+
+  private normalizeQueryTokens = (
+    tokens: string[],
+    candidateVocabulary: Set<string>,
+  ) => {
+    if (tokens.length === 0 || candidateVocabulary.size === 0) {
+      return tokens;
+    }
+
+    const mergedCorrections = this.correctMergedTokens(
+      tokens,
+      candidateVocabulary,
+    );
+
+    return mergedCorrections.map((token) => {
+      if (candidateVocabulary.has(token) || token.length < 3) {
+        return token;
+      }
+
+      const closestMatch = this.findClosestVocabularyToken(
+        token,
+        candidateVocabulary,
+      );
+
+      return closestMatch ?? token;
+    });
+  };
+
+  private correctMergedTokens = (
+    tokens: string[],
+    candidateVocabulary: Set<string>,
+  ) => {
+    const output: string[] = [];
+    let index = 0;
+
+    while (index < tokens.length) {
+      const current = tokens[index];
+      const next = tokens[index + 1];
+
+      if (next) {
+        const merged = `${current}${next}`;
+        const closestMergedMatch = this.findClosestVocabularyToken(
+          merged,
+          candidateVocabulary,
+          0.7,
+        );
+
+        const hasMergedMatch = Boolean(closestMergedMatch);
+
+        if (hasMergedMatch && closestMergedMatch) {
+          output.push(closestMergedMatch);
+          index += 2;
+        } else {
+          output.push(current);
+          index += 1;
+        }
+      } else {
+        output.push(current);
+        index += 1;
+      }
+    }
+
+    return output;
+  };
+
+  private findClosestVocabularyToken = (
+    token: string,
+    candidateVocabulary: Set<string>,
+    minimumSimilarity = 0.78,
+  ) => {
+    let bestToken: string | null = null;
+    let bestSimilarity = 0;
+
+    for (const vocabularyToken of candidateVocabulary.values()) {
+      const lengthGap = Math.abs(vocabularyToken.length - token.length);
+
+      if (lengthGap <= 4) {
+        const similarity = this.levenshteinSimilarity(token, vocabularyToken);
+
+        if (similarity > bestSimilarity) {
+          bestSimilarity = similarity;
+          bestToken = vocabularyToken;
+        }
+      }
+    }
+
+    if (bestSimilarity < minimumSimilarity) {
+      return null;
+    }
+
+    return bestToken;
   };
 
   private tokenize = (text: string, removeStopwords: boolean) => {

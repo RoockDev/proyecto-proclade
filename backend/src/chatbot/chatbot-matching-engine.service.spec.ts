@@ -44,6 +44,26 @@ describe('ChatbotMatchingEngineService', () => {
       ctaLinks: [{ label: 'Noticias', to: '/noticias' }],
       phrases: ['ver noticias', 'novedades del proyecto'],
     },
+    {
+      id: 3,
+      intentCode: 'SUPERHEROES',
+      questionCanonical: 'quienes son los superheroes puch',
+      answer: 'Estos son los superhéroes del proyecto.',
+      tags: ['superheroes', 'testimonios'],
+      route: '/superheroes',
+      ctaLinks: [{ label: 'Superheroes', to: '/superheroes' }],
+      phrases: ['ver superheroes', 'equipo de superheroes'],
+    },
+    {
+      id: 4,
+      intentCode: 'CONTACTO',
+      questionCanonical: 'quiero solicitar informacion',
+      answer: 'Puedes escribirnos para solicitar información.',
+      tags: ['solicitar', 'informacion', 'contacto'],
+      route: '/colabora',
+      ctaLinks: [{ label: 'Contactar', to: 'mailto:equipo@equipopuch.org' }],
+      phrases: ['necesito ayuda', 'quiero solicitar'],
+    },
   ];
 
   it('calcula keywordScore alto para coincidencias directas de keywords', () => {
@@ -144,5 +164,41 @@ describe('ChatbotMatchingEngineService', () => {
       (donar?.scoreBreakdown.contextScore ?? 0) >
         (noticias?.scoreBreakdown.contextScore ?? 0),
     ).toBe(true);
+  });
+
+  it('corrige typos de dominio como super errores y detecta SUPERHEROES', () => {
+    const engine = createEngine();
+
+    const scored = engine.scoreCandidates({
+      normalizedMessage: 'super errores',
+      candidates,
+      pageContext: 'home',
+      sessionContext: {
+        lastDetectedIntentCode: null,
+        lastMessageAt: new Date(),
+        startedAt: new Date(),
+      },
+    });
+
+    expect(scored[0].candidate.intentCode).toBe('SUPERHEROES');
+    expect(scored[0].scoreBreakdown.fuzzyScore).toBeGreaterThan(0.4);
+  });
+
+  it('interpreta lenguaje natural de solicitud para intención de CONTACTO', () => {
+    const engine = createEngine();
+
+    const scored = engine.scoreCandidates({
+      normalizedMessage: 'quiero solicitar informacion',
+      candidates,
+      pageContext: 'colabora',
+      sessionContext: {
+        lastDetectedIntentCode: null,
+        lastMessageAt: new Date(),
+        startedAt: new Date(),
+      },
+    });
+
+    expect(scored[0].candidate.intentCode).toBe('CONTACTO');
+    expect(scored[0].scoreBreakdown.finalScore).toBeGreaterThan(0.45);
   });
 });
