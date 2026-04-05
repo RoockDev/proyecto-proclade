@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ChatReplyType, type Prisma } from 'generated/prisma/client';
+import { ChatbotMatchingConfigService } from './chatbot-matching-config.service';
+import { ChatbotDynamicContextService } from './chatbot-dynamic-context.service';
+import { ChatbotMatchingEngineService } from './chatbot-matching-engine.service';
 import { ChatbotSessionService } from './chatbot-session.service';
 import { KnowledgeBaseService } from './knowledge-base.service';
 import { UnresolvedQuestionService } from './unresolved-question.service';
 import type {
   ChatbotReplyData,
-  KnowledgeCandidate,
+  ChatbotSuggestionsData,
+  MatchingThresholds,
   ScoredCandidate,
 } from './types/chatbot.types';
 
@@ -15,13 +19,13 @@ type SendMessagePayload = {
   pageContext?: string;
 };
 
-const DIRECT_ANSWER_THRESHOLD = 0.72;
-const CLARIFICATION_THRESHOLD = 0.45;
-
 @Injectable()
 export class ChatbotOrchestratorService {
   constructor(
     private readonly chatbotSessionService: ChatbotSessionService,
+    private readonly chatbotMatchingConfigService: ChatbotMatchingConfigService,
+    private readonly chatbotMatchingEngineService: ChatbotMatchingEngineService,
+    private readonly chatbotDynamicContextService: ChatbotDynamicContextService,
     private readonly knowledgeBaseService: KnowledgeBaseService,
     private readonly unresolvedQuestionService: UnresolvedQuestionService,
   ) {}
@@ -48,17 +52,72 @@ export class ChatbotOrchestratorService {
       normalizedText,
     );
 
+    const conversationalReply = this.buildConversationalReply(
+      session.sessionKey,
+      normalizedText,
+    );
+
+    if (conversationalReply) {
+      const enrichedConversationalReply =
+        await this.enrichReplyWithDynamicContext(
+          conversationalReply,
+          normalizedText,
+        );
+      const botMessage = await this.chatbotSessionService.saveBotMessage(
+        session.id,
+        {
+          messageText: enrichedConversationalReply.answer,
+          detectedIntentCode: enrichedConversationalReply.detectedIntentCode,
+          replyType: enrichedConversationalReply.replyType,
+          confidence: enrichedConversationalReply.confidence,
+          meta: {
+            pageContext: payload.pageContext ?? null,
+            suggestions: enrichedConversationalReply.suggestions,
+            ctaLinks: enrichedConversationalReply.ctaLinks,
+            scoreBreakdown: null,
+            candidateId: null,
+          },
+        },
+      );
+
+      await this.chatbotSessionService.touchSession(session.id);
+
+      return {
+        message: 'Respuesta del chatbot generada correctamente',
+        messageId: botMessage.id,
+        ...enrichedConversationalReply,
+      };
+    }
+
+    const sessionContext = await this.chatbotSessionService.getSessionContext(
+      session.id,
+    );
     const candidates = await this.knowledgeBaseService.getCandidates();
-    const scoredCandidates = this.rankCandidates(normalizedText, candidates);
-    const bestMatch = scoredCandidates[0];
+    const scoredCandidates = this.chatbotMatchingEngineService.scoreCandidates({
+      normalizedMessage: normalizedText,
+      candidates,
+      pageContext: payload.pageContext,
+      sessionContext,
+    });
+    const rerankedCandidates = this.applyIntentHints(
+      normalizedText,
+      scoredCandidates,
+    );
+    const bestMatch = rerankedCandidates[0];
+    const thresholds = this.chatbotMatchingConfigService.getThresholds();
 
     const reply = this.buildReply(
       session.sessionKey,
       bestMatch,
-      scoredCandidates,
+      rerankedCandidates,
+      thresholds,
+    );
+    const enrichedReply = await this.enrichReplyWithDynamicContext(
+      reply,
+      normalizedText,
     );
 
-    if (reply.replyType === ChatReplyType.FALLBACK) {
+    if (enrichedReply.replyType === ChatReplyType.FALLBACK) {
       await this.unresolvedQuestionService.register({
         normalizedText,
         sampleText: payload.message,
@@ -68,37 +127,92 @@ export class ChatbotOrchestratorService {
 
     const meta: Prisma.InputJsonValue = {
       pageContext: payload.pageContext ?? null,
-      suggestions: reply.suggestions,
-      ctaLinks: reply.ctaLinks,
+      suggestions: enrichedReply.suggestions,
+      ctaLinks: enrichedReply.ctaLinks,
+      scoreBreakdown: bestMatch?.scoreBreakdown ?? null,
+      candidateId: bestMatch?.candidate.id ?? null,
     };
 
-    await this.chatbotSessionService.saveBotMessage(session.id, {
-      messageText: reply.answer,
-      detectedIntentCode: reply.detectedIntentCode,
-      replyType: reply.replyType,
-      confidence: reply.confidence,
-      meta,
-    });
+    const botMessage = await this.chatbotSessionService.saveBotMessage(
+      session.id,
+      {
+        messageText: enrichedReply.answer,
+        detectedIntentCode: enrichedReply.detectedIntentCode,
+        replyType: enrichedReply.replyType,
+        confidence: enrichedReply.confidence,
+        meta,
+      },
+    );
 
     await this.chatbotSessionService.touchSession(session.id);
 
     return {
       message: 'Respuesta del chatbot generada correctamente',
-      ...reply,
+      messageId: botMessage.id,
+      ...enrichedReply,
     };
   }
 
   async getHealth() {
     const candidates = await this.knowledgeBaseService.getCandidates();
+    const configSnapshot =
+      this.chatbotMatchingEngineService.getConfigSnapshot();
 
     return {
       message: 'Chatbot operativo',
       status: 'ok',
       totalKnowledgeItems: candidates.length,
-      thresholds: {
-        directAnswer: DIRECT_ANSWER_THRESHOLD,
-        clarification: CLARIFICATION_THRESHOLD,
-      },
+      thresholds: configSnapshot.thresholds,
+      weights: configSnapshot.weights,
+    };
+  }
+
+  async getSuggestions(payload: {
+    sessionId?: string;
+    pageContext?: string;
+    limit?: number;
+  }) {
+    const safeLimit = Math.max(1, Math.min(payload.limit ?? 4, 8));
+    const session = payload.sessionId
+      ? await this.chatbotSessionService.findOpenSessionByKey(payload.sessionId)
+      : null;
+
+    const lastDetectedIntentCode = session
+      ? await this.chatbotSessionService.getLastDetectedIntentCode(session.id)
+      : null;
+
+    const candidates = await this.knowledgeBaseService.getCandidates();
+    const uniqueSuggestions = this.buildSuggestions({
+      candidates,
+      limit: safeLimit,
+      pageContext: payload.pageContext,
+      lastDetectedIntentCode,
+    });
+
+    const data: ChatbotSuggestionsData = {
+      sessionId: session?.sessionKey ?? payload.sessionId ?? null,
+      pageContext: payload.pageContext ?? null,
+      suggestions: uniqueSuggestions,
+    };
+
+    return {
+      message: 'Sugerencias del chatbot obtenidas correctamente',
+      ...data,
+    };
+  }
+
+  async registerFeedback(payload: {
+    sessionId: string;
+    messageId: number;
+    helpful: boolean;
+  }) {
+    await this.chatbotSessionService.registerFeedback(payload);
+
+    return {
+      message: 'Feedback del chatbot registrado correctamente',
+      sessionId: payload.sessionId,
+      messageId: payload.messageId,
+      helpful: payload.helpful,
     };
   }
 
@@ -106,26 +220,36 @@ export class ChatbotOrchestratorService {
     sessionId: string,
     bestMatch: ScoredCandidate | undefined,
     rankedCandidates: ScoredCandidate[],
+    thresholds: MatchingThresholds,
   ): ChatbotReplyData {
-    if (!bestMatch || bestMatch.score < CLARIFICATION_THRESHOLD) {
+    const bestQuestion = bestMatch?.candidate.questionCanonical;
+
+    if (!bestMatch || bestMatch.score < thresholds.clarification) {
+      const fallbackAnswer = bestQuestion
+        ? `No te entendí del todo. ¿Te refieres a "${bestQuestion}"? Si quieres, también puedo ayudarte con donaciones, noticias, superhéroes o cómo colaborar.`
+        : 'No he entendido bien tu mensaje. Si quieres, reformúlalo y te ayudo con donaciones, noticias, superhéroes, delegaciones o colaboración.';
+
       return {
         sessionId,
         replyType: ChatReplyType.FALLBACK,
-        answer:
-          'Ahora mismo no tengo una respuesta exacta para eso. Si quieres, puedo ayudarte con información sobre donaciones, noticias, superhéroes o cómo colaborar.',
+        answer: fallbackAnswer,
         confidence: 0,
-        detectedIntentCode: null,
+        detectedIntentCode: bestMatch?.candidate.intentCode ?? null,
         suggestions: this.extractSuggestions(rankedCandidates),
-        ctaLinks: [],
+        ctaLinks: bestMatch?.candidate.ctaLinks ?? [],
       };
     }
 
-    if (bestMatch.score < DIRECT_ANSWER_THRESHOLD) {
+    const shouldDirectAnswer =
+      bestMatch.score >= thresholds.directAnswer ||
+      bestMatch.scoreBreakdown.fuzzyScore >= 0.92 ||
+      bestMatch.scoreBreakdown.keywordScore >= 0.88;
+
+    if (!shouldDirectAnswer) {
       return {
         sessionId,
         replyType: ChatReplyType.CLARIFICATION,
-        answer:
-          'Creo que estás preguntando sobre este tema. ¿Te sirve esta respuesta o quieres que te enseñe opciones relacionadas?',
+        answer: `${bestMatch.candidate.answer}\n\nSi no era exactamente esto, dime más detalle y te doy una respuesta más afinada.`,
         confidence: bestMatch.score,
         detectedIntentCode: bestMatch.candidate.intentCode,
         suggestions: this.extractSuggestions(rankedCandidates),
@@ -144,83 +268,6 @@ export class ChatbotOrchestratorService {
     };
   }
 
-  private rankCandidates(
-    normalizedText: string,
-    candidates: KnowledgeCandidate[],
-  ): ScoredCandidate[] {
-    const userTokens = this.tokenize(normalizedText);
-
-    return candidates
-      .map((candidate) => ({
-        candidate,
-        score: this.calculateCandidateScore(
-          normalizedText,
-          userTokens,
-          candidate,
-        ),
-      }))
-      .sort((left, right) => right.score - left.score)
-      .slice(0, 5);
-  }
-
-  private calculateCandidateScore(
-    normalizedText: string,
-    userTokens: string[],
-    candidate: KnowledgeCandidate,
-  ) {
-    const canonicalScore = this.calculateTextSimilarity(
-      normalizedText,
-      this.normalizeText(candidate.questionCanonical),
-    );
-
-    const phraseScore = candidate.phrases.reduce((best, phrase) => {
-      const value = this.calculateTextSimilarity(
-        normalizedText,
-        this.normalizeText(phrase),
-      );
-      return value > best ? value : best;
-    }, 0);
-
-    const tagsText = candidate.tags.join(' ');
-    const tagScore = this.calculateTextSimilarity(
-      normalizedText,
-      this.normalizeText(tagsText),
-      userTokens,
-    );
-
-    return canonicalScore * 0.5 + phraseScore * 0.35 + tagScore * 0.15;
-  }
-
-  private calculateTextSimilarity(
-    userText: string,
-    candidateText: string,
-    userTokensInput?: string[],
-  ) {
-    if (userText === candidateText) {
-      return 1;
-    }
-
-    if (candidateText.includes(userText) || userText.includes(candidateText)) {
-      return 0.92;
-    }
-
-    const userTokens = userTokensInput ?? this.tokenize(userText);
-    const candidateTokens = this.tokenize(candidateText);
-
-    if (userTokens.length === 0 || candidateTokens.length === 0) {
-      return 0;
-    }
-
-    const candidateTokenSet = new Set(candidateTokens);
-    const matchedTokens = userTokens.filter((token) =>
-      candidateTokenSet.has(token),
-    );
-
-    return (
-      matchedTokens.length / Math.max(userTokens.length, candidateTokens.length)
-    );
-  }
-
   private extractSuggestions(candidates: ScoredCandidate[]) {
     return candidates
       .filter((item) => item.score > 0.2)
@@ -228,11 +275,125 @@ export class ChatbotOrchestratorService {
       .map((item) => item.candidate.questionCanonical);
   }
 
-  private tokenize(text: string) {
-    return text
-      .split(' ')
-      .map((token) => token.trim())
-      .filter((token) => token.length > 1);
+  private buildSuggestions(input: {
+    candidates: ScoredCandidate['candidate'][];
+    pageContext?: string;
+    lastDetectedIntentCode: string | null;
+    limit: number;
+  }) {
+    const onboardingSuggestions = this.buildOnboardingSuggestions(
+      input.candidates,
+      input.limit,
+    );
+
+    const ranked = input.candidates
+      .map((candidate) => {
+        let score = 0;
+
+        if (
+          input.lastDetectedIntentCode &&
+          candidate.intentCode === input.lastDetectedIntentCode
+        ) {
+          score += 2;
+        }
+
+        if (this.pageContextMatchesRoute(input.pageContext, candidate.route)) {
+          score += 1;
+        }
+
+        if (candidate.ctaLinks.length > 0) {
+          score += 0.2;
+        }
+
+        return {
+          text: candidate.questionCanonical,
+          score,
+        };
+      })
+      .sort((left, right) => right.score - left.score);
+
+    const uniqueByText = new Set<string>();
+    const suggestions: string[] = [];
+
+    if (!input.lastDetectedIntentCode) {
+      for (const suggestion of onboardingSuggestions) {
+        uniqueByText.add(suggestion);
+        suggestions.push(suggestion);
+      }
+    }
+
+    for (const item of ranked) {
+      const hasCapacity = suggestions.length < input.limit;
+      const isUnique = !uniqueByText.has(item.text);
+
+      if (hasCapacity && isUnique) {
+        uniqueByText.add(item.text);
+        suggestions.push(item.text);
+      }
+    }
+
+    return suggestions;
+  }
+
+  private buildOnboardingSuggestions(
+    candidates: ScoredCandidate['candidate'][],
+    limit: number,
+  ) {
+    const preferredSuggestions = [
+      {
+        canonical: 'como donar',
+        label: '¿Cómo puedo donar?',
+      },
+      {
+        canonical: 'quiero solicitar informacion',
+        label: 'Quiero solicitar información',
+      },
+      {
+        canonical: 'como colaborar sin donar',
+        label: '¿Cómo puedo colaborar sin donar?',
+      },
+      {
+        canonical: 'formulario de colaboracion',
+        label: 'Quiero colaborar (formulario)',
+      },
+      {
+        canonical: 'donde ver noticias del proyecto',
+        label: 'Enséñame las últimas noticias',
+      },
+    ];
+    const availableSuggestions = new Set(
+      candidates.map((candidate) => candidate.questionCanonical),
+    );
+    const suggestions: string[] = [];
+
+    for (const suggestion of preferredSuggestions) {
+      const hasCapacity = suggestions.length < limit;
+      const isAvailable = availableSuggestions.has(suggestion.canonical);
+
+      if (hasCapacity && isAvailable) {
+        suggestions.push(suggestion.label);
+      }
+    }
+
+    return suggestions;
+  }
+
+  private pageContextMatchesRoute(
+    pageContext: string | undefined,
+    route: string | null,
+  ) {
+    if (!pageContext || !route) {
+      return false;
+    }
+
+    const normalizedPage = `/${pageContext.replace(/^\/+/, '').trim()}`;
+    const normalizedRoute = `/${route.replace(/^\/+/, '').trim()}`;
+
+    return (
+      normalizedPage === normalizedRoute ||
+      normalizedPage.startsWith(normalizedRoute) ||
+      normalizedRoute.startsWith(normalizedPage)
+    );
   }
 
   private normalizeText(text: string) {
@@ -243,5 +404,328 @@ export class ChatbotOrchestratorService {
       .trim()
       .replace(/[^a-z0-9 ]+/g, ' ')
       .replace(/\s+/g, ' ');
+  }
+
+  private applyIntentHints(
+    normalizedText: string,
+    candidates: ScoredCandidate[],
+  ) {
+    const preferredIntentCode = this.detectPreferredIntentCode(normalizedText);
+
+    if (!preferredIntentCode) {
+      return candidates;
+    }
+
+    return candidates
+      .map((candidate) => {
+        if (candidate.candidate.intentCode !== preferredIntentCode) {
+          return candidate;
+        }
+
+        return {
+          ...candidate,
+          score: Math.min(1, candidate.score + 0.18),
+        };
+      })
+      .sort((left, right) => right.score - left.score);
+  }
+
+  private detectPreferredIntentCode(normalizedText: string) {
+    if (/\bnotici\w*\b/.test(normalizedText)) {
+      return 'NOTICIAS';
+    }
+
+    if (
+      /\bdeleg\w*\b/.test(normalizedText) ||
+      /\bciudad real\b|\bmadrid\b/.test(normalizedText)
+    ) {
+      return 'DELEGACIONES';
+    }
+
+    if (
+      /\bsuperh\w*\b|\bsuper errores\b|\bsuper heroes\b|\bsuper\w{4,}\b/.test(
+        normalizedText,
+      )
+    ) {
+      return 'SUPERHEROES';
+    }
+
+    if (/\breto\w*\b/.test(normalizedText)) {
+      return 'RETOS_SOLIDARIOS';
+    }
+
+    return null;
+  }
+
+  private async enrichReplyWithDynamicContext(
+    reply: ChatbotReplyData,
+    normalizedText: string,
+  ) {
+    if (!reply.detectedIntentCode) {
+      return reply;
+    }
+
+    const hasDomainAnchor = this.hasDomainAnchorKeyword(normalizedText);
+    const hasEnoughConfidence = reply.confidence >= 0.45;
+    const canRecoverFallbackWithContext =
+      reply.replyType === ChatReplyType.FALLBACK &&
+      hasDomainAnchor &&
+      !this.isNonsense(normalizedText) &&
+      this.isDynamicFallbackIntent(reply.detectedIntentCode);
+
+    if (
+      reply.replyType !== ChatReplyType.FALLBACK &&
+      !hasDomainAnchor &&
+      !hasEnoughConfidence
+    ) {
+      return reply;
+    }
+
+    if (reply.replyType === ChatReplyType.FALLBACK && !canRecoverFallbackWithContext) {
+      return reply;
+    }
+
+    const dynamicReply =
+      await this.chatbotDynamicContextService.buildIntentReply(
+        reply.detectedIntentCode,
+        normalizedText,
+      );
+
+    if (!dynamicReply) {
+      return reply;
+    }
+
+    const mergedSuggestions = Array.from(
+      new Set([...dynamicReply.suggestions, ...reply.suggestions]),
+    ).slice(0, 5);
+
+    return {
+      ...reply,
+      replyType: ChatReplyType.DIRECT_ANSWER,
+      answer: dynamicReply.answer,
+      ctaLinks:
+        dynamicReply.ctaLinks.length > 0
+          ? dynamicReply.ctaLinks
+          : reply.ctaLinks,
+      suggestions: mergedSuggestions,
+    };
+  }
+
+  private isDynamicFallbackIntent(intentCode: string | null) {
+    if (!intentCode) {
+      return false;
+    }
+
+    return [
+      'SUPERHEROES',
+      'DELEGACIONES',
+      'RETOS_SOLIDARIOS',
+      'NOTICIAS',
+      'COLABORAR',
+      'DONAR',
+      'BIBLIOTECAS_HUMANAS',
+      'CONTACTO',
+    ].includes(intentCode);
+  }
+
+  private buildConversationalReply(
+    sessionId: string,
+    normalizedText: string,
+  ): ChatbotReplyData | null {
+    if (this.isGreeting(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.DIRECT_ANSWER,
+        answer:
+          'Hola, soy el asistente de Equipo PUCH. Puedo ayudarte con donaciones, noticias, superhéroes, colaboración y datos del proyecto. ¿Qué necesitas?',
+        confidence: 1,
+        detectedIntentCode: null,
+        suggestions: [
+          'como donar',
+          'donde ver noticias del proyecto',
+          'que es equipo puch',
+        ],
+        ctaLinks: [],
+      };
+    }
+
+    if (this.isSmallTalk(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.DIRECT_ANSWER,
+        answer:
+          'Estoy genial y listo para ayudarte. Si quieres, te cuento cómo donar, colaborar, ver noticias o conocer los superhéroes del proyecto.',
+        confidence: 1,
+        detectedIntentCode: null,
+        suggestions: [
+          'como donar',
+          'como colaborar sin donar',
+          'quienes son los superheroes puch',
+        ],
+        ctaLinks: [],
+      };
+    }
+
+    if (this.isThanks(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.DIRECT_ANSWER,
+        answer:
+          'De nada. Si quieres, puedo seguir ayudándote con donaciones, noticias o información del proyecto.',
+        confidence: 1,
+        detectedIntentCode: null,
+        suggestions: [
+          'como colaborar sin donar',
+          'que tipo de noticias publican',
+          'quienes son los superheroes puch',
+        ],
+        ctaLinks: [],
+      };
+    }
+
+    if (this.isSupportRequest(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.DIRECT_ANSWER,
+        answer:
+          'Claro. Si quieres solicitar información o colaborar, puedo orientarte ahora mismo: puedes donar desde la página oficial de PROCLADE o escribirnos para colaboración y voluntariado.',
+        confidence: 1,
+        detectedIntentCode: 'CONTACTO',
+        suggestions: [
+          'como donar',
+          'como colaborar sin donar',
+          'formulario de colaboracion',
+        ],
+        ctaLinks: [
+          {
+            label: 'Ir a donar en PROCLADE',
+            to: 'https://www.fundacionproclade.org/dona/',
+          },
+          {
+            label: 'Escribir a equipo@equipopuch.org',
+            to: 'mailto:equipo@equipopuch.org',
+          },
+        ],
+      };
+    }
+
+    if (this.isNonsense(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.FALLBACK,
+        answer:
+          'No he conseguido entender tu mensaje. Prueba con una frase como: "cómo donar", "últimas noticias" o "superhéroes".',
+        confidence: 0,
+        detectedIntentCode: null,
+        suggestions: [
+          'como donar',
+          'donde ver noticias del proyecto',
+          'quienes son los superheroes puch',
+        ],
+        ctaLinks: [],
+      };
+    }
+
+    if (this.isGoodbye(normalizedText)) {
+      return {
+        sessionId,
+        replyType: ChatReplyType.DIRECT_ANSWER,
+        answer:
+          'Perfecto, aquí estaré cuando lo necesites. ¡Gracias por apoyar a Equipo PUCH!',
+        confidence: 1,
+        detectedIntentCode: null,
+        suggestions: [],
+        ctaLinks: [],
+      };
+    }
+
+    return null;
+  }
+
+  private isGreeting(normalizedText: string) {
+    return /^(hola+|buenas+|buenos dias|buen dia|buenas tardes|buenas noches|hey+|ey+|eyy+)( .*)?$/.test(
+      normalizedText,
+    );
+  }
+
+  private isSmallTalk(normalizedText: string) {
+    return /^(que tal|como estas|como va todo|todo bien|como te va|que tal estas)( .*)?$/.test(
+      normalizedText,
+    );
+  }
+
+  private isThanks(normalizedText: string) {
+    return /^(gracias+|muchas gracias|mil gracias|genial gracias|perfecto gracias)( .*)?$/.test(
+      normalizedText,
+    );
+  }
+
+  private isGoodbye(normalizedText: string) {
+    return /^(adios+|hasta luego|nos vemos|chao+|hasta pronto|hasta manana|me voy|bye+)( .*)?$/.test(
+      normalizedText,
+    );
+  }
+
+  private isNonsense(normalizedText: string) {
+    if (!normalizedText || normalizedText.length < 6) {
+      return false;
+    }
+
+    if (this.hasDomainAnchorKeyword(normalizedText)) {
+      return false;
+    }
+
+    const tokens = normalizedText.split(' ').filter(Boolean);
+    if (tokens.length === 1) {
+      const token = tokens[0];
+
+      if (token.length < 7) {
+        return false;
+      }
+
+      return this.isLikelyGibberishToken(token);
+    }
+
+    const relevantTokens = tokens.filter((token) => token.length >= 4);
+    if (relevantTokens.length < 2) {
+      return false;
+    }
+
+    return relevantTokens.every((token) => this.isLikelyGibberishToken(token));
+  }
+
+  private isSupportRequest(normalizedText: string) {
+    const isDomainSpecificQuery =
+      /(notici\w*|reto\w*|superh\w*|super\w{4,}|deleg\w*|equipo puch|biblioteca|libro humano|ciudad real|madrid)/.test(
+        normalizedText,
+      );
+
+    if (isDomainSpecificQuery) {
+      return false;
+    }
+
+    return /^(quiero|me puedes|podrias|necesito).*(solicitar|informacion|ayuda|colaborar|voluntariado|contacto)( .*)?$/.test(
+      normalizedText,
+    );
+  }
+
+  private hasDomainAnchorKeyword(normalizedText: string) {
+    return /(hola|buenas|gracias|adios|notici\w*|reto\w*|superh\w*|super\w{4,}|deleg\w*|donar|donacion|colaborar|voluntariado|contacto|equipo puch|biblioteca|libro humano|como donar|que es equipo puch|ciudad real|madrid)/.test(
+      normalizedText,
+    );
+  }
+
+  private isLikelyGibberishToken(token: string) {
+    const uniqueCharsRatio = new Set(token).size / token.length;
+    const hasLongConsonantRun = /[bcdfghjklmnñpqrstvwxyz]{6,}/.test(token);
+    const hasRepeatedChunk = /^([a-z]{2,4})\1{2,}$/.test(token);
+    const noVowels = !/[aeiou]/.test(token);
+
+    return (
+      uniqueCharsRatio < 0.35 ||
+      hasLongConsonantRun ||
+      hasRepeatedChunk ||
+      noVowels
+    );
   }
 }

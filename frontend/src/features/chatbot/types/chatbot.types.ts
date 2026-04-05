@@ -14,6 +14,7 @@ export type ChatbotSessionData = {
 
 export type ChatbotReplyData = {
   sessionId: string;
+  messageId?: number;
   replyType: ChatbotReplyType;
   answer: string;
   confidence: number;
@@ -22,10 +23,28 @@ export type ChatbotReplyData = {
   ctaLinks: ChatbotCtaLink[];
 };
 
+export type ChatbotSuggestionsData = {
+  sessionId: string | null;
+  pageContext: string | null;
+  suggestions: string[];
+};
+
 export type SendChatbotMessagePayload = {
   message: string;
   sessionId?: string;
   pageContext?: string;
+};
+
+export type ListChatbotSuggestionsPayload = {
+  sessionId?: string;
+  pageContext?: string;
+  limit?: number;
+};
+
+export type SendChatbotFeedbackPayload = {
+  sessionId: string;
+  messageId: number;
+  helpful: boolean;
 };
 
 export type ChatRole = 'user' | 'bot';
@@ -35,7 +54,9 @@ export type ChatUiMessage = {
   role: ChatRole;
   text: string;
   createdAt: string;
+  messageId?: number;
   replyType?: ChatbotReplyType;
   ctaLinks?: ChatbotCtaLink[];
   suggestions?: string[];
+  feedbackHelpful?: boolean;
 };

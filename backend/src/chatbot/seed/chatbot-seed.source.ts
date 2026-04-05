@@ -113,6 +113,20 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 1,
     isActive: true,
   },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'que es equipo patch',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'me explicas que es equipo puch',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
 
   {
     intentCode: 'UNIRSE_EQUIPO_PUCH',
@@ -207,6 +221,34 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.9,
     isActive: true,
   },
+  {
+    intentCode: 'DONAR',
+    text: 'como puedo donar',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'me puedes ayudar sobre como donar',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'me ayudas a donar',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'DONAR',
+    text: 'como hago para donar',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
 
   {
     intentCode: 'COLABORAR',
@@ -251,6 +293,34 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.9,
     isActive: true,
   },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'noticias',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'donde puedo ver noticias',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'quiero ver noticias',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'informacion de esta noticia',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
 
   {
     intentCode: 'SUPERHEROES',
@@ -280,6 +350,34 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.9,
     isActive: true,
   },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'super errores',
+    language: 'es',
+    weight: 0.85,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'quiero ver superheroes',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'donde ver superheroes',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'SUPERHEROES',
+    text: 'informacion de este superheroe',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
 
   {
     intentCode: 'RETOS_SOLIDARIOS',
@@ -300,6 +398,27 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     text: 'una granja en 30 dias',
     language: 'es',
     weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'informacion del reto',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'quiero saber del reto 2',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'RETOS_SOLIDARIOS',
+    text: 'datos del reto 2',
+    language: 'es',
+    weight: 0.9,
     isActive: true,
   },
 
@@ -339,6 +458,34 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 1,
     isActive: true,
   },
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'que delegaciones hay',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'delegacion ciudad real',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'delegacion madrid',
+    language: 'es',
+    weight: 0.95,
+    isActive: true,
+  },
+  {
+    intentCode: 'DELEGACIONES',
+    text: 'informacion de delegaciones',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
 
   {
     intentCode: 'CONTACTO',
@@ -361,6 +508,41 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.8,
     isActive: true,
   },
+  {
+    intentCode: 'CONTACTO',
+    text: 'quiero solicitar informacion',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'quiero solicitar',
+    language: 'es',
+    weight: 0.85,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'me puedes ayudar',
+    language: 'es',
+    weight: 0.8,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'necesito informacion',
+    language: 'es',
+    weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    text: 'como puedo contactar',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
 ];
 
 export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
@@ -369,7 +551,13 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     questionCanonical: 'que es equipo puch',
     answer:
       'Equipo PUCH significa Personas Unidas Contra el Hambre. Es una campana de sensibilizacion y accion social impulsada junto a Fundacion PROCLADE para avanzar hacia el ODS 2 Hambre Cero.',
-    tags: ['equipo puch', 'ods 2', 'hambre cero', 'fundacion proclade'],
+    tags: [
+      'equipo puch',
+      'equipo patch',
+      'ods 2',
+      'hambre cero',
+      'fundacion proclade',
+    ],
     route: '/',
     ctaLinks: [{ label: 'Ir a inicio', to: '/' }],
     isActive: true,
@@ -620,6 +808,22 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
         label: 'Enviar correo de contacto',
         to: 'mailto:equipo@equipopuch.org',
       },
+    ],
+    isActive: true,
+  },
+  {
+    intentCode: 'CONTACTO',
+    questionCanonical: 'quiero solicitar informacion',
+    answer:
+      'Si quieres solicitar informacion, voluntariado o una colaboracion personalizada, puedes escribir a equipo@equipopuch.org y te orientamos segun tu caso.',
+    tags: ['solicitar', 'informacion', 'ayuda', 'voluntariado', 'colaboracion'],
+    route: '/colabora',
+    ctaLinks: [
+      {
+        label: 'Escribir a equipo@equipopuch.org',
+        to: 'mailto:equipo@equipopuch.org',
+      },
+      { label: 'Ir a Colabora', to: '/colabora' },
     ],
     isActive: true,
   },

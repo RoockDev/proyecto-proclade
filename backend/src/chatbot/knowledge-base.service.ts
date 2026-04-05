@@ -84,21 +84,20 @@ export class KnowledgeBaseService {
     const links: ChatbotCtaLink[] = [];
 
     for (const rawItem of value) {
-      if (
-        typeof rawItem !== 'object' ||
-        rawItem === null ||
-        Array.isArray(rawItem)
-      ) {
-        continue;
+      const isObjectLike =
+        typeof rawItem === 'object' &&
+        rawItem !== null &&
+        !Array.isArray(rawItem);
+
+      if (isObjectLike) {
+        const item = rawItem as Record<string, unknown>;
+
+        links.push({
+          label:
+            typeof item.label === 'string' ? item.label : 'Ver más información',
+          to: typeof item.to === 'string' ? item.to : '/',
+        });
       }
-
-      const item = rawItem as Record<string, unknown>;
-
-      links.push({
-        label:
-          typeof item.label === 'string' ? item.label : 'Ver más información',
-        to: typeof item.to === 'string' ? item.to : '/',
-      });
     }
 
     return links;
