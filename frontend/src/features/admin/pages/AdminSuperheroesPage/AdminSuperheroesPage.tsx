@@ -36,7 +36,6 @@ const statusFilters: { label: string; value: AdminSuperheroFilterValue }[] = [
 const initialFormState = {
   name: '',
   description: '',
-  quote: '',
   country: '',
   sortOrder: '',
   status: 'DRAFT' as SuperheroStatus,
@@ -82,7 +81,7 @@ export const AdminSuperheroesPage = () => {
     refresh,
     showDeleted,
     setShowDeleted,
-  } = useAdminSuperheroesList({ pageSize: 6, onError: handleListError });
+  } = useAdminSuperheroesList({ pageSize: 4, onError: handleListError });
 
   useEffect(() => {
     return () => {
@@ -135,7 +134,6 @@ export const AdminSuperheroesPage = () => {
     setFormState({
       name: hero.name,
       description: hero.description,
-      quote: hero.quote ?? '',
       country: hero.country ?? '',
       sortOrder: hero.sortOrder.toString(),
       status: hero.status,
@@ -186,7 +184,6 @@ export const AdminSuperheroesPage = () => {
     return {
       name: formState.name.trim(),
       description: formState.description.trim(),
-      quote: formState.quote.trim() || undefined,
       country: formState.country.trim() || undefined,
       sortOrder,
       status: formState.status,
@@ -329,17 +326,15 @@ export const AdminSuperheroesPage = () => {
           <span className="admin-superheroes-page__notification-message">{notification.message}</span>
         </div>
       )}
-      <div className="admin-superheroes-page__toolbar">
-        <SuperheroesToolbar
-          search={search}
-          onSearchChange={setSearch}
-          onNew={handleNew}
-          filters={statusFilters}
-          activeStatusFilter={statusFilter}
-          showDeletedOnly={showDeleted}
-          onFilterSelect={handleFilterSelect}
-        />
-      </div>
+      <SuperheroesToolbar
+        search={search}
+        onSearchChange={setSearch}
+        onNew={handleNew}
+        filters={statusFilters}
+        activeStatusFilter={statusFilter}
+        showDeletedOnly={showDeleted}
+        onFilterSelect={handleFilterSelect}
+      />
 
       <SuperheroFormModal
         isOpen={isFormOpen}
@@ -354,6 +349,7 @@ export const AdminSuperheroesPage = () => {
         onReset={resetForm}
       />
 
+      <div className="admin-superheroes-page__panel">
         <SuperheroesTable
           heroes={superheroes}
           onEdit={handleEdit}
@@ -363,30 +359,31 @@ export const AdminSuperheroesPage = () => {
           showDeletedOnly={showDeleted}
         />
 
-      <div className="admin-superheroes-pagination">
-        <p className="admin-superheroes-pagination__info">
-          Mostrando {heroListInfo.start}-{heroListInfo.end} de {total}
-        </p>
-        <div className="admin-superheroes-pagination__controls">
-          <button
-            type="button"
-            disabled={page <= 1}
-            onClick={() => pageChange(Math.max(1, page - 1))}
-            aria-label="Página anterior"
-          >
-            ←
-          </button>
-          <span>
-            {page} / {safeTotalPages}
-          </span>
-          <button
-            type="button"
-            disabled={page >= safeTotalPages}
-            onClick={() => pageChange(Math.min(safeTotalPages, page + 1))}
-            aria-label="Página siguiente"
-          >
-            →
-          </button>
+        <div className="admin-superheroes-pagination">
+          <p className="admin-superheroes-pagination__info">
+            Mostrando {heroListInfo.start}-{heroListInfo.end} de {total}
+          </p>
+          <div className="admin-superheroes-pagination__controls">
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => pageChange(Math.max(1, page - 1))}
+              aria-label="Página anterior"
+            >
+              ←
+            </button>
+            <span>
+              {page} / {safeTotalPages}
+            </span>
+            <button
+              type="button"
+              disabled={page >= safeTotalPages}
+              onClick={() => pageChange(Math.min(safeTotalPages, page + 1))}
+              aria-label="Página siguiente"
+            >
+              →
+            </button>
+          </div>
         </div>
       </div>
 

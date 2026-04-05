@@ -71,8 +71,8 @@ export const SuperheroesToolbar = ({
       }
       actionsSlot={
         <div className="superheroes-toolbar__actions">
-          <AdminButton variant="solid" onClick={onNew}>
-            Nuevo superhéroe
+          <AdminButton variant="solid" className="admin-toolbar__new" onClick={onNew}>
+            Nuevo
           </AdminButton>
         </div>
       }
