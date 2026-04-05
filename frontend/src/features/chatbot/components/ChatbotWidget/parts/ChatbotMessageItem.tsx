@@ -4,14 +4,18 @@ type ChatbotMessageItemProps = {
   message: ChatUiMessage;
   onSuggestionClick: (suggestion: string) => void;
   onCtaClick: (link: ChatbotCtaLink) => void;
+  onFeedback: (messageId: number, helpful: boolean) => void;
 };
 
 export function ChatbotMessageItem({
   message,
   onSuggestionClick,
   onCtaClick,
+  onFeedback,
 }: ChatbotMessageItemProps) {
   const isBot = message.role === 'bot';
+  const feedbackMessageId =
+    typeof message.messageId === 'number' ? message.messageId : null;
 
   return (
     <article
@@ -52,6 +56,35 @@ export function ChatbotMessageItem({
             ))}
           </div>
         )}
+
+      {isBot && feedbackMessageId !== null && (
+        <div className="chatbot-message__feedback">
+          <button
+            type="button"
+            className={`chatbot-message__feedback-btn btn btn-sm ${
+              message.feedbackHelpful === true
+                ? 'chatbot-message__feedback-btn--active'
+                : ''
+            }`}
+            aria-label="Esta respuesta me ayudó"
+            onClick={() => onFeedback(feedbackMessageId, true)}
+          >
+            <i className="bi bi-hand-thumbs-up" />
+          </button>
+          <button
+            type="button"
+            className={`chatbot-message__feedback-btn btn btn-sm ${
+              message.feedbackHelpful === false
+                ? 'chatbot-message__feedback-btn--active'
+                : ''
+            }`}
+            aria-label="Esta respuesta no me ayudó"
+            onClick={() => onFeedback(feedbackMessageId, false)}
+          >
+            <i className="bi bi-hand-thumbs-down" />
+          </button>
+        </div>
+      )}
     </article>
   );
 }

@@ -17,6 +17,8 @@ export function ChatbotWidget() {
     isSending,
     errorMessage,
     sendMessage,
+    loadSuggestions,
+    sendFeedback,
   } = useChatbot();
 
   const pageContext = useMemo(
@@ -33,6 +35,14 @@ export function ChatbotWidget() {
 
     node.scrollTop = node.scrollHeight;
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    void loadSuggestions(pageContext);
+  }, [isOpen, loadSuggestions, pageContext]);
 
   const handleToggle = () => {
     setIsOpen((previous) => !previous);
@@ -75,6 +85,10 @@ export function ChatbotWidget() {
     setIsOpen(false);
   };
 
+  const handleFeedback = (messageId: number, helpful: boolean) => {
+    void sendFeedback(messageId, helpful);
+  };
+
   return (
     <aside className={`chatbot-widget ${isOpen ? 'chatbot-widget--open' : ''}`}>
       {isOpen && (
@@ -101,6 +115,7 @@ export function ChatbotWidget() {
                 message={message}
                 onSuggestionClick={handleSuggestionClick}
                 onCtaClick={handleCtaClick}
+                onFeedback={handleFeedback}
               />
             ))}
             {isSending && (
@@ -158,15 +173,15 @@ export function ChatbotWidget() {
   );
 }
 
-function buildPageContextFromPath(pathname: string) {
+const buildPageContextFromPath = (pathname: string) => {
   return pathname.replace(/\//g, ' ').trim() || 'home';
-}
+};
 
-function isExternalLink(url: string) {
+const isExternalLink = (url: string) => {
   return (
     url.startsWith('http://') ||
     url.startsWith('https://') ||
     url.startsWith('mailto:') ||
     url.startsWith('tel:')
   );
-}
+};

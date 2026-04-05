@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   createChatbotSession,
+  listChatbotSuggestions,
+  sendChatbotFeedback,
   sendChatbotMessage,
 } from '../api/chatbot.api';
 import type { ChatUiMessage } from '../types/chatbot.types';
@@ -20,8 +22,8 @@ const CHATBOT_WELCOME_MESSAGE: ChatUiMessage = {
   createdAt: new Date().toISOString(),
   suggestions: [
     '¿Cómo puedo donar?',
-    '¿Qué es Equipo PUCH?',
-    'Enséñame las últimas noticias',
+    'Quiero solicitar información',
+    '¿Cómo puedo colaborar sin donar?',
   ],
 };
 
@@ -30,6 +32,8 @@ type UseChatbotResult = {
   isSending: boolean;
   errorMessage: string | null;
   sendMessage: (message: string, pageContext?: string) => Promise<void>;
+  loadSuggestions: (pageContext?: string) => Promise<void>;
+  sendFeedback: (messageId: number, helpful: boolean) => Promise<void>;
 };
 
 export function useChatbot(): UseChatbotResult {
@@ -108,6 +112,7 @@ export function useChatbot(): UseChatbotResult {
           buildUiMessage({
             role: 'bot',
             text: reply.answer,
+            messageId: reply.messageId,
             replyType: reply.replyType,
             ctaLinks: reply.ctaLinks,
             suggestions: reply.suggestions,
@@ -132,26 +137,104 @@ export function useChatbot(): UseChatbotResult {
     [ensureSession, isSending, sessionId],
   );
 
+  const loadSuggestions = useCallback(
+    async (pageContext?: string) => {
+      try {
+        const activeSessionId = await ensureSession();
+        const response = await listChatbotSuggestions({
+          sessionId: activeSessionId,
+          pageContext,
+          limit: 4,
+        });
+
+        if (!response.success) {
+          return;
+        }
+
+        const nextSuggestions = response.data?.suggestions ?? [];
+        if (nextSuggestions.length === 0) {
+          return;
+        }
+
+        setMessages((previous) =>
+          previous.map((message) => {
+            if (message.id !== CHATBOT_WELCOME_MESSAGE.id) {
+              return message;
+            }
+
+            return {
+              ...message,
+              suggestions: nextSuggestions,
+            };
+          }),
+        );
+      } catch {
+        // Si no hay sugerencias dinámicas mantenemos las sugerencias por defecto.
+      }
+    },
+    [ensureSession],
+  );
+
+  const sendFeedback = useCallback(
+    async (messageId: number, helpful: boolean) => {
+      if (!sessionId) {
+        return;
+      }
+
+      try {
+        const response = await sendChatbotFeedback({
+          sessionId,
+          messageId,
+          helpful,
+        });
+
+        if (!response.success) {
+          return;
+        }
+
+        setMessages((previous) =>
+          previous.map((message) => {
+            if (message.messageId !== messageId) {
+              return message;
+            }
+
+            return {
+              ...message,
+              feedbackHelpful: helpful,
+            };
+          }),
+        );
+      } catch {
+        setErrorMessage('No se pudo guardar tu valoración de la respuesta.');
+      }
+    },
+    [sessionId],
+  );
+
   return {
     messages,
     isSending,
     errorMessage,
     sendMessage,
+    loadSuggestions,
+    sendFeedback,
   };
 }
 
-function buildUiMessage(payload: Omit<ChatUiMessage, 'id' | 'createdAt'>): ChatUiMessage {
+const buildUiMessage = (
+  payload: Omit<ChatUiMessage, 'id' | 'createdAt'>,
+): ChatUiMessage => {
   return {
     id: buildMessageId(),
     createdAt: new Date().toISOString(),
     ...payload,
   };
-}
+};
 
-function buildMessageId() {
+const buildMessageId = () => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
 
   return `msg-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
+};
