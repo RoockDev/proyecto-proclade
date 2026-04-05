@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../prisma/prisma.module';
 import { ChatbotMatchingConfigService } from './chatbot-matching-config.service';
+import { ChatbotDynamicContextService } from './chatbot-dynamic-context.service';
 import { ChatbotMatchingEngineService } from './chatbot-matching-engine.service';
 import { ChatbotController } from './chatbot.controller';
 import { ChatbotOrchestratorService } from './chatbot-orchestrator.service';
@@ -13,6 +14,7 @@ import { UnresolvedQuestionService } from './unresolved-question.service';
   controllers: [ChatbotController],
   providers: [
     ChatbotMatchingConfigService,
+    ChatbotDynamicContextService,
     ChatbotMatchingEngineService,
     ChatbotOrchestratorService,
     ChatbotSessionService,
