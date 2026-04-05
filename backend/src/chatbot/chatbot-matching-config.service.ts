@@ -43,13 +43,13 @@ export class ChatbotMatchingConfigService {
   getThresholds = (): MatchingThresholds => {
     const directAnswer = this.getNumber(
       'CHATBOT_THRESHOLD_DIRECT_ANSWER',
-      0.75,
+      0.56,
       0,
       1,
     );
     const clarification = this.getNumber(
       'CHATBOT_THRESHOLD_CLARIFICATION',
-      0.5,
+      0.38,
       0,
       1,
     );
