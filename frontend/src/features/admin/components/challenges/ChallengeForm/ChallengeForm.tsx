@@ -12,6 +12,7 @@ type ChallengeFormProps = {
   onFieldChange: (field: keyof ChallengeFormData, value: string | boolean) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
+  onReset: () => void;
 };
 
 export const ChallengeForm = ({
@@ -23,6 +24,7 @@ export const ChallengeForm = ({
   onFieldChange,
   onSubmit,
   onClose,
+  onReset,
 }: ChallengeFormProps) => {
   if (!isOpen) return null;
 
@@ -46,14 +48,13 @@ export const ChallengeForm = ({
       <div className="challenge-form-modal__content">
         <div className="challenge-form-card">
           <div className="challenge-form-card__header">
-            <h2>{formMode === 'create' ? 'Nuevo reto' : 'Editar reto'}</h2>
+            <h2>{formMode === 'create' ? 'Crear reto' : 'Editar reto'}</h2>
             <button
               type="button"
-              className="challenge-form-card__close"
+              className="challenge-form-card__close-button"
               onClick={onClose}
-              aria-label="Cerrar"
             >
-              ✕
+              Cerrar
             </button>
           </div>
 
@@ -76,7 +77,7 @@ export const ChallengeForm = ({
               </label>
 
               <label className="challenge-form-card__field">
-                Monto objetivo (céntimos) *
+                Monto objetivo (euros) *
                 <input
                   type="number"
                   min={1}
@@ -87,7 +88,7 @@ export const ChallengeForm = ({
               </label>
 
               <label className="challenge-form-card__field">
-                Monto actual (céntimos)
+                Monto actual (euros)
                 <input
                   type="number"
                   min={0}
@@ -127,10 +128,10 @@ export const ChallengeForm = ({
                 disabled={isSaveDisabled}
                 loading={isProcessing}
               >
-                {formMode === 'create' ? 'Crear' : 'Guardar'}
+                Crear reto
               </AdminButton>
-              <AdminButton variant="outline" type="button" onClick={onClose}>
-                Cancelar
+              <AdminButton variant="outline" type="button" onClick={onReset}>
+                Limpiar formulario
               </AdminButton>
             </div>
           </form>

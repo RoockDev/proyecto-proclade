@@ -30,17 +30,19 @@ export const RegionCard = ({ region, onEdit, onDelete }: RegionCardProps) => (
     <div className="region-card__actions">
       <button
         type="button"
+        className="region-card__icon-button region-card__icon-button--edit"
         onClick={() => onEdit(region)}
-        className="region-card__action region-card__action--edit"
+        aria-label={`Editar ${region.name}`}
       >
-        Editar
+        <i className="bi bi-tools" aria-hidden="true" />
       </button>
       <button
         type="button"
+        className="region-card__icon-button region-card__icon-button--delete"
         onClick={() => onDelete(region)}
-        className="region-card__action region-card__action--delete"
+        aria-label={`Eliminar ${region.name}`}
       >
-        Eliminar
+        <i className="bi bi-x-circle" aria-hidden="true" />
       </button>
     </div>
   </article>

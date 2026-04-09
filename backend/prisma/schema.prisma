@@ -12,6 +12,7 @@ datasource db {
 enum NewsStatus {
   DRAFT
   PUBLISHED
+  HIDDEN
 }
 
 enum SuperheroStatus {

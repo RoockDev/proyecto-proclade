@@ -37,47 +37,36 @@
   font-size: 0.9rem;
 }
 
-.admin-challenges-page__notification {
+.admin-challenges-page__feedback-badge {
   position: fixed;
   top: 1.25rem;
   right: 1.25rem;
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1.35rem;
-  border-radius: 0.9rem;
-  font-weight: 600;
-  color: #fff;
+  gap: 0.6rem;
   box-shadow: 0 25px 45px rgba(15, 23, 42, 0.35);
   z-index: 60;
-  animation: admin-challenges-notification-fade 0.35s ease;
-}
-
-.admin-challenges-page__notification-icon {
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-}
-
-.admin-challenges-page__notification-message {
-  margin: 0;
   font-size: 0.95rem;
+  animation: admin-challenges-feedback-badge-fade 0.35s ease;
 }
 
-.admin-challenges-page__notification--success {
+.admin-challenges-page__feedback-badge-icon {
+  font-size: 1.3rem;
+}
+
+.admin-challenges-page__feedback-badge--success {
   background: linear-gradient(135deg, #14b8a6, #0ea5e9);
 }
 
-.admin-challenges-page__notification--error {
+.admin-challenges-page__feedback-badge--error {
   background: linear-gradient(135deg, #ef4444, #b91c1c);
 }
 
-@keyframes admin-challenges-notification-fade {
+@keyframes admin-challenges-feedback-badge-fade {
   from {
     opacity: 0;
     transform: translateY(-0.5rem);
@@ -86,4 +75,54 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.admin-challenges-page__panel {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.admin-challenges-page__loading {
+  text-align: center;
+  color: #94a3b8;
+  padding: 2rem 1rem;
+}
+
+.challenges-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
+}
+
+.challenges-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.challenges-pagination__controls button {
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.challenges-pagination__controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.challenges-pagination__controls span {
+  min-width: 80px;
+  text-align: center;
 }

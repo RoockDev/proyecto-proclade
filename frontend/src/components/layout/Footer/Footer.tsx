@@ -16,7 +16,7 @@ export const Footer = () => (
             links={[
               { label: '¿Qué es?', href: '/conocenos' },
               { label: '¿Qué buscamos?', href: '/campanas' },
-              { label: 'Superhéroes', href: '/superheroes' },
+              { label: 'Superhéroes', href: '/superheroes?page=1' },
             ]}
           />
         </div>

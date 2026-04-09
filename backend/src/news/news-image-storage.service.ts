@@ -45,7 +45,7 @@ export class NewsImageStorageService {
 
     await writeFile(destinationPath, file.buffer);
 
-    return `/api/uploads/news/${filename}`;
+    return `/uploads/news/${filename}`;
   }
 
   private validateFile(file: UploadedNewsImageFile): void {

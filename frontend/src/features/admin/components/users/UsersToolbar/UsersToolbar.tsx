@@ -49,8 +49,8 @@ export const UsersToolbar = ({
         />
       }
       actionsSlot={
-        <AdminButton variant="solid" className="users-toolbar__new" onClick={onNew}>
-          Nuevo usuario
+        <AdminButton variant="solid" className="users-toolbar__new admin-toolbar__new" onClick={onNew}>
+          Nuevo
         </AdminButton>
       }
     />

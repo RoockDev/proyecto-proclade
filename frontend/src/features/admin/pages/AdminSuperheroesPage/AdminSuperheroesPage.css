@@ -4,6 +4,16 @@
   gap: 1.25rem;
 }
 
+.admin-superheroes-page__panel {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .admin-superheroes-page__toolbar {
   display: flex;
   flex-direction: column;
@@ -145,9 +155,10 @@
 
 .admin-superheroes-pagination {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
 }
 
 .admin-superheroes-pagination__info {

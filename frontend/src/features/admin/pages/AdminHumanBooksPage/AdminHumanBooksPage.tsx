@@ -27,12 +27,16 @@ export const AdminHumanBooksPage = () => {
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedBook, setSelectedBook] = useState<AdminHumanBook | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedbackType, setFeedbackType] = useState<'success' | 'error' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [regions, setRegions] = useState<RegionOption[]>([]);
   const [pendingDelete, setPendingDelete] = useState<AdminHumanBook | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
-  const handleBooksError = useCallback((message: string) => setFeedback(message), []);
+  const handleBooksError = useCallback((message: string) => {
+    setFeedback(message);
+    setFeedbackType('error');
+  }, []);
 
   const {
     filteredBooks,
@@ -41,7 +45,7 @@ export const AdminHumanBooksPage = () => {
     setSearch,
   } = useHumanBooksList({ onError: handleBooksError });
 
-  const rowsPerPage = 7;
+  const rowsPerPage = 4;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredBooks.length / rowsPerPage));
   const paginatedBooks = useMemo(
@@ -60,6 +64,19 @@ export const AdminHumanBooksPage = () => {
   }, [page, totalPages]);
 
   useEffect(() => {
+    if (!feedback) {
+      return undefined;
+    }
+
+    const timer = setTimeout(() => {
+      setFeedback(null);
+      setFeedbackType(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [feedback]);
+
+  useEffect(() => {
     listRegionOptions()
       .then((res) => {
         if (res.success && res.data) {
@@ -68,6 +85,7 @@ export const AdminHumanBooksPage = () => {
       })
       .catch(() => {
         setFeedback('No se pudieron cargar las delegaciones.');
+        setFeedbackType('error');
       });
   }, []);
 
@@ -76,6 +94,7 @@ export const AdminHumanBooksPage = () => {
     setSelectedBook(null);
     setFormData(initialFormState);
     setFeedback(null);
+    setFeedbackType(null);
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setIsFormOpen(true);
   };
@@ -88,26 +107,31 @@ export const AdminHumanBooksPage = () => {
 
     if (!trimmedName || !trimmedTitle) {
       setFeedback('Completa nombre y título.');
+      setFeedbackType('error');
       return;
     }
 
     if (!regionId) {
       setFeedback('Selecciona una delegación.');
+      setFeedbackType('error');
       return;
     }
 
     if (formMode === 'create' && !formData.pdf) {
       setFeedback('Adjunta un archivo PDF.');
+      setFeedbackType('error');
       return;
     }
 
     if (formMode === 'edit' && !selectedBook) {
       setFeedback('Selecciona un libro antes de editar.');
+      setFeedbackType('error');
       return;
     }
 
     setIsProcessing(true);
     setFeedback(null);
+    setFeedbackType(null);
 
     try {
       const response =
@@ -128,6 +152,7 @@ export const AdminHumanBooksPage = () => {
 
       if (response.success) {
         setFeedback(formMode === 'create' ? 'Libro humano creado con éxito.' : 'Libro humano actualizado.');
+        setFeedbackType('success');
         setFormData(initialFormState);
         setFormMode('create');
         setSelectedBook(null);
@@ -135,11 +160,13 @@ export const AdminHumanBooksPage = () => {
         await refreshBooks();
       } else {
         setFeedback(response.message || 'No se pudo guardar el libro humano.');
+        setFeedbackType('error');
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
       const serverMessage = axiosError.response?.data?.message;
       setFeedback(serverMessage || 'Error al intentar guardar el libro humano.');
+      setFeedbackType('error');
     } finally {
       setIsProcessing(false);
     }
@@ -155,6 +182,7 @@ export const AdminHumanBooksPage = () => {
       pdf: null,
     });
     setFeedback(null);
+    setFeedbackType(null);
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setIsFormOpen(true);
   };
@@ -168,31 +196,37 @@ export const AdminHumanBooksPage = () => {
 
     setIsProcessing(true);
     setFeedback(null);
+    setFeedbackType(null);
     try {
       const response = await deleteHumanBook(pendingDelete.id);
-      if (response.success) {
-        setFeedback('Libro humano eliminado.');
-        await refreshBooks();
-      } else {
-        setFeedback(response.message || 'No se pudo eliminar el libro humano.');
+        if (response.success) {
+          setFeedback('Libro humano eliminado.');
+          setFeedbackType('success');
+          await refreshBooks();
+        } else {
+          setFeedback(response.message || 'No se pudo eliminar el libro humano.');
+          setFeedbackType('error');
+        }
+      } catch (error) {
+        console.error('Error al eliminar libro humano', error);
+        setFeedback('No se pudo eliminar el libro humano.');
+        setFeedbackType('error');
+      } finally {
+        setIsProcessing(false);
+        setPendingDelete(null);
       }
-    } catch (error) {
-      console.error('Error al eliminar libro humano', error);
-      setFeedback('No se pudo eliminar el libro humano.');
-    } finally {
-      setIsProcessing(false);
-      setPendingDelete(null);
-    }
   };
 
   const handleFieldChange = (field: keyof HumanBookFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setFeedback(null);
+    setFeedbackType(null);
   };
 
   const handleFileChange = (file: File | null) => {
     setFormData((prev) => ({ ...prev, pdf: file }));
     setFeedback(null);
+    setFeedbackType(null);
   };
 
   const handleCloseForm = () => {
@@ -201,10 +235,16 @@ export const AdminHumanBooksPage = () => {
     setSelectedBook(null);
     setFormData(initialFormState);
     setFeedback(null);
+    setFeedbackType(null);
   };
 
   return (
     <section className="admin-human-books-page">
+      <HumanBooksToolbar
+        search={search}
+        onSearchChange={setSearch}
+        onNew={handleCreateNew}
+      />
       <div ref={formRef}>
         <HumanBooksForm
           isOpen={isFormOpen}
@@ -221,11 +261,22 @@ export const AdminHumanBooksPage = () => {
         />
       </div>
 
-      <HumanBooksToolbar
-        search={search}
-        onSearchChange={setSearch}
-        onNew={handleCreateNew}
-      />
+      {feedback && feedbackType && (
+        <div
+          className={`admin-human-books-page__feedback-badge admin-human-books-page__feedback-badge--${feedbackType}`}
+          role="status"
+        >
+          <i
+            className={`bi ${
+              feedbackType === 'success'
+                ? 'bi-check-circle-fill'
+                : 'bi-x-circle-fill'
+            } admin-human-books-page__feedback-badge-icon`}
+            aria-hidden="true"
+          />
+          {feedback}
+        </div>
+      )}
 
       <HumanBooksTable
         books={paginatedBooks}

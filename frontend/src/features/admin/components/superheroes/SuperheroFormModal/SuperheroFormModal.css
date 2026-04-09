@@ -42,8 +42,11 @@
 }
 
 .superhero-form-card__close {
-  background: transparent;
-  border: none;
+  border-radius: 999px;
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e40af;
+  padding: 0.35rem 0.9rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -131,35 +134,40 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  grid-column: 1 / -1;
 }
 
 .superhero-form-card__file-control {
   display: flex;
-  align-items: stretch;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  background: #fff;
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
 }
 
 .superhero-form-card__file-trigger {
-  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.65rem;
   background: #f3f4f6;
   border: 1px solid #d1d5db;
-  border-radius: 0.65rem;
-  font-size: 0.85rem;
-  font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .superhero-form-card__file-name {
   flex: 1;
-  border: 1px solid #d1d5db;
-  border-radius: 0.65rem;
-  padding: 0.45rem 0.75rem;
   font-size: 0.85rem;
   color: #1f2937;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .superhero-form-card__file-input {

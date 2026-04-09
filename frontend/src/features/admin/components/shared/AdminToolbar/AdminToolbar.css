@@ -15,3 +15,11 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.admin-toolbar__new {
+  min-width: 130px;
+  width: 130px;
+  padding: 0.1rem 0.45rem;
+  font-size: 1rem;
+  border-radius: 0.6rem;
+}

@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  position: relative;
 }
 
 .admin-regions-page__header {
@@ -76,6 +77,33 @@
 .regions-pagination__controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.admin-regions-page__feedback-badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  box-shadow: 0 20px 35px rgba(11, 150, 208, 0.4);
+  color: #fff;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.admin-regions-page__feedback-badge--success {
+  background: linear-gradient(135deg, #26b6b9, #0b96d0);
+}
+
+.admin-regions-page__feedback-badge--error {
+  background: #f05757;
+}
+
+.admin-regions-page__feedback-badge-icon {
+  font-size: 1.2rem;
 }
 
 .regions-pagination__controls span {

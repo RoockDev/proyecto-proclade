@@ -1,4 +1,4 @@
-export type AdminNewsStatus = 'DRAFT' | 'PUBLISHED';
+export type AdminNewsStatus = 'DRAFT' | 'PUBLISHED' | 'HIDDEN';
 
 export type AdminNewsItem = {
   id: number;

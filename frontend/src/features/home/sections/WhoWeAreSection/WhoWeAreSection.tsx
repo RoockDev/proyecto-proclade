@@ -62,7 +62,7 @@ export const WhoWeAreSection = () => {
         </div>
 
         <div className="text-center mt-4">
-          <Link to="/superheroes" className="btn btn-brand-gradient">
+        <Link to="/superheroes?page=1" className="btn btn-brand-gradient">
             Ver todos los superhéroes <i className="bi bi-arrow-right ms-2" />
           </Link>
         </div>

@@ -43,19 +43,22 @@
   color: #1e293b;
 }
 
-.challenge-form-card__close {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
+.challenge-form-card__close-button {
+  background: #fff;
+  border: 1px solid #d7e3ef;
+  color: #1e3a8a;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
   cursor: pointer;
-  color: #94a3b8;
-  padding: 0.25rem;
-  border-radius: 0.375rem;
-  transition: color 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  font-size: 0.95rem;
 }
 
-.challenge-form-card__close:hover {
-  color: #475569;
+.challenge-form-card__close-button:hover,
+.challenge-form-card__close-button:focus-visible {
+  border-color: #94a3b8;
+  color: #1f4b8f;
 }
 
 .challenge-form-card__feedback {

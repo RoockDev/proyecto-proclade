@@ -19,6 +19,7 @@ type NewsFormProps = {
 
 const STATUS_OPTIONS = [
   { value: 'DRAFT', label: 'Borrador' },
+  { value: 'HIDDEN', label: 'Oculto' },
   { value: 'PUBLISHED', label: 'Publicada' },
 ] as const;
 
@@ -46,9 +47,7 @@ export const NewsForm = ({
         <div className="news-form-card">
           <div className="news-form-card__header">
             <div>
-              <p className="news-form-card__eyebrow">Gestión de noticias</p>
               <h2>{formMode === 'create' ? 'Crear noticia' : 'Editar noticia'}</h2>
-              <p>Completa la información y guarda para actualizar el panel.</p>
             </div>
             <button type="button" className="news-form-card__close" onClick={onClose}>
               Cerrar
@@ -121,7 +120,7 @@ export const NewsForm = ({
                   value={formData.excerpt}
                   onChange={(event) => onFieldChange('excerpt', event.target.value)}
                   placeholder="Resumen breve de al menos 40 caracteres"
-                  rows={2}
+                  rows={1}
                   required
                 />
               </label>
@@ -132,7 +131,7 @@ export const NewsForm = ({
                   value={formData.content}
                   onChange={(event) => onFieldChange('content', event.target.value)}
                   placeholder="Contenido completo de la noticia"
-                  rows={5}
+                rows={3}
                   required
                 />
               </label>

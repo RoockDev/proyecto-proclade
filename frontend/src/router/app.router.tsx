@@ -1,3 +1,4 @@
+﻿import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { HomePage } from '../features/home/pages/HomePage/HomePage';
 import { AuthPage } from '../features/auth/pages/AuthPage/AuthPage';
@@ -13,10 +14,23 @@ import { AdminSectionPage } from '../features/admin/pages/AdminSectionPage/Admin
 import { AdminSuperheroesPage } from '../features/admin/pages/AdminSuperheroesPage/AdminSuperheroesPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { SuperheroesPage } from './pages/SuperheroesPage';
 import { ColaboraPage } from './pages/ColaboraPage';
 import { NewsListPage } from '../features/news/pages/NewsListPage/NewsListPage';
 import { NewsDetailPage } from '../features/news/pages/NewsDetailPage/NewsDetailPage';
+
+const SuperheroesPage = lazy(() =>
+  import('../features/superheroes/pages/SuperheroesPage/SuperheroesPage').then((module) => ({
+    default: module.SuperheroesPage,
+  })),
+);
+
+const superheroesFallback = (
+  <section className="section-padding">
+    <div className="container text-center">
+      <div className="spinner-border text-secondary" role="status" />
+    </div>
+  </section>
+);
 
 export const appRouter = createBrowserRouter([
   {
@@ -41,7 +55,11 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'superheroes',
-        element: <SuperheroesPage />,
+        element: (
+          <Suspense fallback={superheroesFallback}>
+            <SuperheroesPage />
+          </Suspense>
+        ),
       },
       {
         path: 'noticias',

@@ -53,26 +53,59 @@
   word-break: break-word;
 }
 
+.region-card__details dt {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #059669;
+}
+
 .region-card__actions {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
   margin-top: auto;
+  justify-content: center;
+  align-items: center;
 }
 
-.region-card__action {
-  border: none;
-  border-radius: 999px;
-  padding: 0.42rem 0.85rem;
-  font-weight: 600;
-  font-size: 0.85rem;
+.region-card__icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #d9e3f9;
+  background: #f6f8ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(18, 36, 71, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
 }
 
-.region-card__action--edit {
-  background: rgba(13, 59, 115, 0.12);
-  color: #0d3b73;
+.region-card__icon-button:hover,
+.region-card__icon-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(18, 36, 71, 0.15);
 }
 
-.region-card__action--delete {
-  background: rgba(138, 31, 47, 0.14);
-  color: #8a1f2f;
+.region-card__icon-button i {
+  font-size: 1.1rem;
+}
+
+.region-card__icon-button--edit {
+  color: #059669;
+}
+
+.region-card__icon-button--edit:hover,
+.region-card__icon-button--edit:focus-visible {
+  background: rgba(5, 150, 105, 0.15);
+}
+
+.region-card__icon-button--delete {
+  color: #dc2626;
+}
+
+.region-card__icon-button--delete:hover,
+.region-card__icon-button--delete:focus-visible {
+  background: rgba(220, 38, 38, 0.15);
 }

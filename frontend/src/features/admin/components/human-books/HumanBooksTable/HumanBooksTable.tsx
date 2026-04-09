@@ -50,7 +50,7 @@ export const HumanBooksTable = ({ books, onEdit, onDelete }: HumanBooksTableProp
       key: 'actions',
       header: 'Acciones',
       cell: (book: AdminHumanBook) => (
-        <div className="human-books-table__actions">
+        <div className="human-books-table__actions human-books-table__actions--center">
           <button
             type="button"
             onClick={() => onEdit(book)}

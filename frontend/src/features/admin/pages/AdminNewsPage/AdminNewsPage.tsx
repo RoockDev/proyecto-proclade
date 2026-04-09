@@ -70,6 +70,7 @@ export const AdminNewsPage = () => {
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedNews, setSelectedNews] = useState<AdminNewsItem | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedbackType, setFeedbackType] = useState<'success' | 'error' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -77,10 +78,36 @@ export const AdminNewsPage = () => {
     null,
   );
 
-  const handleNewsError = useCallback(
-    (message: string) => setFeedback(message),
+  const showFeedback = useCallback(
+    (message: string | null, type: 'success' | 'error' | null = null) => {
+      setFeedback(message);
+      setFeedbackType(type);
+    },
     [],
   );
+
+  const clearFeedback = useCallback(() => {
+    showFeedback(null, null);
+  }, [showFeedback]);
+
+  const handleNewsError = useCallback(
+    (message: string) => showFeedback(message, 'error'),
+    [showFeedback],
+  );
+
+  useEffect(() => {
+    if (!feedback) {
+      return undefined;
+    }
+
+    const timer = setTimeout(() => {
+      clearFeedback();
+    }, 3600);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [feedback, clearFeedback]);
 
   const {
     filteredNews,
@@ -89,7 +116,7 @@ export const AdminNewsPage = () => {
     search,
     setSearch,
   } = useAdminNewsList({ onError: handleNewsError });
-  const rowsPerPage = 7;
+  const rowsPerPage = 4;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredNews.length / rowsPerPage));
   const paginatedNews = useMemo(
@@ -115,7 +142,7 @@ export const AdminNewsPage = () => {
 
   const handleCreateNews = () => {
     resetFormState();
-    setFeedback(null);
+    clearFeedback();
     setIsFormOpen(true);
   };
 
@@ -129,7 +156,7 @@ export const AdminNewsPage = () => {
       imageUrl: item.imageUrl ?? '',
       status: item.status,
     });
-    setFeedback(null);
+    clearFeedback();
     setIsFormOpen(true);
   };
 
@@ -147,19 +174,19 @@ export const AdminNewsPage = () => {
     }
 
     setIsProcessing(true);
-    setFeedback(null);
+    clearFeedback();
 
     try {
       const response = await deleteAdminNews(pendingDeleteNews.id);
 
       if (response.success) {
-        setFeedback(response.message || 'Noticia eliminada correctamente.');
+        showFeedback(response.message || 'Noticia eliminada correctamente.', 'success');
         await refreshNews();
       } else {
-        setFeedback(response.message || 'No se pudo eliminar la noticia.');
+        showFeedback(response.message || 'No se pudo eliminar la noticia.', 'error');
       }
     } catch {
-      setFeedback('No se pudo eliminar la noticia.');
+      showFeedback('No se pudo eliminar la noticia.', 'error');
     } finally {
       setIsProcessing(false);
       setPendingDeleteNews(null);
@@ -170,24 +197,24 @@ export const AdminNewsPage = () => {
     setIsFormOpen(false);
     setIsUploadingImage(false);
     resetFormState();
-    setFeedback(null);
+    clearFeedback();
   };
 
   const handleResetForm = () => {
     setFormData(initialFormState);
-    setFeedback(null);
+    clearFeedback();
   };
 
   const handleFieldChange = (field: keyof AdminNewsFormData, value: string) => {
     const nextValue =
       field === 'status' ? (value as AdminNewsFormData['status']) : value;
     setFormData((prev) => ({ ...prev, [field]: nextValue }));
-    setFeedback(null);
+    clearFeedback();
   };
 
   const handleImageUpload = async (file: File) => {
     setIsUploadingImage(true);
-    setFeedback(null);
+    clearFeedback();
 
     try {
       const response = await uploadAdminNewsImage(file);
@@ -195,14 +222,43 @@ export const AdminNewsPage = () => {
 
       if (response.success && uploadedImageUrl) {
         setFormData((prev) => ({ ...prev, imageUrl: uploadedImageUrl }));
-        setFeedback('Imagen subida correctamente.');
+        showFeedback('Imagen subida correctamente.', 'success');
       } else {
-        setFeedback(response.message || 'No se pudo subir la imagen.');
+        showFeedback(response.message || 'No se pudo subir la imagen.', 'error');
       }
     } catch {
-      setFeedback('No se pudo subir la imagen.');
+      showFeedback('No se pudo subir la imagen.', 'error');
     } finally {
       setIsUploadingImage(false);
+    }
+  };
+
+  const handleToggleStatus = async (item: AdminNewsItem) => {
+    setIsProcessing(true);
+    clearFeedback();
+
+    try {
+      const nextStatus = item.status === 'PUBLISHED' ? 'HIDDEN' : 'PUBLISHED';
+      const response = await updateAdminNews({
+        id: item.id,
+        status: nextStatus,
+      });
+
+      if (response.success) {
+        showFeedback(
+          `Noticia ${
+            nextStatus === 'PUBLISHED' ? 'publicada' : 'ocultada'
+          } correctamente.`,
+          'success',
+        );
+        await refreshNews();
+      } else {
+        showFeedback(response.message || 'No se pudo cambiar el estado.', 'error');
+      }
+    } catch {
+      showFeedback('No se pudo cambiar el estado de la noticia.', 'error');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -210,23 +266,23 @@ export const AdminNewsPage = () => {
     event.preventDefault();
 
     if (isUploadingImage) {
-      setFeedback('Espera a que termine la subida de imagen.');
+      showFeedback('Espera a que termine la subida de imagen.', 'error');
       return;
     }
 
     const validationError = validateNewsForm(formData);
     if (validationError) {
-      setFeedback(validationError);
+      showFeedback(validationError, 'error');
       return;
     }
 
     if (formMode === 'edit' && !selectedNews) {
-      setFeedback('Selecciona una noticia antes de editar.');
+      showFeedback('Selecciona una noticia antes de editar.', 'error');
       return;
     }
 
     setIsProcessing(true);
-    setFeedback(null);
+    clearFeedback();
 
     try {
       const payload = buildNewsPayload(formData);
@@ -239,15 +295,15 @@ export const AdminNewsPage = () => {
             });
 
       if (response.success) {
-        setFeedback(response.message || 'Operación realizada correctamente.');
+        showFeedback(response.message || 'Operación realizada correctamente.', 'success');
         await refreshNews();
         setIsFormOpen(false);
         resetFormState();
       } else {
-        setFeedback(response.message || 'No se pudo guardar la noticia.');
+        showFeedback(response.message || 'No se pudo guardar la noticia.', 'error');
       }
     } catch {
-      setFeedback('Error al guardar la noticia.');
+      showFeedback('Error al guardar la noticia.', 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -269,24 +325,29 @@ export const AdminNewsPage = () => {
         onClose={handleCloseForm}
       />
 
-      <header className="admin-news-page__header">
-        <p className="admin-news-page__eyebrow">Panel de administración</p>
-        <h1 className="admin-news-page__title">Gestión de noticias</h1>
-        <p className="admin-news-page__description">
-          Lista de noticias en tiempo real con búsqueda cliente para administración.
-        </p>
-      </header>
-
-      <NewsToolbar
-        search={search}
-        onSearchChange={setSearch}
-        onNew={handleCreateNews}
-      />
+        <NewsToolbar
+          search={search}
+          onSearchChange={setSearch}
+          onNew={handleCreateNews}
+        />
 
       {feedback && !isFormOpen ? (
-        <p className="admin-news-page__feedback" role="status">
+        <div
+          className={`admin-news-page__feedback-badge ${
+            feedbackType === 'success'
+              ? 'admin-news-page__feedback-badge--success'
+              : 'admin-news-page__feedback-badge--error'
+          }`}
+          role="status"
+        >
+          {feedbackType === 'success' && (
+            <i
+              className="bi bi-check-circle-fill admin-news-page__feedback-badge-icon"
+              aria-hidden="true"
+            />
+          )}
           {feedback}
-        </p>
+        </div>
       ) : null}
 
       {isFetching ? (
@@ -297,6 +358,7 @@ export const AdminNewsPage = () => {
         news={paginatedNews}
         onEdit={handleEditNews}
         onDelete={handleRequestDelete}
+        onToggleStatus={handleToggleStatus}
       />
 
       <div className="news-pagination">

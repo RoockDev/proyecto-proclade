@@ -12,10 +12,11 @@
 
 .admin-data-table th,
 .admin-data-table td {
-  padding: 0.95rem 1rem;
+  padding: 0.65rem 0.8rem;
   border-bottom: 1px solid #eef2f7;
   border-right: 1px solid #eef2f7;
   text-align: left;
+  font-size: 0.85rem;
 }
 
 .admin-data-table th:last-child,
@@ -27,10 +28,12 @@
   font-weight: 600;
   background: #f9fafb;
   text-align: center;
+  font-size: 0.82rem;
 }
 
 .admin-data-table td {
   text-align: center;
+  font-size: 0.8rem;
 }
 
 .admin-data-table__empty {

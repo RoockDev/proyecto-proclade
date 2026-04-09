@@ -7,7 +7,6 @@ import type { SuperheroStatus } from '../../../types/superheroes.types';
 type SuperheroFormState = {
   name: string;
   description: string;
-  quote: string;
   country: string;
   sortOrder: string;
   status: SuperheroStatus;
@@ -43,6 +42,7 @@ export const SuperheroFormModal = ({
 
   useEffect(() => {
     if (!isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedFilename(null);
     }
   }, [isOpen]);
@@ -127,14 +127,7 @@ export const SuperheroFormModal = ({
                   onImageChange(file);
                 }}
               />
-              <div className="superhero-form-card__preview superhero-form-card__full">
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Vista previa" />
-                ) : (
-                  <span>No se ha seleccionado imagen</span>
-                )}
-              </div>
-              <label className="superhero-form-card__full">
+             <label className="superhero-form-card__full">
                 Descripción*
                 <textarea
                   value={formState.description}

@@ -1,5 +1,4 @@
 import type { AdminChallenge } from '../../../types/challenges.types';
-import { AdminButton } from '../../shared/AdminButton/AdminButton';
 import './ChallengeCard.css';
 
 type ChallengeCardProps = {
@@ -7,6 +6,7 @@ type ChallengeCardProps = {
   onEdit: (challenge: AdminChallenge) => void;
   onUpdateAmount: (challenge: AdminChallenge) => void;
   onDelete: (challenge: AdminChallenge) => void;
+  onToggleActive: (challenge: AdminChallenge) => void;
 };
 
 export const ChallengeCard = ({
@@ -14,6 +14,7 @@ export const ChallengeCard = ({
   onEdit,
   onUpdateAmount,
   onDelete,
+  onToggleActive,
 }: ChallengeCardProps) => {
   const progress = challenge.targetAmount > 0
     ? Math.min((challenge.currentAmount / challenge.targetAmount) * 100, 100)
@@ -66,15 +67,47 @@ export const ChallengeCard = ({
       </div>
 
       <div className="challenge-card__actions">
-        <AdminButton variant="outline" onClick={() => onEdit(challenge)}>
-          Editar
-        </AdminButton>
-        <AdminButton variant="outline" onClick={() => onUpdateAmount(challenge)}>
-          Actualizar monto
-        </AdminButton>
-        <AdminButton variant="ghost" onClick={() => onDelete(challenge)}>
-          Eliminar
-        </AdminButton>
+        <button
+          type="button"
+          className="challenge-card__icon-button challenge-card__icon-button--tool"
+          onClick={() => onEdit(challenge)}
+          aria-label={`Editar ${challenge.title}`}
+        >
+          <i className="bi bi-tools" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className={`challenge-card__icon-button challenge-card__icon-button--status ${
+            challenge.isActive ? 'challenge-card__icon-button--status-active' : ''
+          }`}
+          onClick={() => onToggleActive(challenge)}
+          aria-label={
+            challenge.isActive
+              ? `Marcar ${challenge.title} como inactivo`
+              : `Marcar ${challenge.title} como activo`
+          }
+        >
+          <i
+            className={`bi ${challenge.isActive ? 'bi-eye-slash' : 'bi-eye'}`}
+            aria-hidden="true"
+          />
+        </button>
+        <button
+          type="button"
+          className="challenge-card__icon-button challenge-card__icon-button--delete"
+          onClick={() => onDelete(challenge)}
+          aria-label={`Eliminar ${challenge.title}`}
+        >
+          <i className="bi bi-x-circle" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="challenge-card__icon-button challenge-card__icon-button--confirm"
+          onClick={() => onUpdateAmount(challenge)}
+          aria-label={`Actualizar monto de ${challenge.title}`}
+        >
+          <span className="challenge-card__icon-button-symbol">€</span>
+        </button>
       </div>
     </article>
   );

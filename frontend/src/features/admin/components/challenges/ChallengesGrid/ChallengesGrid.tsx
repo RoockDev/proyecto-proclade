@@ -7,6 +7,7 @@ type ChallengesGridProps = {
   onEdit: (challenge: AdminChallenge) => void;
   onUpdateAmount: (challenge: AdminChallenge) => void;
   onDelete: (challenge: AdminChallenge) => void;
+  onToggleActive: (challenge: AdminChallenge) => void;
 };
 
 export const ChallengesGrid = ({
@@ -14,6 +15,7 @@ export const ChallengesGrid = ({
   onEdit,
   onUpdateAmount,
   onDelete,
+  onToggleActive,
 }: ChallengesGridProps) => {
   if (challenges.length === 0) {
     return (
@@ -30,6 +32,7 @@ export const ChallengesGrid = ({
           onEdit={onEdit}
           onUpdateAmount={onUpdateAmount}
           onDelete={onDelete}
+          onToggleActive={onToggleActive}
         />
       ))}
     </div>
