@@ -9,17 +9,17 @@ type RequestWithUser = {
   };
 };
 
-@Controller('users')
+@Controller('users/me')
 @UseGuards(JwtAuthGuard)
 export class UsersProfileController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('me')
+  @Get()
   findMyProfile(@Req() request: RequestWithUser) {
     return this.usersService.findProfileById(request.user.id);
   }
 
-  @Patch('me')
+  @Patch()
   updateMyProfile(
     @Req() request: RequestWithUser,
     @Body() updateProfileDto: UpdateProfileDto,
