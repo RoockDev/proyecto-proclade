@@ -6,6 +6,7 @@ import {
   subscribeToAuthSession,
   userHasAdminRole,
 } from '../../../features/auth/utils/auth-session.storage';
+import { ProfileModal } from '../../../features/profile/components/ProfileModal/ProfileModal';
 import './Header.css';
 import { HeaderBrand } from './shared/HeaderBrand/HeaderBrand';
 import { HeaderNav, type HeaderNavItem } from './shared/HeaderNav/HeaderNav';
@@ -24,6 +25,7 @@ const navItems: HeaderNavItem[] = [
 export const Header = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [session, setSession] = useState(() => getAuthSession());
 
   useEffect(() => {
@@ -39,9 +41,26 @@ export const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleOpenProfile = () => {
+    closeMenu();
+    setIsProfileOpen(true);
+  };
+
+  const handleCloseProfile = () => {
+    setIsProfileOpen(false);
+  };
+
+  const handlePasswordChanged = () => {
+    clearAuthSession();
+    setIsProfileOpen(false);
+    navigate('/auth/login', { replace: true });
+  };
+
   const handleLogout = () => {
     clearAuthSession();
     closeMenu();
+    setIsProfileOpen(false);
     navigate('/', { replace: true });
   };
 
@@ -68,11 +87,18 @@ export const Header = () => {
               isAdmin={isAdmin}
               isAuthenticated={isAuthenticated}
               onClose={closeMenu}
+              onProfile={handleOpenProfile}
               onLogout={handleLogout}
             />
           </div>
         </div>
       </nav>
+
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={handleCloseProfile}
+        onPasswordChanged={handlePasswordChanged}
+      />
     </header>
   );
 };
