@@ -123,6 +123,15 @@ export const saveAuthSession = (data: AuthResponseData): void => {
   notifyAuthSessionChanged();
 };
 
+export const updateAuthSessionUser = (nextUser: AuthUser): void => {
+  if (!isBrowser) {
+    return;
+  }
+
+  localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(nextUser));
+  notifyAuthSessionChanged();
+};
+
 export const clearAuthSession = (): void => {
   if (!isBrowser) {
     return;

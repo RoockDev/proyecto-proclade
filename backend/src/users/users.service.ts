@@ -6,6 +6,7 @@ import {
 import type { Prisma } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RoleName } from '../common/types/role-name.enum';
 import * as bcrypt from 'bcrypt';
@@ -19,6 +20,19 @@ type UserWithRoles = Prisma.UserGetPayload<{
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private async findActiveByIdWithRoles(id: number): Promise<UserWithRoles> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+      include: { roles: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+
+    return user;
+  }
 
   private formatUserResponse(user: any) {
     if (!user) return null;
@@ -67,15 +81,7 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const user = await this.prisma.user.findFirst({
-      where: { id, deletedAt: null },
-      include: { roles: true },
-    });
-
-    if (!user) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    }
-
+    const user = await this.findActiveByIdWithRoles(id);
     return this.formatUserResponse(user);
   }
 
@@ -124,6 +130,26 @@ export class UsersService {
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: dataToUpdate,
+      include: { roles: true },
+    });
+
+    return this.formatUserResponse(updatedUser);
+  }
+
+  async findProfileById(userId: number) {
+    const user = await this.findActiveByIdWithRoles(userId);
+    return this.formatUserResponse(user);
+  }
+
+  async updateProfileById(userId: number, updateProfileDto: UpdateProfileDto) {
+    await this.findActiveByIdWithRoles(userId);
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: updateProfileDto.name.trim(),
+        surname: updateProfileDto.surname.trim(),
+      },
       include: { roles: true },
     });
 

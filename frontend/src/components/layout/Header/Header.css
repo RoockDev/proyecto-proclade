@@ -109,6 +109,21 @@
   box-shadow: none;
 }
 
+.header-action-btn--profile {
+  color: var(--brand-secondary);
+  border: 1px solid rgba(13, 59, 115, 0.32);
+  background: rgba(13, 59, 115, 0.04);
+  box-shadow: none;
+}
+
+.header-action-btn--profile:hover,
+.header-action-btn--profile:focus {
+  color: var(--brand-secondary);
+  border-color: rgba(13, 59, 115, 0.5);
+  background: rgba(13, 59, 115, 0.1);
+  box-shadow: none;
+}
+
 @media (max-width: 1199.98px) {
   .brand-header .nav-link {
     padding-left: 0.55rem;
