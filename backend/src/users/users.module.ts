@@ -6,7 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersProfileController } from './users-profile.controller';
 @Module({
   imports: [PrismaModule, forwardRef(() => AuthModule)],
-  controllers: [UsersController, UsersProfileController],
+  controllers: [UsersProfileController, UsersController],
   providers: [UsersService],
   exports: [UsersService],
 })
