@@ -10,6 +10,7 @@ export type AdminUser = {
   surname: string;
   email: string;
   roles: string[];
+  isRealHero: boolean;
   deletedAt?: string | null;
   updatedAt: string;
 };

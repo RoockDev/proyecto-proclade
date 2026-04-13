@@ -1,0 +1,2 @@
+-- AddColumn
+ALTER TABLE "User" ADD COLUMN "isRealHero" BOOLEAN NOT NULL DEFAULT false;

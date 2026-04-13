@@ -8,14 +8,23 @@ type UsersTableProps = {
   onEdit: (user: AdminUser) => void;
   onDelete: (user: AdminUser) => void;
   onReactivate?: (user: AdminUser) => void;
+  onToggleRealHero?: (user: AdminUser) => void;
 };
 
 const badgeForUser = (user: AdminUser) =>
   user.deletedAt
     ? { label: 'Eliminado', status: 'FINALIZADA' as const }
+    : user.isRealHero
+    ? { label: 'Superhéroe real', status: 'PUBLICADO' as const }
     : { label: 'Activo', status: 'ACTIVA' as const };
 
-export const UsersTable = ({ users, onEdit, onDelete, onReactivate }: UsersTableProps) => {
+export const UsersTable = ({
+  users,
+  onEdit,
+  onDelete,
+  onReactivate,
+  onToggleRealHero,
+}: UsersTableProps) => {
   const columns: AdminTableColumn<AdminUser>[] = [
     {
       key: 'name',
@@ -55,6 +64,25 @@ export const UsersTable = ({ users, onEdit, onDelete, onReactivate }: UsersTable
             >
               <i className="bi bi-tools" aria-hidden="true" />
             </button>
+            {!user.deletedAt && onToggleRealHero ? (
+              <button
+                type="button"
+                onClick={() => onToggleRealHero(user)}
+                aria-label={
+                  user.isRealHero
+                    ? `Desactivar ${user.name} ${user.surname} como superhéroe real`
+                    : `Convertir ${user.name} ${user.surname} en superhéroe real`
+                }
+                className={`users-table__icon-button users-table__icon-button--convert${
+                  user.isRealHero ? ' is-active' : ''
+                }`}
+              >
+                <i
+                  className={`bi ${user.isRealHero ? 'bi-star-fill' : 'bi-star'}`}
+                  aria-hidden="true"
+                />
+              </button>
+            ) : null}
             {user.deletedAt ? (
               <button
                 type="button"

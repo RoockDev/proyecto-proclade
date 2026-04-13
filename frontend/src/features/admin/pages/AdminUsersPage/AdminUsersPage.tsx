@@ -9,6 +9,7 @@ import {
   deleteUser,
   reactivateUser,
   updateUser,
+  toggleUserRealHero,
 } from '../../api/users.api';
 import type { AdminUser } from '../../types/users.types';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
@@ -267,6 +268,39 @@ export const AdminUsersPage = () => {
     }
   };
 
+  const handleToggleRealHero = async (user: AdminUser) => {
+    setIsProcessing(true);
+    setFeedback(null);
+    const shouldEnable = !user.isRealHero;
+
+    try {
+      const response = await toggleUserRealHero(user.id, shouldEnable);
+
+      if (response.success) {
+        const successMessage =
+          response.message ||
+          (shouldEnable
+            ? 'Usuario convertido en superhéroe real.'
+            : 'Superhéroe real desactivado.');
+        setFeedback(successMessage);
+        showNotification(successMessage, 'success');
+        await refreshUsers();
+        return;
+      }
+
+      const errorMessage = response.message || 'No se pudo actualizar el estado del superhéroe.';
+      setFeedback(errorMessage);
+      showNotification(errorMessage, 'error');
+    } catch (error) {
+      console.error('Error al actualizar estado del superhéroe', error);
+      const genericError = 'No se pudo actualizar el estado del superhéroe real.';
+      setFeedback(genericError);
+      showNotification(genericError, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const requestReactivate = (user: AdminUser) => {
     reactivateConfirmation.requestConfirmation(user);
   };
@@ -320,6 +354,7 @@ export const AdminUsersPage = () => {
             onEdit={handleEdit}
             onDelete={handleDelete}
             onReactivate={requestReactivate}
+            onToggleRealHero={handleToggleRealHero}
           />
 
           <div className="users-pagination">

@@ -65,6 +65,25 @@
   color: #15803d;
 }
 
+.users-table__icon-button--convert {
+  color: #d97706;
+}
+
+.users-table__icon-button--convert:hover {
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
+}
+
+.users-table__icon-button--convert.is-active {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.45);
+  color: #15803d;
+}
+
+.users-table__icon-button--convert.is-active:hover {
+  background: rgba(34, 197, 94, 0.2);
+}
+
 .users-table__icon-button--delete {
   color: #ef4444;
 }

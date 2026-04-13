@@ -26,6 +26,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 type UserWithRoles = Prisma.UserGetPayload<{
   include: {
     roles: true;
+    realHeroSuperhero: true;
   };
 }>;
 
@@ -112,6 +113,7 @@ export class AuthService {
       },
       include: {
         roles: true,
+        realHeroSuperhero: true,
       },
     });
 
@@ -165,6 +167,7 @@ export class AuthService {
         },
         include: {
           roles: true,
+          realHeroSuperhero: true,
         },
       });
     }
