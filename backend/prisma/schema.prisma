@@ -46,6 +46,9 @@ model User {
   resetPasswordTokenHash   String?
   resetPasswordExpiresAt   DateTime?
   deletedAt                DateTime?
+  isRealHero               Boolean   @default(false)
+  realHeroSuperheroId      Int?       @unique
+  realHeroSuperhero        Superhero? @relation("UserRealHero", fields: [realHeroSuperheroId], references: [id])
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
   roles                    Role[]    @relation("UserRoles")
@@ -98,6 +101,7 @@ model Superhero {
   updatedAt   DateTime        @updatedAt
 
   createdBy User @relation(fields: [createdById], references: [id])
+  realHeroUser User? @relation("UserRealHero")
 }
 
 model Region {

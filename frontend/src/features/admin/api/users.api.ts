@@ -55,3 +55,14 @@ export const reactivateUser = async (id: number) => {
   );
   return handleResponse(response);
 };
+
+export const toggleUserRealHero = async (id: number, enabled: boolean) => {
+  const response = await api.patch<ApiResponse<null>>(
+    `/users/${id}/real-hero`,
+    { enabled },
+    {
+      headers: authHeaders(),
+    },
+  );
+  return handleResponse(response);
+};

@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import type { Prisma } from 'generated/prisma/client';
+import { Prisma, SuperheroStatus } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -14,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 type UserWithRoles = Prisma.UserGetPayload<{
   include: {
     roles: true;
+    realHeroSuperhero: true;
   };
 }>;
 
@@ -24,7 +25,7 @@ export class UsersService {
   private async findActiveByIdWithRoles(id: number): Promise<UserWithRoles> {
     const user = await this.prisma.user.findFirst({
       where: { id, deletedAt: null },
-      include: { roles: true },
+      include: { roles: true, realHeroSuperhero: true },
     });
 
     if (!user) {
@@ -93,9 +94,10 @@ export class UsersService {
         email,
         deletedAt: null,
       },
-      include: {
-        roles: true,
-      },
+    include: {
+      roles: true,
+      realHeroSuperhero: true,
+    },
     });
   }
 
@@ -184,5 +186,125 @@ export class UsersService {
       include: { roles: true },
     });
     return this.formatUserResponse(restoredUser);
+  }
+
+  async setRealHeroStatus(userId: number, enable: boolean, convertedById: number) {
+    const user = await this.findActiveByIdWithRoles(userId);
+
+    const heroName = `${user.name} ${user.surname}`.trim() || 'Superhéroe real';
+
+    if (enable) {
+      if (user.isRealHero) {
+        return {
+          message: 'El usuario ya es un superhéroe real.',
+        };
+      }
+
+      let hero = user.realHeroSuperhero;
+
+      if (hero) {
+        await this.prisma.superhero.update({
+          where: { id: hero.id },
+          data: {
+            status: SuperheroStatus.PUBLISHED,
+            deletedAt: null,
+            name: heroName,
+            description: `Superhéroe real creado desde el panel de administración para ${heroName}.`,
+            quote: 'Comprometido con el Equipo PUCH.',
+          },
+        });
+      } else {
+        const slug = await this.generateUniqueHeroSlug(heroName);
+        hero = await this.prisma.superhero.create({
+          data: {
+            name: heroName,
+            slug,
+            description: `Superhéroe real creado desde el panel de administración para ${heroName}.`,
+            quote: 'Comprometido con el Equipo PUCH.',
+            country: null,
+            sortOrder: 0,
+            status: SuperheroStatus.PUBLISHED,
+            createdById: convertedById,
+          },
+        });
+      }
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          isRealHero: true,
+          realHeroSuperheroId: hero?.id,
+        },
+      });
+
+      return {
+        message: 'Usuario convertido en superhéroe real.',
+      };
+    }
+
+    if (!user.isRealHero) {
+      return {
+        message: 'El usuario ya no era un superhéroe real.',
+      };
+    }
+
+    if (user.realHeroSuperhero) {
+      await this.prisma.superhero.update({
+        where: { id: user.realHeroSuperhero.id },
+        data: {
+          status: SuperheroStatus.HIDDEN,
+          deletedAt: new Date(),
+        },
+      });
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isRealHero: false,
+      },
+    });
+
+    return {
+      message: 'Superhéroe real desactivado.',
+    };
+  }
+
+  private buildHeroSlugBase(name: string): string {
+    const normalized = name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    return normalized || 'superheroe';
+  }
+
+  private async generateUniqueHeroSlug(name: string): Promise<string> {
+    const baseSlug = this.buildHeroSlugBase(name);
+
+    const where: Prisma.SuperheroWhereInput = {
+      OR: [{ slug: baseSlug }, { slug: { startsWith: `${baseSlug}-` } }],
+    };
+
+    const existingSlugs = await this.prisma.superhero.findMany({
+      where,
+      select: { slug: true },
+    });
+
+    const slugSet = new Set(existingSlugs.map((item) => item.slug));
+
+    if (!slugSet.has(baseSlug)) {
+      return baseSlug;
+    }
+
+    let suffix = 2;
+    while (slugSet.has(`${baseSlug}-${suffix}`)) {
+      suffix += 1;
+    }
+
+    return `${baseSlug}-${suffix}`;
   }
 }
