@@ -127,6 +127,13 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.95,
     isActive: true,
   },
+  {
+    intentCode: 'EQUIPO_PUCH_OVERVIEW',
+    text: 'que es equipo puch y cual es su objetivo',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
 
   {
     intentCode: 'UNIRSE_EQUIPO_PUCH',
@@ -192,6 +199,13 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.9,
     isActive: true,
   },
+  {
+    intentCode: 'PROYECTOS_INTERNACIONALES',
+    text: 'que proyectos apoyais actualmente',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
 
   {
     intentCode: 'DONAR',
@@ -249,6 +263,13 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     weight: 0.95,
     isActive: true,
   },
+  {
+    intentCode: 'DONAR',
+    text: 'como puedo donar a equipo puch',
+    language: 'es',
+    weight: 1,
+    isActive: true,
+  },
 
   {
     intentCode: 'COLABORAR',
@@ -269,6 +290,13 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     text: 'como participar en la red solidaria',
     language: 'es',
     weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'COLABORAR',
+    text: 'como puedo colaborar o hacer voluntariado',
+    language: 'es',
+    weight: 1,
     isActive: true,
   },
 
@@ -319,6 +347,13 @@ export const CHATBOT_SEED_INTENT_PHRASES: ChatbotSeedIntentPhrase[] = [
     text: 'informacion de esta noticia',
     language: 'es',
     weight: 0.9,
+    isActive: true,
+  },
+  {
+    intentCode: 'NOTICIAS',
+    text: 'donde puedo ver noticias de la iniciativa',
+    language: 'es',
+    weight: 1,
     isActive: true,
   },
 
