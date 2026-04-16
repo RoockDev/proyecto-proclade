@@ -29,5 +29,10 @@ Thumbs.db
 # Docker
 *.pid
 
+# SSL certificates (private keys must never be committed)
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
 # Yarn
 **/.yarn/install-state.gz
