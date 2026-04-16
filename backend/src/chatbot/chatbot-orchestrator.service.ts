@@ -431,6 +431,14 @@ export class ChatbotOrchestratorService {
   }
 
   private detectPreferredIntentCode(normalizedText: string) {
+    if (/\bdonar\b|\bdonacion\w*\b/.test(normalizedText)) {
+      return 'DONAR';
+    }
+
+    if (/\bcolaborar\b|\bvoluntariado\b/.test(normalizedText)) {
+      return 'COLABORAR';
+    }
+
     if (/\bnotici\w*\b/.test(normalizedText)) {
       return 'NOTICIAS';
     }
