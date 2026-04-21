@@ -35,19 +35,19 @@ export const ConfirmModal = ({
         <div className="confirm-modal__actions">
           <button
             type="button"
-            className="confirm-modal__cancel btn btn-outline-secondary btn-sm"
-            onClick={onCancel}
-            disabled={isProcessing}
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
             className="confirm-modal__confirm btn btn-success btn-sm"
             onClick={onConfirm}
             disabled={isProcessing}
           >
             {isProcessing ? 'Procesando...' : confirmLabel}
+          </button>
+          <button
+            type="button"
+            className="confirm-modal__cancel btn btn-outline-secondary btn-sm"
+            onClick={onCancel}
+            disabled={isProcessing}
+          >
+            {cancelLabel}
           </button>
         </div>
       </div>
