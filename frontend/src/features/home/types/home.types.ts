@@ -4,13 +4,6 @@ export type MissionCard = {
   icon: string;
 };
 
-export type SuperheroPreview = {
-  id: string;
-  name: string;
-  speech: string;
-  imageKey: string;
-};
-
 export type HomeCountryProjectId =
   | 'india'
   | 'burkina-faso'
