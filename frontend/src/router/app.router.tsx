@@ -11,6 +11,7 @@ import { AdminNewsPage } from '../features/admin/pages/AdminNewsPage/AdminNewsPa
 import { AdminRegionsPage } from '../features/admin/pages/AdminRegionsPage/AdminRegionsPage';
 import { AdminUsersPage } from '../features/admin/pages/AdminUsersPage/AdminUsersPage';
 import { AdminSuperheroesPage } from '../features/admin/pages/AdminSuperheroesPage/AdminSuperheroesPage';
+import { AdminChatbotPage } from '../features/admin/pages/AdminChatbotPage/AdminChatbotPage';
 import { PublicLayout } from './layouts/PublicLayout';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ColaboraPage } from './pages/ColaboraPage';
@@ -109,6 +110,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'usuarios',
         element: <AdminUsersPage />,
+      },
+      {
+        path: 'chatbot',
+        element: <AdminChatbotPage />,
       },
       {
         path: '*',

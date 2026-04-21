@@ -17,6 +17,7 @@ const navItems: AdminNavItem[] = [
   { label: 'Superhéroes', to: '/admin/superheroes' },
   { label: 'Delegaciones', to: '/admin/delegaciones' },
   { label: 'Usuarios', to: '/admin/usuarios' },
+  { label: 'Chatbot', to: '/admin/chatbot' },
 ];
 
 const getAdminTitle = (pathname: string): string => {
@@ -27,6 +28,7 @@ const getAdminTitle = (pathname: string): string => {
   if (pathname.startsWith('/admin/superheroes')) return 'Superhéroes';
   if (pathname.startsWith('/admin/delegaciones')) return 'Delegaciones';
   if (pathname.startsWith('/admin/usuarios')) return 'Usuarios';
+  if (pathname.startsWith('/admin/chatbot')) return 'Chatbot';
   return 'Administración';
 };
 

@@ -57,6 +57,11 @@ model User {
   createdHumanBooks        HumanBook[]
   chatSessions             ChatSession[]
   resolvedUnresolved       UnresolvedQuestion[] @relation("UnresolvedResolvedBy")
+  chatbotKnowledgeUpdates  KnowledgeItem[] @relation("KnowledgeItemUpdatedBy")
+  chatbotIntentUpdates     ChatbotIntent[] @relation("ChatbotIntentUpdatedBy")
+  chatbotIntentPhraseUpdates ChatbotIntentPhrase[] @relation("ChatbotIntentPhraseUpdatedBy")
+  chatbotCreatedConfigs    ChatbotAdminConfig[] @relation("ChatbotConfigCreatedBy")
+  chatbotUpdatedConfigs    ChatbotAdminConfig[] @relation("ChatbotConfigUpdatedBy")
 }
 
 
@@ -163,6 +168,8 @@ model ChatbotIntent {
   isActive       Boolean             @default(true)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+  updatedById    Int?
+  updatedBy      User?               @relation("ChatbotIntentUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   phrases        ChatbotIntentPhrase[]
   knowledgeItems KnowledgeItem[]
 
@@ -179,6 +186,8 @@ model ChatbotIntentPhrase {
   isActive  Boolean       @default(true)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+  updatedById Int?
+  updatedBy   User?        @relation("ChatbotIntentPhraseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   intent    ChatbotIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
 
   @@unique([intentId, text, language])
@@ -197,7 +206,11 @@ model KnowledgeItem {
   isActive          Boolean        @default(true)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
+  updatedById       Int?
+  updatedBy         User?          @relation("KnowledgeItemUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   intent            ChatbotIntent? @relation(fields: [intentId], references: [id], onDelete: SetNull)
+
+  @@index([updatedById])
 
   @@index([intentId])
   @@index([isActive])
@@ -255,4 +268,20 @@ model UnresolvedQuestion {
   @@index([occurrences])
   @@index([resolvedAt])
   @@index([lastSeenAt])
+}
+
+model ChatbotAdminConfig {
+  id               Int      @id @default(autoincrement())
+  weights          Json
+  thresholds       Json
+  fuzzyInternalMin Float
+  createdById      Int?
+  createdBy        User?    @relation("ChatbotConfigCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedById      Int?
+  updatedBy        User?    @relation("ChatbotConfigUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([updatedById])
 }

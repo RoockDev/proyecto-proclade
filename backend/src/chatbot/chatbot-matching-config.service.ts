@@ -5,15 +5,31 @@ import type {
   MatchingWeights,
 } from './types/chatbot.types';
 
+type MatchingConfigSnapshot = {
+  weights: MatchingWeights;
+  thresholds: MatchingThresholds;
+  fuzzyInternalMin: number;
+};
+
 @Injectable()
 export class ChatbotMatchingConfigService {
+  private runtimeOverride: MatchingConfigSnapshot | null = null;
+
   constructor(private readonly configService: ConfigService) {}
 
+  setRuntimeConfig(config: MatchingConfigSnapshot) {
+    this.runtimeOverride = config;
+  }
+
   getWeights = (): MatchingWeights => {
+    if (this.runtimeOverride) {
+      return this.runtimeOverride.weights;
+    }
+
     const rawWeights = {
-      keyword: this.getNumber('CHATBOT_WEIGHT_KEYWORD', 0.35, 0, 1),
-      fuzzy: this.getNumber('CHATBOT_WEIGHT_FUZZY', 0.25, 0, 1),
-      semantic: this.getNumber('CHATBOT_WEIGHT_SEMANTIC', 0.3, 0, 1),
+      keyword: this.getNumber('CHATBOT_WEIGHT_KEYWORD', 0.2, 0, 1),
+      fuzzy: this.getNumber('CHATBOT_WEIGHT_FUZZY', 0.28, 0, 1),
+      semantic: this.getNumber('CHATBOT_WEIGHT_SEMANTIC', 0.42, 0, 1),
       context: this.getNumber('CHATBOT_WEIGHT_CONTEXT', 0.1, 0, 1),
     };
 
@@ -25,9 +41,9 @@ export class ChatbotMatchingConfigService {
 
     if (totalWeight <= 0) {
       return {
-        keyword: 0.35,
-        fuzzy: 0.25,
-        semantic: 0.3,
+        keyword: 0.2,
+        fuzzy: 0.28,
+        semantic: 0.42,
         context: 0.1,
       };
     }
@@ -41,15 +57,19 @@ export class ChatbotMatchingConfigService {
   };
 
   getThresholds = (): MatchingThresholds => {
+    if (this.runtimeOverride) {
+      return this.runtimeOverride.thresholds;
+    }
+
     const directAnswer = this.getNumber(
       'CHATBOT_THRESHOLD_DIRECT_ANSWER',
-      0.56,
+      0.66,
       0,
       1,
     );
     const clarification = this.getNumber(
       'CHATBOT_THRESHOLD_CLARIFICATION',
-      0.38,
+      0.45,
       0,
       1,
     );
@@ -68,7 +88,11 @@ export class ChatbotMatchingConfigService {
   };
 
   getFuzzyInternalMin = () => {
-    return this.getNumber('CHATBOT_FUZZY_INTERNAL_MIN', 0.25, 0, 1);
+    if (this.runtimeOverride) {
+      return this.runtimeOverride.fuzzyInternalMin;
+    }
+
+    return this.getNumber('CHATBOT_FUZZY_INTERNAL_MIN', 0.33, 0, 1);
   };
 
   private getNumber = (
