@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useChatbot } from '../../hooks/useChatbot';
 import type { ChatbotCtaLink } from '../../types/chatbot.types';
+import { QuickFaq } from '../QuickFaq/QuickFaq';
 import { ChatbotLauncherButton } from './parts/ChatbotLauncherButton';
 import { ChatbotMessageItem } from './parts/ChatbotMessageItem';
 import './ChatbotWidget.css';
@@ -118,6 +119,14 @@ export function ChatbotWidget() {
                 onFeedback={handleFeedback}
               />
             ))}
+
+            {messages.length <= 1 && (
+              <QuickFaq
+                disabled={isSending}
+                onSelect={handleSuggestionClick}
+              />
+            )}
+
             {isSending && (
               <div className="chatbot-message chatbot-message--bot chatbot-message--typing">
                 <span className="chatbot-typing-dot" />

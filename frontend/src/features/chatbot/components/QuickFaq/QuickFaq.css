@@ -1,0 +1,44 @@
+.quick-faq {
+  padding: 0.5rem 0.8rem 0.2rem;
+}
+
+.quick-faq__title {
+  margin: 0 0 0.42rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(13, 59, 115, 0.55);
+}
+
+.quick-faq__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.36rem;
+}
+
+.quick-faq__chip {
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.62rem;
+  color: #1f5f4a;
+  border: 1px solid rgba(58, 128, 72, 0.26);
+  background: rgba(107, 170, 117, 0.12);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.quick-faq__chip:hover,
+.quick-faq__chip:focus-visible {
+  border-color: rgba(58, 128, 72, 0.5);
+  background: rgba(107, 170, 117, 0.24);
+  outline: none;
+}
+
+.quick-faq__chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
