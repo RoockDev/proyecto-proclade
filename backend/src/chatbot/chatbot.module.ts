@@ -21,6 +21,6 @@ import { UnresolvedQuestionService } from './unresolved-question.service';
     KnowledgeBaseService,
     UnresolvedQuestionService,
   ],
-  exports: [ChatbotOrchestratorService],
+  exports: [ChatbotOrchestratorService, ChatbotMatchingConfigService],
 })
 export class ChatbotModule {}

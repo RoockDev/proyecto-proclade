@@ -205,13 +205,20 @@ export class ChatbotMatchingEngineService {
       semanticScore,
       contextScore,
     });
+    const adjustedFinalScore = this.applyShortQueryPenalty({
+      finalScore,
+      queryTokens: input.queryTokens,
+      normalizedMessage: input.normalizedMessage,
+      correctedNormalizedMessage: input.correctedNormalizedMessage,
+      candidate: input.candidate,
+    });
 
     return {
       keywordScore,
       fuzzyScore,
       semanticScore,
       contextScore,
-      finalScore,
+      finalScore: adjustedFinalScore,
     };
   };
 
@@ -353,6 +360,33 @@ export class ChatbotMatchingEngineService {
       weights.context * scores.contextScore;
 
     return this.roundScore(finalScore);
+  };
+
+  private applyShortQueryPenalty = (input: {
+    finalScore: number;
+    queryTokens: string[];
+    normalizedMessage: string;
+    correctedNormalizedMessage: string;
+    candidate: KnowledgeCandidate;
+  }) => {
+    const candidateCanonical = this.normalizeText(input.candidate.questionCanonical);
+    const isExactCanonicalMatch =
+      candidateCanonical === input.normalizedMessage ||
+      candidateCanonical === input.correctedNormalizedMessage;
+
+    if (isExactCanonicalMatch) {
+      return input.finalScore;
+    }
+
+    if (input.queryTokens.length <= 1) {
+      return this.roundScore(input.finalScore * 0.55);
+    }
+
+    if (input.queryTokens.length === 2) {
+      return this.roundScore(input.finalScore * 0.85);
+    }
+
+    return input.finalScore;
   };
 
   private getSemanticArtifacts = (candidates: KnowledgeCandidate[]) => {

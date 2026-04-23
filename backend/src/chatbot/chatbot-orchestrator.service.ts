@@ -63,30 +63,31 @@ export class ChatbotOrchestratorService {
           conversationalReply,
           normalizedText,
         );
-      const botMessage = await this.chatbotSessionService.saveBotMessage(
-        session.id,
-        {
-          messageText: enrichedConversationalReply.answer,
-          detectedIntentCode: enrichedConversationalReply.detectedIntentCode,
-          replyType: enrichedConversationalReply.replyType,
-          confidence: enrichedConversationalReply.confidence,
-          meta: {
-            pageContext: payload.pageContext ?? null,
-            suggestions: enrichedConversationalReply.suggestions,
-            ctaLinks: enrichedConversationalReply.ctaLinks,
-            scoreBreakdown: null,
-            candidateId: null,
-          },
-        },
+      const safeConversationalReply = this.applySafetyGuard(
+        session.sessionKey,
+        enrichedConversationalReply,
       );
+      return this.persistReply({
+        sessionId: session.id,
+        pageContext: payload.pageContext,
+        reply: safeConversationalReply,
+        scoreBreakdown: null,
+        candidateId: null,
+        normalizedText,
+        sampleText: payload.message,
+      });
+    }
 
-      await this.chatbotSessionService.touchSession(session.id);
-
-      return {
-        message: 'Respuesta del chatbot generada correctamente',
-        messageId: botMessage.id,
-        ...enrichedConversationalReply,
-      };
+    if (this.isLikelyOutOfDomain(normalizedText)) {
+      return this.persistReply({
+        sessionId: session.id,
+        pageContext: payload.pageContext,
+        reply: this.buildOutOfDomainReply(session.sessionKey),
+        scoreBreakdown: null,
+        candidateId: null,
+        normalizedText,
+        sampleText: payload.message,
+      });
     }
 
     const sessionContext = await this.chatbotSessionService.getSessionContext(
@@ -116,41 +117,17 @@ export class ChatbotOrchestratorService {
       reply,
       normalizedText,
     );
+    const safeReply = this.applySafetyGuard(session.sessionKey, enrichedReply);
 
-    if (enrichedReply.replyType === ChatReplyType.FALLBACK) {
-      await this.unresolvedQuestionService.register({
-        normalizedText,
-        sampleText: payload.message,
-        pageContext: payload.pageContext,
-      });
-    }
-
-    const meta: Prisma.InputJsonValue = {
-      pageContext: payload.pageContext ?? null,
-      suggestions: enrichedReply.suggestions,
-      ctaLinks: enrichedReply.ctaLinks,
+    return this.persistReply({
+      sessionId: session.id,
+      pageContext: payload.pageContext,
+      reply: safeReply,
       scoreBreakdown: bestMatch?.scoreBreakdown ?? null,
       candidateId: bestMatch?.candidate.id ?? null,
-    };
-
-    const botMessage = await this.chatbotSessionService.saveBotMessage(
-      session.id,
-      {
-        messageText: enrichedReply.answer,
-        detectedIntentCode: enrichedReply.detectedIntentCode,
-        replyType: enrichedReply.replyType,
-        confidence: enrichedReply.confidence,
-        meta,
-      },
-    );
-
-    await this.chatbotSessionService.touchSession(session.id);
-
-    return {
-      message: 'Respuesta del chatbot generada correctamente',
-      messageId: botMessage.id,
-      ...enrichedReply,
-    };
+      normalizedText,
+      sampleText: payload.message,
+    });
   }
 
   async getHealth() {
@@ -216,6 +193,105 @@ export class ChatbotOrchestratorService {
     };
   }
 
+  private async persistReply(input: {
+    sessionId: number;
+    pageContext?: string;
+    reply: ChatbotReplyData;
+    scoreBreakdown: Prisma.InputJsonValue | null;
+    candidateId: number | null;
+    normalizedText: string;
+    sampleText: string;
+  }) {
+    if (input.reply.replyType === ChatReplyType.FALLBACK) {
+      await this.unresolvedQuestionService.register({
+        normalizedText: input.normalizedText,
+        sampleText: input.sampleText,
+        pageContext: input.pageContext,
+      });
+    }
+
+    const meta: Prisma.InputJsonValue = {
+      pageContext: input.pageContext ?? null,
+      suggestions: input.reply.suggestions,
+      ctaLinks: input.reply.ctaLinks,
+      scoreBreakdown: input.scoreBreakdown,
+      candidateId: input.candidateId,
+    };
+
+    const botMessage = await this.chatbotSessionService.saveBotMessage(
+      input.sessionId,
+      {
+        messageText: input.reply.answer,
+        detectedIntentCode: input.reply.detectedIntentCode,
+        replyType: input.reply.replyType,
+        confidence: input.reply.confidence,
+        meta,
+      },
+    );
+
+    await this.chatbotSessionService.touchSession(input.sessionId);
+
+    return {
+      message: 'Respuesta del chatbot generada correctamente',
+      messageId: botMessage.id,
+      ...input.reply,
+    };
+  }
+
+  private applySafetyGuard(sessionId: string, reply: ChatbotReplyData) {
+    if (!this.hasUnsafeContent(reply.answer)) {
+      return reply;
+    }
+
+    return {
+      sessionId,
+      replyType: ChatReplyType.FALLBACK,
+      answer:
+        'No puedo responder con ese contenido. Si quieres, te ayudo con informacion de Equipo PUCH: donaciones, colaboracion, noticias, delegaciones y contacto.',
+      confidence: 0,
+      detectedIntentCode: null,
+      suggestions: [
+        'como donar',
+        'como colaborar sin donar',
+        'donde ver noticias del proyecto',
+      ],
+      ctaLinks: [],
+    };
+  }
+
+  private buildOutOfDomainReply(sessionId: string): ChatbotReplyData {
+    return {
+      sessionId,
+      replyType: ChatReplyType.FALLBACK,
+      answer:
+        'No puedo ayudarte con ese tema, pero si con Equipo PUCH y Fundacion PROCLADE. Puedo ayudarte con donaciones, colaboracion, noticias, superheroes, retos, delegaciones y contacto.',
+      confidence: 0,
+      detectedIntentCode: null,
+      suggestions: [
+        'que es equipo puch',
+        'como donar',
+        'como colaborar sin donar',
+      ],
+      ctaLinks: [],
+    };
+  }
+
+  private isLikelyOutOfDomain(normalizedText: string) {
+    if (this.hasDomainAnchorKeyword(normalizedText)) {
+      return false;
+    }
+
+    return /\b(barsa|barca|realmadrid|madrid cf|atleti|champions|laliga|futbol|partido|gol|goles|penalti|arbitro|nba|nfl|bitcoin|btc|ethereum|crypto|criptomoneda|trump|biden|elecciones|senado|presidente|temperatura|clima|tiempo|llover|lluvia)\b/.test(
+      normalizedText,
+    );
+  }
+
+  private hasUnsafeContent(text: string) {
+    return /\b(matar|maten|muerte|odio|racista|puta|puto|gilipollas|subnormal|maricon|nazi)\b/.test(
+      text,
+    );
+  }
+
   private buildReply(
     sessionId: string,
     bestMatch: ScoredCandidate | undefined,
@@ -226,8 +302,8 @@ export class ChatbotOrchestratorService {
 
     if (!bestMatch || bestMatch.score < thresholds.clarification) {
       const fallbackAnswer = bestQuestion
-        ? `No te entendí del todo. ¿Te refieres a "${bestQuestion}"? Si quieres, también puedo ayudarte con donaciones, noticias, superhéroes o cómo colaborar.`
-        : 'No he entendido bien tu mensaje. Si quieres, reformúlalo y te ayudo con donaciones, noticias, superhéroes, delegaciones o colaboración.';
+        ? `No te entendi del todo. Te refieres a "${bestQuestion}"? Si quieres, tambien puedo ayudarte con donaciones, noticias, superheroes o como colaborar.`
+        : 'No he entendido bien tu mensaje. Reformulalo y te ayudo con donaciones, noticias, superheroes, delegaciones o colaboracion.';
 
       return {
         sessionId,
@@ -242,8 +318,8 @@ export class ChatbotOrchestratorService {
 
     const shouldDirectAnswer =
       bestMatch.score >= thresholds.directAnswer ||
-      bestMatch.scoreBreakdown.fuzzyScore >= 0.92 ||
-      bestMatch.scoreBreakdown.keywordScore >= 0.88;
+      (bestMatch.scoreBreakdown.fuzzyScore >= 0.95 &&
+        bestMatch.scoreBreakdown.semanticScore >= 0.55);
 
     if (!shouldDirectAnswer) {
       return {
