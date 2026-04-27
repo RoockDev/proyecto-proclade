@@ -154,6 +154,11 @@ export class AdminSuperheroesController {
     return this.superheroesService.restore(id);
   }
 
+  @Delete(':id/permanent')
+  removePermanently(@Param('id', ParseIntPipe) id: number) {
+    return this.superheroesService.removePermanently(id);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.superheroesService.remove(id);

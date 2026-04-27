@@ -11,6 +11,7 @@ type SuperheroesTableProps = {
   onToggleStatus: (hero: AdminSuperheroRow) => void;
   onDeactivate: (hero: AdminSuperheroRow) => void;
   onRestore: (hero: AdminSuperheroRow) => void;
+  onPermanentDelete: (hero: AdminSuperheroRow) => void;
   showDeletedOnly?: boolean;
 };
 
@@ -26,6 +27,7 @@ export const SuperheroesTable = ({
   onToggleStatus,
   onDeactivate,
   onRestore,
+  onPermanentDelete,
 }: SuperheroesTableProps) => {
   const columns: AdminTableColumn<AdminSuperheroRow>[] = [
     {
@@ -108,14 +110,24 @@ export const SuperheroesTable = ({
               </button>
             </>
           ) : (
-            <button
-              type="button"
-              className="superheroes-table__icon-button superheroes-table__icon-button--reactivate"
-              onClick={() => onRestore(hero)}
-              aria-label={`Reactivar ${hero.name}`}
-            >
-              <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
-            </button>
+            <>
+              <button
+                type="button"
+                className="superheroes-table__icon-button superheroes-table__icon-button--reactivate"
+                onClick={() => onRestore(hero)}
+                aria-label={`Reactivar ${hero.name}`}
+              >
+                <i className="bi bi-arrow-counterclockwise" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="superheroes-table__icon-button superheroes-table__icon-button--danger"
+                onClick={() => onPermanentDelete(hero)}
+                aria-label={`Eliminar definitivamente ${hero.name}`}
+              >
+                <i className="bi bi-trash3" aria-hidden="true" />
+              </button>
+            </>
           )}
         </div>
       ),
