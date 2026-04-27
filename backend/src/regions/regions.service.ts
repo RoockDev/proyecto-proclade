@@ -18,6 +18,19 @@ type RegionWithBooksCount = Region & {
 export class RegionsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAllPublic() {
+    return this.prisma.region.findMany({
+      where: { deletedAt: null },
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        email: true,
+      },
+    });
+  }
+
   async findAllForAdmin(
     query: ListRegionsQueryDto,
   ): Promise<RegionWithBooksCount[]> {
