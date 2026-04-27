@@ -5,6 +5,7 @@ type ChatbotMessageItemProps = {
   onSuggestionClick: (suggestion: string) => void;
   onCtaClick: (link: ChatbotCtaLink) => void;
   onFeedback: (messageId: number, helpful: boolean) => void;
+  hideSuggestions?: boolean;
 };
 
 export function ChatbotMessageItem({
@@ -12,6 +13,7 @@ export function ChatbotMessageItem({
   onSuggestionClick,
   onCtaClick,
   onFeedback,
+  hideSuggestions = false,
 }: ChatbotMessageItemProps) {
   const isBot = message.role === 'bot';
   const feedbackMessageId =
@@ -41,6 +43,7 @@ export function ChatbotMessageItem({
       )}
 
       {isBot &&
+        !hideSuggestions &&
         Array.isArray(message.suggestions) &&
         message.suggestions.length > 0 && (
           <div className="chatbot-message__suggestions">

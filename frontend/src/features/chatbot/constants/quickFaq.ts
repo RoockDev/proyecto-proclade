@@ -23,8 +23,8 @@ export const QUICK_FAQ_ITEMS: QuickFaqItem[] = [
   },
   {
     id: 'faq-projects',
-    label: '🌍 Proyectos actuales',
-    message: '¿Qué proyectos apoyáis actualmente?',
+    label: '🎯 Retos activos',
+    message: '¿Qué retos hay?',
     order: 3,
     isActive: true,
   },

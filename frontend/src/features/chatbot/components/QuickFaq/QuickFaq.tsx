@@ -6,9 +6,9 @@ type QuickFaqProps = {
   onSelect: (message: string) => void;
 };
 
-const faqs = getVisibleFaqs();
-
 export function QuickFaq({ disabled, onSelect }: QuickFaqProps) {
+  const faqs = getVisibleFaqs();
+
   if (faqs.length === 0) {
     return null;
   }

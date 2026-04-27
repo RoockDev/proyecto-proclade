@@ -20,11 +20,7 @@ const CHATBOT_WELCOME_MESSAGE: ChatUiMessage = {
   role: 'bot',
   text: 'Hola, soy el asistente de Equipo PUCH. Te ayudo con donaciones, noticias, superhéroes y cómo colaborar.',
   createdAt: new Date().toISOString(),
-  suggestions: [
-    '¿Cómo puedo donar?',
-    'Quiero solicitar información',
-    '¿Cómo puedo colaborar sin donar?',
-  ],
+  suggestions: [],
 };
 
 type UseChatbotResult = {
