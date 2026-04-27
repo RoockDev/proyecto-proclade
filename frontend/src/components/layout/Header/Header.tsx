@@ -17,6 +17,11 @@ const navItems: HeaderNavItem[] = [
   { label: '¿Qué es?', to: '/conocenos' },
   { label: '¿Qué buscamos?', to: '/campanas' },
   { label: 'Superhéroes', to: '/superheroes' },
+  {
+    label: 'Bibliotecas Humanas',
+    to: '/bibliotecas-humanas',
+    className: 'nav-link--libraries',
+  },
   { label: 'Noticias', to: '/noticias' },
   { label: 'Colabora', to: '/colabora' },
   { label: 'Contacto', to: '/contacto' },
@@ -66,7 +71,7 @@ export const Header = () => {
 
   return (
     <header className="brand-header sticky-top">
-      <nav className="navbar navbar-expand-lg">
+      <nav className="navbar navbar-expand-xl">
         <div className="container">
           <HeaderBrand onClick={closeMenu} />
 

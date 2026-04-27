@@ -13,6 +13,7 @@
   color: var(--brand-secondary);
   font-size: 1.06rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .brand-header .nav-link {
@@ -21,7 +22,13 @@
   font-weight: 700;
   border-radius: 999px;
   padding: 0.4rem 0.75rem;
+  white-space: nowrap;
   transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.brand-header .navbar-nav {
+  flex-wrap: nowrap;
+  gap: 0.15rem;
 }
 
 .brand-header .nav-link:hover,
@@ -33,6 +40,13 @@
 .brand-header .nav-link.active {
   color: var(--brand-secondary);
   background-color: rgba(13, 59, 115, 0.1);
+}
+
+.brand-header .nav-link--libraries {
+  max-width: 7.9rem;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.12;
 }
 
 .header-actions {
@@ -125,16 +139,19 @@
 }
 
 @media (max-width: 1199.98px) {
-  .brand-header .nav-link {
-    padding-left: 0.55rem;
-    padding-right: 0.55rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 991.98px) {
   .brand-header .navbar-collapse {
     padding-top: 0.8rem;
+  }
+
+  .brand-header .navbar-nav {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .brand-header .nav-link--libraries {
+    max-width: none;
+    text-align: left;
+    line-height: 1.25;
   }
 
   .header-actions {
@@ -144,5 +161,39 @@
 
   .header-action-btn {
     flex: 1;
+  }
+}
+
+@media (max-width: 1299.98px) {
+  .brand-name {
+    display: none;
+  }
+
+  .brand-header .nav-link {
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+    font-size: 0.86rem;
+  }
+
+  .brand-header .nav-link--libraries {
+    max-width: 6.85rem;
+    font-size: 0.82rem;
+    line-height: 1.08;
+  }
+
+  .header-actions {
+    gap: 0.4rem !important;
+  }
+
+  .header-action-btn {
+    min-height: 34px;
+    padding: 0.35rem 0.72rem;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .header-action-btn {
+    flex-basis: 100%;
   }
 }
