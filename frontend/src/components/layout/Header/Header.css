@@ -11,7 +11,7 @@
 
 .brand-name {
   color: var(--brand-secondary);
-  font-size: 1.06rem;
+  font-size: 1rem;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -164,11 +164,7 @@
   }
 }
 
-@media (max-width: 1299.98px) {
-  .brand-name {
-    display: none;
-  }
-
+@media (max-width: 1399.98px) {
   .brand-header .nav-link {
     padding-left: 0.45rem;
     padding-right: 0.45rem;
@@ -193,6 +189,10 @@
 }
 
 @media (max-width: 575.98px) {
+  .brand-name {
+    font-size: 0.94rem;
+  }
+
   .header-action-btn {
     flex-basis: 100%;
   }

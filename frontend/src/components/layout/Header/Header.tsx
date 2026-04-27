@@ -71,7 +71,7 @@ export const Header = () => {
 
   return (
     <header className="brand-header sticky-top">
-      <nav className="navbar navbar-expand-xl">
+      <nav className="navbar navbar-expand-xxl">
         <div className="container">
           <HeaderBrand onClick={closeMenu} />
 
