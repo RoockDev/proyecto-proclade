@@ -369,7 +369,9 @@ export class ChatbotMatchingEngineService {
     correctedNormalizedMessage: string;
     candidate: KnowledgeCandidate;
   }) => {
-    const candidateCanonical = this.normalizeText(input.candidate.questionCanonical);
+    const candidateCanonical = this.normalizeText(
+      input.candidate.questionCanonical,
+    );
     const isExactCanonicalMatch =
       candidateCanonical === input.normalizedMessage ||
       candidateCanonical === input.correctedNormalizedMessage;

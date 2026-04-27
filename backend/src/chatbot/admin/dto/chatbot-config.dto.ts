@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, Max, Min, ValidateNested } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
 class ChatbotWeightsDto {
   @IsNumber()

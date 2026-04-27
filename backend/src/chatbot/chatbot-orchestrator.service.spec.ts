@@ -305,7 +305,9 @@ describe('ChatbotOrchestratorService', () => {
     expect(response.replyType).toBe('FALLBACK');
     expect(response.confidence).toBe(0);
     expect(response.detectedIntentCode).toBeNull();
-    expect(response.answer.toLowerCase()).toContain('no he conseguido entender');
+    expect(response.answer.toLowerCase()).toContain(
+      'no he conseguido entender',
+    );
     expect(unresolvedServiceMock.register).not.toHaveBeenCalled();
   });
 
@@ -320,7 +322,9 @@ describe('ChatbotOrchestratorService', () => {
     expect(response.replyType).toBe('FALLBACK');
     expect(response.confidence).toBe(0);
     expect(response.detectedIntentCode).toBeNull();
-    expect(response.answer.toLowerCase()).toContain('no he conseguido entender');
+    expect(response.answer.toLowerCase()).toContain(
+      'no he conseguido entender',
+    );
     expect(unresolvedServiceMock.register).not.toHaveBeenCalled();
   });
 

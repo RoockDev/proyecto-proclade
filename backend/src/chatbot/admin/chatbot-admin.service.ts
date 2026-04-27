@@ -5,7 +5,11 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client-runtime-utils';
-import { Prisma, ChatMessageRole, ChatReplyType } from 'generated/prisma/client';
+import {
+  Prisma,
+  ChatMessageRole,
+  ChatReplyType,
+} from 'generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ChatbotMatchingConfigService } from '../chatbot-matching-config.service';
 import { ChatbotMetricsQueryDto } from './dto/chatbot-metrics-query.dto';
@@ -26,10 +30,7 @@ import {
   ChatbotMetricsData,
   ChatbotUnresolvedQuestionItem,
 } from './types/chatbot-admin.types';
-import {
-  MatchingThresholds,
-  MatchingWeights,
-} from '../types/chatbot.types';
+import { MatchingThresholds, MatchingWeights } from '../types/chatbot.types';
 
 type DateRange = {
   start: Date;
@@ -192,8 +193,7 @@ export class ChatbotAdminService implements OnModuleInit {
     const resolved =
       resolvedRaw === true || resolvedRaw === 'true'
         ? true
-        : resolvedRaw === false ||
-            resolvedRaw === 'false'
+        : resolvedRaw === false || resolvedRaw === 'false'
           ? false
           : undefined;
 
@@ -418,7 +418,10 @@ export class ChatbotAdminService implements OnModuleInit {
         knowledge: this.mapKnowledgeItem(knowledge),
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException(
           'Ya existe un item de conocimiento con esa canonical.',
         );
@@ -484,7 +487,10 @@ export class ChatbotAdminService implements OnModuleInit {
         knowledge: this.mapKnowledgeItem(knowledge),
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException(
           'No se puede actualizar porque ya existe otro item con esa canonical.',
         );
@@ -500,7 +506,10 @@ export class ChatbotAdminService implements OnModuleInit {
         where: { id },
       });
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
         throw new NotFoundException('No se encontro el item de conocimiento');
       }
 
@@ -567,7 +576,10 @@ export class ChatbotAdminService implements OnModuleInit {
         intent: this.mapIntent(intent),
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException('Ya existe un intent con ese código.');
       }
 
@@ -640,7 +652,10 @@ export class ChatbotAdminService implements OnModuleInit {
         phrase: this.mapPhrase(phrase),
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException(
           'Ya existe una frase idéntica para esta intención y lenguaje',
         );
@@ -687,7 +702,10 @@ export class ChatbotAdminService implements OnModuleInit {
         phrase: this.mapPhrase(updated),
       };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
         throw new BadRequestException(
           'Ya existe otra frase con los mismos datos para esta intención',
         );
@@ -708,8 +726,7 @@ export class ChatbotAdminService implements OnModuleInit {
       ? this.ensureThresholds(dto.thresholds)
       : currentSnapshot.thresholds;
 
-    const nextFuzzy =
-      dto.fuzzyInternalMin ?? currentSnapshot.fuzzyInternalMin;
+    const nextFuzzy = dto.fuzzyInternalMin ?? currentSnapshot.fuzzyInternalMin;
 
     const existing = await this.prisma.chatbotAdminConfig.findFirst({
       orderBy: {
@@ -756,7 +773,9 @@ export class ChatbotAdminService implements OnModuleInit {
     return { config: snapshot };
   }
 
-  private mapUnresolved(item: UnresolvedQuestionPayload): ChatbotUnresolvedQuestionItem {
+  private mapUnresolved(
+    item: UnresolvedQuestionPayload,
+  ): ChatbotUnresolvedQuestionItem {
     return {
       id: item.id,
       normalizedText: item.normalizedText,
@@ -872,7 +891,9 @@ export class ChatbotAdminService implements OnModuleInit {
 
         return session.lastMessageAt.getTime() - session.startedAt.getTime();
       })
-      .filter((value): value is number => typeof value === 'number' && value > 0);
+      .filter(
+        (value): value is number => typeof value === 'number' && value > 0,
+      );
 
     if (durations.length === 0) {
       return 0;
@@ -964,10 +985,7 @@ export class ChatbotAdminService implements OnModuleInit {
     };
   }
 
-  private parseNumber(
-    value: unknown,
-    fallback: number,
-  ): number {
+  private parseNumber(value: unknown, fallback: number): number {
     if (typeof value === 'number' && !Number.isNaN(value)) {
       return value;
     }
@@ -1001,9 +1019,7 @@ export class ChatbotAdminService implements OnModuleInit {
     };
   }
 
-  private ensureThresholds(
-    thresholds: MatchingThresholds,
-  ): MatchingThresholds {
+  private ensureThresholds(thresholds: MatchingThresholds): MatchingThresholds {
     const normalized: MatchingThresholds = {
       directAnswer: this.clamp(thresholds.directAnswer),
       clarification: this.clamp(thresholds.clarification),

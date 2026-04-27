@@ -72,6 +72,10 @@ export class UsersController {
     @Body() toggleRealHeroDto: ToggleRealHeroDto,
     @Req() request: RequestWithUser,
   ) {
-    return this.usersService.setRealHeroStatus(id, toggleRealHeroDto.enabled, request.user.id);
+    return this.usersService.setRealHeroStatus(
+      id,
+      toggleRealHeroDto.enabled,
+      request.user.id,
+    );
   }
 }
