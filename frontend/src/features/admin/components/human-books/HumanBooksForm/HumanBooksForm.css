@@ -100,7 +100,7 @@
 }
 
 .human-books-form-card__file-info {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.8rem;
@@ -108,6 +108,18 @@
   background: rgba(255, 225, 181, 0.3);
   padding: 0.3rem 0.6rem;
   border-radius: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.human-books-form-card__file-name {
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .human-books-form-card__clear-file {
@@ -118,6 +130,7 @@
   padding: 0;
   display: inline-flex;
   font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .human-books-form-card__hint {

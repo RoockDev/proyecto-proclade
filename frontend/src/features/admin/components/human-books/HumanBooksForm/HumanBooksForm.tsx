@@ -111,7 +111,9 @@ export const HumanBooksForm = ({
                 />
                 {formData.pdf && (
                   <span className="human-books-form-card__file-info">
-                    {formData.pdf.name}
+                    <span className="human-books-form-card__file-name" title={formData.pdf.name}>
+                      {formData.pdf.name}
+                    </span>
                     <button type="button" className="human-books-form-card__clear-file" onClick={handleClearFile}>
                       <i className="bi bi-x" aria-hidden="true" />
                     </button>
