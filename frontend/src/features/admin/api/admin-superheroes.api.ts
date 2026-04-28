@@ -106,3 +106,13 @@ export const restoreAdminSuperhero = async (id: number) => {
   );
   return handleResponse(response);
 };
+
+export const deleteAdminSuperheroPermanently = async (id: number) => {
+  const response = await api.delete<ApiResponse<null>>(
+    `/admin/superheroes/${id}/permanent`,
+    {
+      headers: authHeaders(),
+    },
+  );
+  return handleResponse(response);
+};

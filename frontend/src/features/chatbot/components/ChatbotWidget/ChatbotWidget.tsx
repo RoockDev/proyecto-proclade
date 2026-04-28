@@ -90,6 +90,10 @@ export function ChatbotWidget() {
     void sendFeedback(messageId, helpful);
   };
 
+  const shouldShowQuickFaq = useMemo(() => {
+    return messages.length <= 1;
+  }, [messages.length]);
+
   return (
     <aside className={`chatbot-widget ${isOpen ? 'chatbot-widget--open' : ''}`}>
       {isOpen && (
@@ -117,10 +121,11 @@ export function ChatbotWidget() {
                 onSuggestionClick={handleSuggestionClick}
                 onCtaClick={handleCtaClick}
                 onFeedback={handleFeedback}
+                hideSuggestions={message.id === 'chatbot-welcome'}
               />
             ))}
 
-            {messages.length <= 1 && (
+            {shouldShowQuickFaq && (
               <QuickFaq
                 disabled={isSending}
                 onSelect={handleSuggestionClick}

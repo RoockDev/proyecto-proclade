@@ -94,10 +94,10 @@ export class UsersService {
         email,
         deletedAt: null,
       },
-    include: {
-      roles: true,
-      realHeroSuperhero: true,
-    },
+      include: {
+        roles: true,
+        realHeroSuperhero: true,
+      },
     });
   }
 
@@ -188,7 +188,11 @@ export class UsersService {
     return this.formatUserResponse(restoredUser);
   }
 
-  async setRealHeroStatus(userId: number, enable: boolean, convertedById: number) {
+  async setRealHeroStatus(
+    userId: number,
+    enable: boolean,
+    convertedById: number,
+  ) {
     const user = await this.findActiveByIdWithRoles(userId);
 
     const heroName = `${user.name} ${user.surname}`.trim() || 'Superhéroe real';

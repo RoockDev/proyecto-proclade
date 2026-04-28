@@ -289,6 +289,37 @@ export class SuperheroesService {
     };
   }
 
+  async removePermanently(id: number) {
+    const superhero = await this.findAnyById(id);
+
+    if (superhero.deletedAt === null) {
+      throw new BadRequestException(
+        'Debes desactivar el superhéroe antes de eliminarlo definitivamente',
+      );
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.user.updateMany({
+        where: {
+          realHeroSuperheroId: id,
+        },
+        data: {
+          realHeroSuperheroId: null,
+          isRealHero: false,
+        },
+      }),
+      this.prisma.superhero.delete({
+        where: {
+          id,
+        },
+      }),
+    ]);
+
+    return {
+      message: 'Superhéroe eliminado definitivamente',
+    };
+  }
+
   private async findActiveById(id: number): Promise<Superhero> {
     const superhero = await this.prisma.superhero.findFirst({
       where: {

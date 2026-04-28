@@ -159,15 +159,17 @@
   background: #f3f4f6;
   border: 1px solid #d1d5db;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .superhero-form-card__file-name {
   flex: 1;
+  min-width: 0;
   font-size: 0.85rem;
   color: #1f2937;
   white-space: nowrap;
-  overflow: visible;
-  text-overflow: clip;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .superhero-form-card__file-input {

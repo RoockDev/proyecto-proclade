@@ -17,6 +17,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { ColaboraPage } from './pages/ColaboraPage';
 import { NewsListPage } from '../features/news/pages/NewsListPage/NewsListPage';
 import { NewsDetailPage } from '../features/news/pages/NewsDetailPage/NewsDetailPage';
+import { HumanLibrariesPage } from '../features/human-libraries/pages/HumanLibrariesPage/HumanLibrariesPage';
 
 const SuperheroesPage = lazy(() =>
   import('../features/superheroes/pages/SuperheroesPage/SuperheroesPage').then((module) => ({
@@ -68,6 +69,14 @@ export const appRouter = createBrowserRouter([
       {
         path: 'noticias/:slug',
         element: <NewsDetailPage />,
+      },
+      {
+        path: 'bibliotecas-humanas',
+        element: <HumanLibrariesPage />,
+      },
+      {
+        path: 'bibliotecas-humanas/:delegationSlug',
+        element: <HumanLibrariesPage />,
       },
       {
         path: 'colabora',

@@ -1,0 +1,49 @@
+.delegation-contact-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(13, 59, 115, 0.1);
+  background-color: rgba(255, 255, 255, 0.82);
+  padding: clamp(1.1rem, 2.2vw, 1.45rem);
+  box-shadow: 0 12px 24px rgba(13, 59, 115, 0.08);
+}
+
+.delegation-contact-panel__title {
+  color: var(--brand-secondary);
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.delegation-contact-panel__map-wrapper {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(13, 59, 115, 0.18);
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0.8rem;
+}
+
+.delegation-contact-panel__map-frame {
+  width: 100%;
+  min-height: 13rem;
+  border: 0;
+}
+
+.delegation-contact-panel__map-link {
+  margin-bottom: 0.95rem;
+}
+
+.delegation-contact-panel__details {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.delegation-contact-panel__details p {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  color: var(--brand-dark);
+}
+
+.delegation-contact-panel__details i {
+  margin-top: 0.15rem;
+  color: var(--brand-secondary);
+}

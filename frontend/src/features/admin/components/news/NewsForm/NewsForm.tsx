@@ -86,16 +86,6 @@ export const NewsForm = ({
               </label>
 
               <label className="news-form-card__full">
-                URL de imagen
-                <input
-                  type="text"
-                  value={formData.imageUrl}
-                  onChange={(event) => onFieldChange('imageUrl', event.target.value)}
-                  placeholder="/api/uploads/news/mi-imagen.jpg o https://..."
-                />
-              </label>
-
-              <label className="news-form-card__full">
                 Subir imagen
                 <input
                   type="file"
@@ -109,6 +99,24 @@ export const NewsForm = ({
                   }}
                   disabled={isUploadingImage}
                 />
+                {formData.imageUrl ? (
+                  <div className="news-form-card__image-meta">
+                    <span
+                      className="news-form-card__image-status"
+                      title={formData.imageUrl}
+                    >
+                      Imagen seleccionada correctamente
+                    </span>
+                    <button
+                      type="button"
+                      className="news-form-card__image-clear"
+                      onClick={() => onFieldChange('imageUrl', '')}
+                      disabled={isUploadingImage}
+                    >
+                      Quitar imagen
+                    </button>
+                  </div>
+                ) : null}
                 <span className="news-form-card__hint">
                   JPG, PNG, WEBP o GIF. Máximo 5MB.
                 </span>

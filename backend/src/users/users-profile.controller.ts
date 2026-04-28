@@ -24,6 +24,9 @@ export class UsersProfileController {
     @Req() request: RequestWithUser,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    return this.usersService.updateProfileById(request.user.id, updateProfileDto);
+    return this.usersService.updateProfileById(
+      request.user.id,
+      updateProfileDto,
+    );
   }
 }

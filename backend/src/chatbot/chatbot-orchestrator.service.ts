@@ -565,7 +565,10 @@ export class ChatbotOrchestratorService {
       return reply;
     }
 
-    if (reply.replyType === ChatReplyType.FALLBACK && !canRecoverFallbackWithContext) {
+    if (
+      reply.replyType === ChatReplyType.FALLBACK &&
+      !canRecoverFallbackWithContext
+    ) {
       return reply;
     }
 

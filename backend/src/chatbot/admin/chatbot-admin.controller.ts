@@ -100,10 +100,7 @@ export class ChatbotAdminController {
   }
 
   @Post('intents')
-  createIntent(
-    @Body() dto: CreateIntentDto,
-    @Req() request: RequestWithUser,
-  ) {
+  createIntent(@Body() dto: CreateIntentDto, @Req() request: RequestWithUser) {
     return this.service.createIntent(dto, request.user.id);
   }
 

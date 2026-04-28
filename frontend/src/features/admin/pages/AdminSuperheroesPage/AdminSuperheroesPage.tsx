@@ -6,6 +6,7 @@ import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal'
 import { SuperheroesTable } from '../../components/superheroes/SuperheroesTable/SuperheroesTable';
 import {
   createAdminSuperhero,
+  deleteAdminSuperheroPermanently,
   updateAdminSuperhero,
   updateAdminSuperheroStatus,
   deleteAdminSuperhero,
@@ -52,6 +53,7 @@ export const AdminSuperheroesPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pendingDeactivate, setPendingDeactivate] = useState<AdminSuperheroRow | null>(null);
   const [pendingRestore, setPendingRestore] = useState<AdminSuperheroRow | null>(null);
+  const [pendingPermanentDelete, setPendingPermanentDelete] = useState<AdminSuperheroRow | null>(null);
 
   const [notification, setNotification] = useState<NotificationState | null>(null);
 
@@ -302,6 +304,30 @@ export const AdminSuperheroesPage = () => {
     }
   };
 
+  const confirmPermanentDelete = async () => {
+    if (!pendingPermanentDelete) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const response = await deleteAdminSuperheroPermanently(pendingPermanentDelete.id);
+      if (response.success) {
+        showNotification('Superhéroe eliminado definitivamente.', 'success');
+        await refresh();
+      } else {
+        showNotification(response.message || 'No se pudo eliminar definitivamente el superhéroe.', 'error');
+      }
+    } catch (error) {
+      console.error('Error al eliminar definitivamente superhéroe', error);
+      showNotification('No se pudo eliminar definitivamente el superhéroe.', 'error');
+    } finally {
+      setIsProcessing(false);
+      setPendingPermanentDelete(null);
+    }
+  };
+
   const heroListInfo = useMemo(() => {
     const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
     const end = Math.min(total, page * pageSize);
@@ -356,6 +382,7 @@ export const AdminSuperheroesPage = () => {
           onToggleStatus={handleToggleStatus}
           onDeactivate={(hero) => setPendingDeactivate(hero)}
           onRestore={(hero) => setPendingRestore(hero)}
+          onPermanentDelete={(hero) => setPendingPermanentDelete(hero)}
           showDeletedOnly={showDeleted}
         />
 
@@ -420,6 +447,24 @@ export const AdminSuperheroesPage = () => {
           cancelLabel="Cancelar"
           onConfirm={confirmRestore}
           onCancel={() => setPendingRestore(null)}
+          isProcessing={isProcessing}
+        />
+
+        <ConfirmModal
+          isOpen={Boolean(pendingPermanentDelete)}
+          title="Eliminar superhéroe definitivamente"
+          description={
+            pendingPermanentDelete ? (
+              <>
+                ¿Seguro que quieres eliminar de forma permanente a{' '}
+                <strong>{pendingPermanentDelete.name}</strong>? Esta acción no se puede deshacer.
+              </>
+            ) : undefined
+          }
+          confirmLabel="Eliminar definitivamente"
+          cancelLabel="Cancelar"
+          onConfirm={confirmPermanentDelete}
+          onCancel={() => setPendingPermanentDelete(null)}
           isProcessing={isProcessing}
         />
 
