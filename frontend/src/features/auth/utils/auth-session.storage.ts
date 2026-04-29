@@ -53,6 +53,43 @@ type AuthSessionSnapshot = {
 // (tests, SSR, etc.). Así evitamos errores al acceder a `window` o `localStorage`.
 const isBrowser = typeof window !== 'undefined';
 
+const normalizeBase64Url = (value: string): string => {
+  const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+  const paddingLength = (4 - (base64.length % 4)) % 4;
+  return `${base64}${'='.repeat(paddingLength)}`;
+};
+
+const parseJwtPayload = (token: string): Record<string, unknown> | null => {
+  const tokenParts = token.split('.');
+  if (tokenParts.length !== 3 || !tokenParts[1]) {
+    return null;
+  }
+
+  try {
+    const decodedPayload = atob(normalizeBase64Url(tokenParts[1]));
+    const parsedPayload = JSON.parse(decodedPayload) as unknown;
+
+    if (typeof parsedPayload !== 'object' || parsedPayload === null) {
+      return null;
+    }
+
+    return parsedPayload as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+};
+
+const isAccessTokenExpired = (token: string): boolean => {
+  const payload = parseJwtPayload(token);
+  const exp = payload?.exp;
+
+  if (typeof exp !== 'number') {
+    return false;
+  }
+
+  return Date.now() >= exp * 1000;
+};
+
 const notifyAuthSessionChanged = (): void => {
   if (!isBrowser) {
     return;
@@ -103,6 +140,16 @@ export const getAuthSession = (): AuthSessionSnapshot => {
   }
 
   const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+  if (accessToken && isAccessTokenExpired(accessToken)) {
+    localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(AUTH_USER_STORAGE_KEY);
+
+    return {
+      accessToken: null,
+      user: null,
+    };
+  }
+
   const user = parseStoredUser(localStorage.getItem(AUTH_USER_STORAGE_KEY));
 
   return {
@@ -120,6 +167,15 @@ export const saveAuthSession = (data: AuthResponseData): void => {
   // para decidir si se muestra "Panel Admin".
   localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
   localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(data.user));
+  notifyAuthSessionChanged();
+};
+
+export const updateAuthSessionUser = (nextUser: AuthUser): void => {
+  if (!isBrowser) {
+    return;
+  }
+
+  localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(nextUser));
   notifyAuthSessionChanged();
 };
 

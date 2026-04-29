@@ -1,0 +1,65 @@
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.25rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 180ms ease, opacity 120ms ease;
+  box-shadow: 0 15px 30px rgba(15, 52, 110, 0.1);
+}
+
+.admin-button:focus-visible {
+  outline: 3px solid rgba(107, 170, 117, 0.4);
+  outline-offset: 2px;
+}
+
+.admin-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.admin-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.admin-button__label {
+  display: inline-block;
+}
+
+.admin-button--solid {
+  background: var(--brand-primary);
+  color: var(--brand-white);
+}
+
+.admin-button--solid:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 40px rgba(15, 52, 110, 0.2);
+}
+
+.admin-button--outline {
+  background: transparent;
+  color: var(--brand-primary);
+  border: 1px solid rgba(15, 52, 110, 0.2);
+}
+
+.admin-button--outline:hover:not(:disabled) {
+  background: rgba(17, 59, 115, 0.08);
+}
+
+.admin-button--ghost {
+  background: transparent;
+  color: var(--brand-dark);
+  border: 1px dashed rgba(17, 59, 115, 0.25);
+}
+
+.admin-button--ghost:hover:not(:disabled) {
+  background: rgba(15, 52, 110, 0.06);
+}

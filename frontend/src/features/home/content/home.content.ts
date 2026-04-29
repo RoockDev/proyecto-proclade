@@ -1,15 +1,10 @@
 import burkinaFasoProjectImage from '../../../assets/Fotos proyectos equipo puch/burkina faso.jpg';
 import haitiRepDominicanaProjectImage from '../../../assets/Fotos proyectos equipo puch/haiti-republica dominicana .jpg';
-import superheroPresentationImage from '../../../assets/superheroes/1-- SUPERHEROES OK-18.png';
-import superheroHaitiRepDominicanaImage from '../../../assets/superheroes/4- HAT-REP DOM-SUPERHEROES OK-10.png';
-import superheroIndiaImage from '../../../assets/superheroes/5-INDIA-SUPERHEROE .png';
-import superheroBurkinaFasoImage from '../../../assets/superheroes/6-BURKINA FASO-SUPERHEROES OK-08.png';
 import type {
   HomeCounter,
   HomeCountryProject,
   HomeJoinReason,
   MissionCard,
-  SuperheroPreview,
 } from '../types/home.types';
 
 export const MISSION_CARDS: MissionCard[] = [
@@ -92,44 +87,6 @@ export const HOME_JOIN_REASONS: HomeJoinReason[] = [
 
 export const HOME_JOIN_CLOSING_MESSAGE =
   'Una misma insignia. Un mismo equipo. Una misma meta: acabar con el hambre.';
-
-export const SUPERHERO_IMAGES_BY_KEY: Record<string, string> = {
-  'hero-presentacion': superheroPresentationImage,
-  'hero-india': superheroIndiaImage,
-  'hero-burkina-faso': superheroBurkinaFasoImage,
-  'hero-haiti-republica-dominicana': superheroHaitiRepDominicanaImage,
-};
-
-export const SUPERHEROES_PREVIEW: SuperheroPreview[] = [
-  {
-    id: 'presentacion',
-    name: 'Equipo PUCH',
-    speech:
-      '“¡Hola! Somos Personas Unidas Contra el Hambre. No llevamos capa mágica, pero sí compromiso.”',
-    imageKey: 'hero-presentacion',
-  },
-  {
-    id: 'india',
-    name: 'Superhéroe India',
-    speech:
-      '“En India trabajamos con comunidades Dalit, fortaleciendo su dignidad y su independencia económica a través de la ganadería.”',
-    imageKey: 'hero-india',
-  },
-  {
-    id: 'burkina-faso',
-    name: 'Superhéroe Burkina Faso',
-    speech:
-      '“En Koudougou creamos huertas agroecológicas con riego solar y apoyamos pequeñas granjas para fortalecer la comunidad.”',
-    imageKey: 'hero-burkina-faso',
-  },
-  {
-    id: 'haiti-republica-dominicana',
-    name: 'Superhéroe Haití y Rep. Dominicana',
-    speech:
-      '“En la frontera ayudamos a crear huertas agroecológicas, sistemas de riego y espacios de formación.”',
-    imageKey: 'hero-haiti-republica-dominicana',
-  },
-];
 
 export const HOME_REAL_HEROES_COUNTER: HomeCounter = {
   value: 1247,

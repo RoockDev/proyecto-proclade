@@ -1,0 +1,111 @@
+.region-card {
+  background: #fff;
+  border: 1px solid rgba(18, 36, 71, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgba(15, 52, 110, 0.09);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.region-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.region-card__header h3 {
+  margin: 0;
+  color: #122447;
+  font-size: 1.05rem;
+}
+
+.region-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(13, 59, 115, 0.12);
+  color: #0d3b73;
+  font-size: 0.77rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+}
+
+.region-card__details {
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.region-card__details dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #617084;
+}
+
+.region-card__details dd {
+  margin: 0.15rem 0 0;
+  color: #23384f;
+  word-break: break-word;
+}
+
+.region-card__details dt {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #059669;
+}
+
+.region-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.region-card__icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #d9e3f9;
+  background: #f6f8ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(18, 36, 71, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+}
+
+.region-card__icon-button:hover,
+.region-card__icon-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(18, 36, 71, 0.15);
+}
+
+.region-card__icon-button i {
+  font-size: 1.1rem;
+}
+
+.region-card__icon-button--edit {
+  color: #059669;
+}
+
+.region-card__icon-button--edit:hover,
+.region-card__icon-button--edit:focus-visible {
+  background: rgba(5, 150, 105, 0.15);
+}
+
+.region-card__icon-button--delete {
+  color: #dc2626;
+}
+
+.region-card__icon-button--delete:hover,
+.region-card__icon-button--delete:focus-visible {
+  background: rgba(220, 38, 38, 0.15);
+}

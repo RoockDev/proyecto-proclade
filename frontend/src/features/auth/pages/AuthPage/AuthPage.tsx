@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { LoginForm } from '../../components/LoginForm/LoginForm';
 import { RegisterForm } from '../../components/RegisterForm/RegisterForm';
+import { getAuthSession } from '../../utils/auth-session.storage';
 import './AuthPage.css';
 
 export type AuthPageMode = 'login' | 'register';
@@ -10,6 +11,11 @@ interface AuthPageProps {
 }
 
 export const AuthPage = ({ mode }: AuthPageProps) => {
+  const { accessToken } = getAuthSession();
+  if (accessToken) {
+    return <Navigate to="/" replace />;
+  }
+
   const isLoginMode = mode === 'login';
 
   return (

@@ -1,0 +1,129 @@
+.news-table {
+  width: 100%;
+}
+
+.news-table__thumb,
+.news-table__thumb-placeholder {
+  width: 92px;
+  height: 58px;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(18, 36, 71, 0.12);
+}
+
+.news-table__thumb {
+  display: block;
+  object-fit: cover;
+}
+
+.news-table__thumb-placeholder {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(13, 59, 115, 0.08);
+  color: #51657e;
+}
+
+.news-table__title-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.news-table__title-cell strong {
+  color: #122447;
+  font-size: 0.95rem;
+}
+
+.news-table__title-cell span {
+  color: #51657e;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.news-table__excerpt {
+  margin: 0;
+  max-width: 30ch;
+  color: #3f4f63;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-table__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 40px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.news-table__icon-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 16px;
+  background: #f5f6fb;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  color: var(--brand-secondary);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.news-table__icon-button i {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.news-table__icon-button:hover,
+.news-table__icon-button:focus-visible {
+  transform: translateY(-1px);
+  background: #e9ecf6;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+}
+
+.news-table__icon-button--tool {
+  color: #059669;
+}
+
+.news-table__icon-button--tool:hover {
+  background: rgba(5, 150, 105, 0.12);
+}
+
+.news-table__icon-button--status {
+  color: #0ea5e9;
+  background: #f5f6fb;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+.news-table__icon-button--status:hover {
+  background: rgba(14, 165, 233, 0.15);
+}
+
+.news-table__icon-button--status--active {
+  background: #e0f2ff;
+  border-color: rgba(14, 165, 233, 0.3);
+}
+
+.news-table__icon-button--delete {
+  color: #dc2626;
+}
+
+.news-table__icon-button--delete:hover {
+  background: rgba(220, 38, 38, 0.12);
+}
+  background: rgba(220, 38, 38, 0.12);
+}
+
+.admin-data-table__actions-column,
+.admin-data-table__actions-cell {
+  min-width: 160px;
+}

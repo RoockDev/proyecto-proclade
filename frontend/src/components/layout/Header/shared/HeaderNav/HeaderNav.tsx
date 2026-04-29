@@ -4,6 +4,7 @@ export type HeaderNavItem = {
   label: string;
   to: string;
   end?: boolean;
+  className?: string;
 };
 
 type HeaderNavProps = {
@@ -18,7 +19,11 @@ export const HeaderNav = ({ items, onLinkClick }: HeaderNavProps) => (
         <NavLink
           to={item.to}
           end={Boolean(item.end)}
-          className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+          className={({ isActive }) =>
+            ['nav-link', item.className, isActive ? 'active' : '']
+              .filter(Boolean)
+              .join(' ')
+          }
           onClick={onLinkClick}
         >
           {item.label}

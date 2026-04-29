@@ -2,9 +2,13 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import './RegisterForm.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth.api';
 import { saveAuthSession } from '../../utils/auth-session.storage';
+import {
+  getRequestedRedirectTarget,
+  resolvePostAuthTarget,
+} from '../../utils/post-auth-redirect';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 
@@ -20,6 +24,8 @@ type RegisterFormState = {
 };
 
 export const RegisterForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [formState, setFormState] = useState<RegisterFormState>({
     name: '',
     surname: '',
@@ -30,6 +36,12 @@ export const RegisterForm = () => {
     error: null,
     successMessage: null,
   });
+
+  const navigateAfterAuth = () => {
+    const requestedTarget = getRequestedRedirectTarget(location.search, location.state);
+    const target = resolvePostAuthTarget(requestedTarget);
+    navigate(target, { replace: true });
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -78,11 +90,7 @@ export const RegisterForm = () => {
       }
 
       saveAuthSession(response.data);
-      setFormState((prev) => ({
-        ...prev,
-        successMessage: response.message,
-        error: null,
-      }));
+      navigateAfterAuth();
     } catch (error) {
       let errorMessage = 'No se pudo completar el registro. Intentalo de nuevo.';
 

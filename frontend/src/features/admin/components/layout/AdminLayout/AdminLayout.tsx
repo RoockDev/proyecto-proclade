@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import {
   getAuthSession,
   subscribeToAuthSession,
@@ -10,41 +10,62 @@ import { AdminTopbar } from '../../shared/AdminTopbar/AdminTopbar';
 import './AdminLayout.css';
 
 const navItems: AdminNavItem[] = [
-  { label: 'Panel', to: '/admin' },
-  { label: 'Campañas', to: '/admin/campanas' },
-  { label: 'Noticias' },
-  { label: 'Retos' },
-  { label: 'Solicitudes' },
-  { label: 'Propuestas' },
-  { label: 'Chat' },
+  { label: 'Dashboard', to: '/admin' },
+  { label: 'Noticias', to: '/admin/noticias' },
+  { label: 'Retos', to: '/admin/retos' },
+  { label: 'Libros Humanos', to: '/admin/libros' },
+  { label: 'Superhéroes', to: '/admin/superheroes' },
+  { label: 'Delegaciones', to: '/admin/delegaciones' },
+  { label: 'Usuarios', to: '/admin/usuarios' },
+  { label: 'Chatbot', to: '/admin/chatbot' },
 ];
 
 const getAdminTitle = (pathname: string): string => {
-  if (pathname.startsWith('/admin/campanas')) return 'Campañas';
-  if (pathname === '/admin') return 'Panel';
+  if (pathname === '/admin') return 'Dashboard';
+  if (pathname.startsWith('/admin/noticias')) return 'Noticias';
+  if (pathname.startsWith('/admin/retos')) return 'Retos';
+  if (pathname.startsWith('/admin/libros')) return 'Libros Humanos';
+  if (pathname.startsWith('/admin/superheroes')) return 'Superhéroes';
+  if (pathname.startsWith('/admin/delegaciones')) return 'Delegaciones';
+  if (pathname.startsWith('/admin/usuarios')) return 'Usuarios';
+  if (pathname.startsWith('/admin/chatbot')) return 'Chatbot';
   return 'Administración';
 };
 
 export const AdminLayout = () => {
   const location = useLocation();
-  const [sessionUser, setSessionUser] = useState(() => getAuthSession().user);
+  const [session, setSession] = useState(() => getAuthSession());
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthSession(() => {
-      setSessionUser(getAuthSession().user);
+      setSession(getAuthSession());
     });
 
     return unsubscribe;
   }, []);
 
-  const isAdmin = userHasAdminRole(sessionUser);
-  const topbarEmail = sessionUser?.email ?? '';
-  const topbarRole = sessionUser?.roles?.[0]
-    ? sessionUser.roles[0].charAt(0).toUpperCase() +
-      sessionUser.roles[0].slice(1).toLowerCase()
-    : '';
+  const isAuthenticated = Boolean(session.accessToken);
+  if (!isAuthenticated) {
+    const requestedPath = `${location.pathname}${location.search}`;
+    const params = new URLSearchParams();
+    params.set('redirectTo', requestedPath);
 
-  const title = useMemo(() => getAdminTitle(location.pathname), [location.pathname]);
+    return (
+      <Navigate
+        to={`/auth/login?${params.toString()}`}
+        replace
+        state={{ redirectTo: requestedPath }}
+      />
+    );
+  }
+
+  const isAdmin = userHasAdminRole(session.user);
+  const topbarEmail = session.user?.email ?? '';
+  const topbarRole = session.user?.roles?.[0]
+    ? session.user.roles[0].charAt(0).toUpperCase() +
+      session.user.roles[0].slice(1).toLowerCase()
+    : '';
+  const title = getAdminTitle(location.pathname);
 
   return (
     <div className="admin-layout">

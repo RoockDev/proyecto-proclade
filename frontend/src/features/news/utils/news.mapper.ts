@@ -1,4 +1,5 @@
 import type { NewsApiItem, NewsItem, NewsListState } from '../types/news.types';
+import { resolveUploadUrl } from '../../../services/http/api.constants';
 
 const DEFAULT_CATEGORY = 'Noticias';
 
@@ -10,7 +11,7 @@ export function mapNewsApiItem(item: NewsApiItem): NewsItem {
     slug: item.slug,
     excerpt: item.excerpt,
     content: item.content,
-    imageUrl: item.imageUrl ?? null,
+    imageUrl: resolveUploadUrl(item.imageUrl ?? null),
     status: item.status,
     publishedAt: item.publishedAt ?? null,
     createdAt: item.createdAt,

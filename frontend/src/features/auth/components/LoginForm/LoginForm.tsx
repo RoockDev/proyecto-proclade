@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { googleSignIn, login } from '../../api/auth.api';
 import { saveAuthSession } from '../../utils/auth-session.storage';
+import {
+  getRequestedRedirectTarget,
+  resolvePostAuthTarget,
+} from '../../utils/post-auth-redirect';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
 import type { LoginFormState } from '../../types/auth.types';
@@ -63,6 +67,8 @@ const loadGoogleIdentityScript = (): Promise<void> => {
 };
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const googleButtonRef = useRef<HTMLDivElement | null>(null);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
   const [googleError, setGoogleError] = useState<string | null>(null);
@@ -84,6 +90,12 @@ export const LoginForm = () => {
       successMessage: null,
     }));
   };
+
+  const navigateAfterAuth = useCallback(() => {
+    const requestedTarget = getRequestedRedirectTarget(location.search, location.state);
+    const target = resolvePostAuthTarget(requestedTarget);
+    navigate(target, { replace: true });
+  }, [location.search, location.state, navigate]);
 
   const handleGoogleCredentialResponse = useCallback(
     async (response: GoogleCredentialResponse) => {
@@ -115,11 +127,7 @@ export const LoginForm = () => {
         }
 
         saveAuthSession(apiResponse.data);
-        setFormState((prev) => ({
-          ...prev,
-          successMessage: apiResponse.message,
-          error: null,
-        }));
+        navigateAfterAuth();
       } catch (error) {
         setFormState((prev) => ({
           ...prev,
@@ -132,7 +140,7 @@ export const LoginForm = () => {
         }));
       }
     },
-    [],
+    [navigateAfterAuth],
   );
 
   useEffect(() => {
@@ -198,10 +206,7 @@ export const LoginForm = () => {
       }
 
       saveAuthSession(response.data);
-      setFormState((prev) => ({
-        ...prev,
-        successMessage: response.message,
-      }));
+      navigateAfterAuth();
     } catch (error) {
       setFormState((prev) => ({
         ...prev,

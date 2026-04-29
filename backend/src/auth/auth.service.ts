@@ -21,10 +21,12 @@ import { GoogleAuthService } from './google/google-auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 type UserWithRoles = Prisma.UserGetPayload<{
   include: {
     roles: true;
+    realHeroSuperhero: true;
   };
 }>;
 
@@ -111,6 +113,7 @@ export class AuthService {
       },
       include: {
         roles: true,
+        realHeroSuperhero: true,
       },
     });
 
@@ -164,6 +167,7 @@ export class AuthService {
         },
         include: {
           roles: true,
+          realHeroSuperhero: true,
         },
       });
     }
@@ -297,5 +301,69 @@ export class AuthService {
 
     this.logger.log(`Contraseña restablecida para usuario ID: ${user.id}`);
     return { message: 'Contraseña cambiada con éxito' };
+  }
+
+  async changePassword(userId: number, changePasswordDto: ChangePasswordDto) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+        deletedAt: null,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.google) {
+      throw new BadRequestException(
+        'Las cuentas de Google deben cambiar la contraseña desde su proveedor.',
+      );
+    }
+
+    if (
+      changePasswordDto.newPassword !== changePasswordDto.confirmNewPassword
+    ) {
+      throw new BadRequestException(
+        'La confirmación de contraseña no coincide con la nueva contraseña',
+      );
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      user.passwordHash,
+    );
+
+    if (!isCurrentPasswordValid) {
+      throw new UnauthorizedException('La contraseña actual no es correcta');
+    }
+
+    const isSameAsCurrent = await bcrypt.compare(
+      changePasswordDto.newPassword,
+      user.passwordHash,
+    );
+
+    if (isSameAsCurrent) {
+      throw new BadRequestException(
+        'La nueva contraseña debe ser diferente a la actual',
+      );
+    }
+
+    const newPasswordHash = await bcrypt.hash(
+      changePasswordDto.newPassword,
+      10,
+    );
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash: newPasswordHash,
+        resetPasswordTokenHash: null,
+        resetPasswordExpiresAt: null,
+      },
+    });
+
+    this.logger.log(`Contraseña actualizada para usuario ID: ${user.id}`);
+    return { message: 'Contraseña actualizada correctamente' };
   }
 }

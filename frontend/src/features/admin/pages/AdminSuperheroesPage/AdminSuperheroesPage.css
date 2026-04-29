@@ -1,0 +1,193 @@
+.admin-superheroes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-superheroes-page__panel {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  box-shadow: 0 30px 60px rgba(15, 52, 110, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-superheroes-page__toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-superheroes-page__notification {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.35rem;
+  border-radius: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.35);
+  z-index: 60;
+  animation: admin-superheroes-page__notification__fade 0.35s ease;
+}
+
+.admin-superheroes-page__notification-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.admin-superheroes-page__notification-message {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.admin-superheroes-page__notification--success {
+  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+}
+
+.admin-superheroes-page__notification--error {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+@keyframes admin-superheroes-page__notification__fade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-superheroes-form {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-superheroes-form__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.admin-superheroes-form__description {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+}
+
+.admin-superheroes-form__feedback {
+  color: #0f172a;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-superheroes-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.admin-superheroes-form__grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.admin-superheroes-form__grid input,
+.admin-superheroes-form__grid select,
+.admin-superheroes-form__grid textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+}
+
+.admin-superheroes-form__grid textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.admin-superheroes-form__full {
+  grid-column: 1 / -1;
+}
+
+.admin-superheroes-form__preview {
+  border: 1px dashed #cbd5f5;
+  border-radius: 0.8rem;
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.admin-superheroes-form__preview img {
+  max-width: 140px;
+  max-height: 140px;
+  border-radius: 0.5rem;
+}
+
+.admin-superheroes-form__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.admin-superheroes-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
+}
+
+.admin-superheroes-pagination__info {
+  margin: 0;
+  color: #6b7280;
+}
+
+.admin-superheroes-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-superheroes-pagination__controls button {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.admin-superheroes-pagination__controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-superheroes-page__loading {
+  margin: 0;
+  color: #0ea5e9;
+  font-weight: 600;
+}

@@ -1,0 +1,128 @@
+.challenge-form-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.challenge-form-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.challenge-form-modal__content {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  margin: 1rem;
+}
+
+.challenge-form-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25);
+}
+
+.challenge-form-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.challenge-form-card__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.challenge-form-card__close-button {
+  background: #fff;
+  border: 1px solid #d7e3ef;
+  color: #1e3a8a;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  font-size: 0.95rem;
+}
+
+.challenge-form-card__close-button:hover,
+.challenge-form-card__close-button:focus-visible {
+  border-color: #94a3b8;
+  color: #1f4b8f;
+}
+
+.challenge-form-card__feedback {
+  margin: 0 0 1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.challenge-form-card__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.challenge-form-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.challenge-form-card__field input[type='text'],
+.challenge-form-card__field input[type='number'],
+.challenge-form-card__field textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #1e293b;
+  transition: border-color 0.15s ease;
+}
+
+.challenge-form-card__field input:focus,
+.challenge-form-card__field textarea:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+.challenge-form-card__field--toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.challenge-form-card__field--toggle input[type='checkbox'] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #0ea5e9;
+}
+
+.challenge-form-card__field--full {
+  grid-column: 1 / -1;
+}
+
+.challenge-form-card__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}

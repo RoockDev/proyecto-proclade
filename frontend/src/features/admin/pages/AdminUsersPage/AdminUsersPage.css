@@ -1,0 +1,102 @@
+.admin-users-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0;
+}
+
+.admin-users-page__panel {
+  background: #eef1f6;
+  border-radius: 1.75rem;
+  padding: clamp(1.25rem, 2.5vw, 2rem)  clamp(1.25rem, 2.5vw, 2rem);
+  box-shadow: 0 25px 45px rgba(15, 52, 110, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  margin-top: -0.5rem;
+}
+
+.admin-users-page__notification {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.35rem;
+  border-radius: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.35);
+  z-index: 60;
+  animation: admin-users-page__notification__fade 0.35s ease;
+}
+
+.admin-users-page__notification-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.admin-users-page__notification-message {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.admin-users-page__notification--success {
+  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+}
+
+.admin-users-page__notification--error {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+@keyframes admin-users-page__notification__fade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.users-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #5d6470;
+}
+
+.users-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.users-pagination__controls button {
+  border: 1px solid rgba(13, 59, 115, 0.2);
+  background: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.users-pagination__controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.users-pagination__controls span {
+  min-width: 80px;
+  text-align: center;
+}
