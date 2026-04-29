@@ -22,4 +22,4 @@ Positivas:
 
 Negativas:
 
-- Se necesita fortalecer controles complementarios (rate limit, auditoria).
+- Necesita controles complementarios (rate limit, auditoria y observabilidad).

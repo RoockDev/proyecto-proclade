@@ -19,7 +19,7 @@ Adoptar contrato unico para todas las respuestas HTTP:
 }
 ```
 
-Implementado con interceptor global y exception filter global.
+Implementado con interceptor global (`TransformInterceptor`) y filtro global (`GlobalExceptionFilter`).
 
 ## Consecuencias
 

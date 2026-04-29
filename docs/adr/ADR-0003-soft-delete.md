@@ -1,24 +1,27 @@
-# ADR-0003 - Soft delete en usuarios y noticias
+# ADR-0003 - Soft delete por defecto
 
 - Estado: Accepted
 - Fecha: 2026-03-06
 
 ## Contexto
 
-En entorno ONG se necesita trazabilidad historica y evitar perdida irreversible de informacion por errores operativos.
+En entorno ONG se necesita trazabilidad y recuperacion ante errores operativos.
 
 ## Decision
 
-Aplicar borrado logico con `deletedAt` en entidades `User` y `News`.
+Aplicar borrado logico con `deletedAt` como politica por defecto en entidades gestionables.
+
+Excepciones controladas:
+
+- En superheroes se permite endpoint de borrado permanente tras desactivacion previa.
 
 ## Consecuencias
 
 Positivas:
 
-- Recuperabilidad de datos.
-- Mejor trazabilidad de operaciones.
+- Recuperabilidad y trazabilidad.
 
 Negativas:
 
-- Consultas deben filtrar siempre `deletedAt: null`.
-- Mantenimiento de datos historicos puede requerir politicas de archivado.
+- Todas las consultas deben filtrar `deletedAt: null` cuando proceda.
+- A medio plazo requiere politica de archivado/purga operativa.

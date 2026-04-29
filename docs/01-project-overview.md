@@ -2,36 +2,56 @@
 
 ## Resumen ejecutivo
 
-Proyecto web para Fundacion Proclade / Equipo PUCH orientado a sensibilizacion y accion contra el hambre (ODS 2), con:
+Plataforma web para Fundacion Proclade / Equipo PUCH orientada a sensibilizacion y accion contra el hambre (ODS 2), con dos dominios funcionales:
 
-- Zona publica: home, noticias, contenido de impacto y colaboracion.
-- Zona de autenticacion: login, registro, Google Sign-In y recuperacion de contrasena.
-- Zona de administracion: panel interno y gestion de noticias/campanas.
+- Zona publica para comunicacion, captacion y consulta de contenido.
+- Zona interna de administracion para gestion operativa de datos y contenido.
 
 ## Objetivos de negocio
 
-1. Comunicar impacto de la ONG en terreno.
-2. Facilitar captacion de apoyo y colaboracion.
-3. Permitir gestion interna de contenido (especialmente noticias).
-4. Preparar el producto para despliegue real en entorno staging/produccion.
+1. Comunicar impacto social de forma clara y actualizada.
+2. Facilitar colaboracion (donaciones, participacion y acceso a informacion).
+3. Permitir gestion autonoma por parte de personal admin de la ONG.
+4. Entregar una base tecnica mantenible por terceros.
 
-## Alcance implementado a fecha de corte
+## Alcance implementado (estado real)
 
-- Backend NestJS con modulos de Auth, Users y News.
-- Frontend React con arquitectura por features.
-- Contrato de respuesta API unificado (`success`, `message`, `data`).
-- Docker Compose para entorno de desarrollo completo.
-- CI de build en GitHub Actions.
-- Pipeline base de despliegue a staging (parcial, con placeholders en fases de lint/test segun HU).
+### Publico
+
+- Home corporativa modular.
+- Noticias publicas (`/noticias`, `/noticias/:slug`).
+- Superheroes publicos con paginacion y detalle por slug.
+- Bibliotecas Humanas publicas con delegaciones dinamicas y descarga de PDFs.
+- Chatbot web integrado en layout publico (sesion, sugerencias, feedback).
+
+### Autenticacion y cuenta
+
+- Login con email/password.
+- Registro.
+- Sign-in con Google.
+- Recuperacion y reset de contrasena.
+- Cambio de contrasena autenticado.
+- Perfil de usuario (`/users/me`) para consulta y actualizacion.
+
+### Panel admin
+
+- Dashboard.
+- Gestion de noticias.
+- Gestion de retos.
+- Gestion de libros humanos (con PDF local).
+- Gestion de superheroes (incluye soft delete, restore y borrado permanente).
+- Gestion de delegaciones.
+- Gestion de usuarios (incluye flag de real hero).
+- Gestion del chatbot (knowledge, intents, frases, metricas y unresolved).
 
 ## Stack tecnico
 
-- Backend: NestJS 11, TypeScript, Prisma 7, PostgreSQL, Redis, JWT, Nodemailer.
+- Backend: NestJS 11, TypeScript, Prisma 7, PostgreSQL, JWT, class-validator.
 - Frontend: React 19, Vite 7, TypeScript, React Router, Axios, Bootstrap 5.
-- Infra: Docker, Docker Compose, Nginx.
-- CI/CD: GitHub Actions.
+- Infra: Docker Compose, Nginx reverse proxy, Redis.
+- Integraciones externas: Google Identity, SMTP, Google Maps embebido (iframe).
 
-## Convenciones clave del proyecto
+## Convenciones clave
 
 - Rama de integracion: `dev`.
 - Contrato API obligatorio:
@@ -44,10 +64,11 @@ Proyecto web para Fundacion Proclade / Equipo PUCH orientado a sensibilizacion y
 }
 ```
 
-- Soft delete en entidades principales (`deletedAt`).
-- Roles de acceso en backend: `ADMIN`, `USER`.
+- Autorizacion por roles en backend (`ADMIN`, `USER`).
+- Borrado logico en entidades clave (`deletedAt`) salvo casos explicitos de purge.
 
 ## Referencias
 
-- Guia de estilos visual (PDF): `frontend/documentación/GuíaDeEstilosProclade.pdf`
-- Esquema de datos: `backend/prisma/schema.prisma`
+- Schema de datos: `backend/prisma/schema.prisma`
+- Configuracion de red/proxy: `nginx/default.conf`
+- Guia visual: `frontend/documentacion/GuiaDeEstilosProclade.pdf`

@@ -2,11 +2,11 @@
 
 ## Objetivo
 
-Esta documentacion esta pensada para un equipo tecnico externo que deba mantener, evolucionar y operar la plataforma sin depender del equipo original.
+Esta documentacion esta orientada a un equipo tecnico externo que deba mantener, evolucionar y operar la plataforma sin depender del equipo original.
 
 ## Alcance
 
-Incluye arquitectura, backend, frontend, infraestructura, despliegue, calidad y runbook operativo.
+Incluye arquitectura, backend, frontend, DevOps, handover operativo, calidad y chatbot.
 
 ## Estructura
 
@@ -17,17 +17,18 @@ Incluye arquitectura, backend, frontend, infraestructura, despliegue, calidad y 
 - [05 - DevOps e Infraestructura](./05-devops/)
 - [06 - Handover Operativo](./06-handover/)
 - [07 - Calidad y Riesgos](./07-quality/)
-- [ADR - Decision Records](./adr/)
+- [08 - Chatbot](./08-chatbot/)
+- [ADR - Architecture Decision Records](./adr/)
 
 ## Reglas de mantenimiento
 
-1. Toda HU mergeada a `dev` debe reflejarse en estos documentos.
-2. Si cambia un contrato API, actualizar primero `03-backend/api-reference.md`.
-3. Si cambia arquitectura, registrar decision en `adr/`.
-4. No mezclar documentacion funcional con tareas personales del equipo.
+1. Toda HU mergeada a `dev` debe reflejarse en `docs/`.
+2. Si cambia un endpoint o su contrato, actualizar primero `docs/03-backend/03.2-api-reference.md`.
+3. Si cambia un flujo principal (auth, admin, chatbot, bibliotecas humanas), actualizar `docs/02-architecture/02.4-runtime-flows.md`.
+4. Cada decision tecnica transversal debe quedar registrada en `docs/adr/`.
 
 ## Estado actual
 
-Version de la documentacion: `v1-inicial-handover`.
+Version de documentacion: `v2-handover-operativo`.
 
-Fecha de corte tecnico: `2026-03-06`.
+Fecha de corte tecnico: `2026-04-29`.

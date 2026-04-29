@@ -10,8 +10,8 @@
 
 ## Principios aplicados
 
-1. Separacion por capas y modulos.
-2. Contratos explicitos entre frontend y backend.
-3. Control de acceso por JWT + roles.
-4. Persistencia desacoplada mediante Prisma.
-5. Preparacion para despliegue con Docker y Nginx como reverse proxy.
+1. Arquitectura modular por dominio (backend) y por feature (frontend).
+2. Contrato de respuesta API unificado para todo el sistema.
+3. Seguridad por JWT + roles en capa backend.
+4. Persistencia con Prisma y reglas de negocio en servicios.
+5. Operacion local unificada por Docker Compose + Nginx.
