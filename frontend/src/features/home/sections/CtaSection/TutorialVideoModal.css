@@ -1,0 +1,135 @@
+.tutorial-video-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1085;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(107, 170, 117, 0.24), transparent 42%),
+    radial-gradient(circle at 85% 80%, rgba(13, 59, 115, 0.26), transparent 46%),
+    rgba(8, 14, 20, 0.52);
+  backdrop-filter: blur(3px);
+}
+
+.tutorial-video-modal__content {
+  position: relative;
+  width: min(840px, 100%);
+  border-radius: 1rem;
+  border: 1px solid rgba(13, 59, 115, 0.16);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.99), rgba(246, 250, 247, 0.99));
+  box-shadow:
+    0 24px 50px rgba(7, 23, 41, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  padding: 1rem 1rem 0.95rem;
+  animation: puchRevealUp 320ms cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+}
+
+.tutorial-video-modal__close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(13, 59, 115, 0.24);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-secondary);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 5px 12px rgba(13, 59, 115, 0.14);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tutorial-video-modal__close:hover,
+.tutorial-video-modal__close:focus {
+  border-color: rgba(13, 59, 115, 0.38);
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+}
+
+.tutorial-video-modal__close:focus-visible {
+  outline: 3px solid rgba(123, 188, 133, 0.58);
+  outline-offset: 2px;
+}
+
+.tutorial-video-modal__header {
+  margin-bottom: 0.5rem;
+  padding: 0.6rem 2.5rem 0.6rem 0.4rem;
+}
+
+.tutorial-video-modal__title {
+  margin: 0;
+  color: var(--brand-secondary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.1vw, 1.6rem);
+  font-weight: 800;
+}
+
+.tutorial-video-modal__subtitle {
+  margin: 0.4rem 0 0;
+  color: var(--brand-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tutorial-video-modal__duration {
+  margin: 0 0 0.65rem;
+  padding-left: 0.4rem;
+  color: var(--brand-secondary);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.tutorial-video-modal__frame-wrap {
+  border-radius: 0.85rem;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.tutorial-video-modal__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.tutorial-video-modal__external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.72rem;
+  color: var(--brand-secondary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tutorial-video-modal__external-link::after {
+  content: '\2197';
+  font-size: 0.92rem;
+}
+
+.tutorial-video-modal__external-link:hover,
+.tutorial-video-modal__external-link:focus {
+  text-decoration: underline;
+}
+
+@media (max-width: 575.98px) {
+  .tutorial-video-modal__content {
+    padding: 0.88rem 0.72rem 0.82rem;
+  }
+
+  .tutorial-video-modal__header {
+    padding-right: 2.2rem;
+  }
+
+  .tutorial-video-modal__subtitle {
+    font-size: 0.9rem;
+  }
+}
