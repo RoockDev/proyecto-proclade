@@ -14,7 +14,7 @@ export class MailService {
     this.mailFrom =
       this.configService.get<string>('MAIL_FROM') || 'noreply@proclade.org';
     this.frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost';
 
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
