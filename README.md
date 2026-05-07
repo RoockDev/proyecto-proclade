@@ -64,6 +64,7 @@ docker compose up --build
 Esto realiza los siguientes pasos:
 - Construye las imágenes.
 - Instala dependencias dentro de Docker.
+- Aplica migraciones y carga los seeds iniciales de desarrollo.
 - Levanta frontend, backend, base de datos, redis y nginx.
 
 La aplicación quedará disponible en: [http://localhost](http://localhost)
@@ -127,7 +128,7 @@ docker compose down -v
 
 ---
 
-## 📦 Ejecutar comandos dentro del contenedor (\`docker exec\`)
+## 📦 Ejecutar comandos dentro del contenedor (\`docker compose exec\`)
 
 Se usa para ejecutar comandos dentro de un contenedor que ya está corriendo.
 
@@ -146,7 +147,7 @@ Verás algo como:
 **2. Entrar al backend:**
 
 ```bash
-docker exec -it proyectoproclade-backend-1 sh
+docker compose exec backend sh
 ```
 - Salir escribiendo: `exit`
 
@@ -154,17 +155,17 @@ docker exec -it proyectoproclade-backend-1 sh
 
 - **Instalar una dependencia en el backend:**
   ```bash
-  docker exec -it proyectoproclade-backend-1 yarn add bcrypt
+  docker compose exec backend yarn add bcrypt
   ```
 
 - **Instalar una dependencia de desarrollo:**
   ```bash
-  docker exec -it proyectoproclade-backend-1 yarn add -D @types/bcrypt
+  docker compose exec backend yarn add -D @types/bcrypt
   ```
 
 - **Ejecutar Prisma:**
   ```bash
-  docker exec -it proyectoproclade-backend-1 yarn prisma migrate dev
+  docker compose exec backend yarn prisma migrate dev
   ```
 
 ### ❓ ¿Puedo ejecutar estos comandos desde VS Code?
@@ -294,17 +295,20 @@ Debe verse `__metadata` y `version: 8`.
 ## Seeds (Datos de prueba)
 
 El proyecto incluye un sistema de seeds reproducible e idempotente para poblar la base de datos con datos de prueba.
+Estos seeds se ejecutan automáticamente durante `docker compose up --build`, por lo que el proyecto queda listo para probar al terminar el arranque.
 
 ### Ejecutar seeds
 
+Si necesitas relanzarlos manualmente:
 
+```bash
 # Aplicar migraciones a la DB
-```bash
-docker exec proyecto-proclade-backend-1 yarn prisma migrate deploy
+docker compose exec backend yarn prisma migrate deploy
 ```
-# Poblar datos de prueba (opcional)
+
 ```bash
-docker exec proyecto-proclade-backend-1 yarn prisma:seed
+# Poblar datos de prueba otra vez
+docker compose exec backend yarn prisma:seed
 ```
 
 ### Datos creados

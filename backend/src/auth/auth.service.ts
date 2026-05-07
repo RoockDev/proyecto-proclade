@@ -87,16 +87,6 @@ export class AuthService {
       throw new ConflictException('El email ya está registrado');
     }
 
-    const userRole = await this.prisma.role.findUnique({
-      where: {
-        name: RoleName.USER,
-      },
-    });
-
-    if (!userRole) {
-      throw new NotFoundException('No existe el rol USER');
-    }
-
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
     const user = await this.prisma.user.create({
@@ -106,9 +96,16 @@ export class AuthService {
         name: registerDto.name,
         surname: registerDto.surname,
         roles: {
-          connect: {
-            id: userRole.id,
-          },
+          connectOrCreate: [
+            {
+              where: {
+                name: RoleName.USER,
+              },
+              create: {
+                name: RoleName.USER,
+              },
+            },
+          ],
         },
       },
       include: {
@@ -137,16 +134,6 @@ export class AuthService {
     let user = await this.usersService.findActiveByEmailWithRoles(email);
 
     if (!user) {
-      const userRole = await this.prisma.role.findUnique({
-        where: {
-          name: RoleName.USER,
-        },
-      });
-
-      if (!userRole) {
-        throw new NotFoundException('No existe el rol USER');
-      }
-
       const name = googlePayload.name?.trim() || 'Usuario';
       const surname = googlePayload.surname?.trim() || 'Google';
       const randomPassword = randomBytes(24).toString('hex');
@@ -160,9 +147,16 @@ export class AuthService {
           surname,
           google: true,
           roles: {
-            connect: {
-              id: userRole.id,
-            },
+            connectOrCreate: [
+              {
+                where: {
+                  name: RoleName.USER,
+                },
+                create: {
+                  name: RoleName.USER,
+                },
+              },
+            ],
           },
         },
         include: {
