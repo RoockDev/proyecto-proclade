@@ -92,3 +92,11 @@ export const HOME_REAL_HEROES_COUNTER: HomeCounter = {
   value: 1247,
   label: 'superhéroes reales y contando',
 };
+
+export const HOME_TUTORIAL_CONTENT = {
+  ctaLabel: 'Vídeo tutorial',
+  modalTitle: 'Cómo usar Equipo PUCH',
+  durationLabel: 'Duración: 2:44',
+  videoEmbedUrl: 'https://www.youtube.com/embed/qbJLKGUeXro?rel=0',
+  videoWatchUrl: 'https://youtu.be/qbJLKGUeXro',
+};

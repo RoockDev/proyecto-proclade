@@ -42,7 +42,7 @@ export const HeaderActions = ({
             className="btn header-action-btn header-action-btn--main"
             onClick={onClose}
           >
-            Panel Admin
+            Panel
           </Link>
         ) : null}
 
@@ -50,9 +50,9 @@ export const HeaderActions = ({
           type="button"
           className="btn header-action-btn header-action-btn--logout"
           onClick={onLogout}
+          aria-label="Cerrar sesión"
         >
-          <i className="bi bi-box-arrow-right me-1" aria-hidden="true" />
-          Cerrar sesión
+          <i className="bi bi-box-arrow-right" aria-hidden="true" />
         </button>
       </>
     ) : (

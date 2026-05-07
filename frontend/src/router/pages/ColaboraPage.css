@@ -1,0 +1,218 @@
+.colabora-page {
+  background: #ecebea;
+  color: #1d2233;
+}
+
+.colabora-page__container {
+  width: min(1120px, 92%);
+  margin: 0 auto;
+}
+
+.colabora-page__hero {
+  background: linear-gradient(100deg, #2f9f95 0%, #45c0b8 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: clamp(4rem, 7vw, 6rem) 0;
+}
+
+.colabora-page__hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 700;
+}
+
+.colabora-page__hero p {
+  max-width: 760px;
+  margin: 1.2rem auto 0;
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  line-height: 1.45;
+  opacity: 0.95;
+}
+
+.colabora-page__block {
+  padding: clamp(3.2rem, 6vw, 5rem) 0;
+}
+
+.colabora-page h2 {
+  margin: 0 0 2rem;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+.colabora-page__challenges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.8rem;
+}
+
+.colabora-page__challenge-card,
+.colabora-page__step-card,
+.colabora-page__form-card {
+  background: #f4f4f4;
+  border: 1px solid #dfdfdf;
+  border-radius: 1.7rem;
+}
+
+.colabora-page__challenge-card {
+  padding: 2.4rem;
+}
+
+.colabora-page__challenge-card h3 {
+  margin: 0;
+  font-size: clamp(1.55rem, 2.6vw, 2.2rem);
+}
+
+.colabora-page__challenge-card p {
+  margin: 1rem 0 1.25rem;
+  color: #5e6270;
+  font-size: 1.45rem;
+}
+
+.colabora-page__amounts {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.colabora-page__progress-track {
+  height: 0.9rem;
+  background: #dfdcd9;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0.9rem 0;
+}
+
+.colabora-page__progress-track div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ea7b2a 0%, #efc332 100%);
+}
+
+.colabora-page__challenge-card small {
+  font-size: 1.25rem;
+  color: #6b6f7c;
+}
+
+.colabora-page__empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  text-align: center;
+  color: #5e6270;
+  font-size: 1.2rem;
+}
+
+.colabora-page__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.6rem;
+}
+
+.colabora-page__step-card {
+  padding: 2rem;
+  text-align: center;
+}
+
+.colabora-page__step-card span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(160deg, #ea7b2a 0%, #efc332 100%);
+}
+
+.colabora-page__step-card p {
+  margin: 1.1rem 0 0;
+  color: #5e6270;
+  font-size: 1.45rem;
+}
+
+.colabora-page__form-wrap {
+  max-width: 860px;
+}
+
+.colabora-page__form-card {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 2.4rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.colabora-page__form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.colabora-page__form-card label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.colabora-page__form-card input,
+.colabora-page__form-card textarea {
+  width: 100%;
+  border: 1px solid #d7d4d1;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+  background: #ecebea;
+  color: #1d2233;
+  font-size: 1.3rem;
+  font-family: var(--font-body);
+}
+
+.colabora-page__form-card textarea {
+  resize: vertical;
+}
+
+.colabora-page__form-card small {
+  color: #6b6f7c;
+  font-size: 1.15rem;
+}
+
+.colabora-page__form-card button,
+.colabora-page__donation a {
+  border: none;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1.2rem;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ea7b2a 0%, #efc332 100%);
+}
+
+.colabora-page__donation {
+  text-align: center;
+  padding: clamp(3.8rem, 7vw, 5.5rem) 0;
+  background: linear-gradient(90deg, #eb7a2a 0%, #efc332 100%);
+  color: #ffffff;
+}
+
+.colabora-page__donation p {
+  max-width: 840px;
+  margin: 0 auto 1.8rem;
+  font-size: clamp(1.2rem, 2vw, 2rem);
+}
+
+.colabora-page__donation a {
+  display: inline-block;
+  background: #4b9d7f;
+}
+
+@media (max-width: 992px) {
+  .colabora-page__challenges,
+  .colabora-page__steps,
+  .colabora-page__form-grid {
+    grid-template-columns: 1fr;
+  }
+}
