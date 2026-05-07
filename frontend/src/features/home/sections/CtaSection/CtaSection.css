@@ -65,7 +65,8 @@
 }
 
 .home-cta__btn-main,
-.home-cta__btn-alt {
+.home-cta__btn-alt,
+.home-cta__btn-tutorial {
   min-width: 190px;
 }
 
@@ -89,7 +90,8 @@
   }
 
   .home-cta__btn-main,
-  .home-cta__btn-alt {
+  .home-cta__btn-alt,
+  .home-cta__btn-tutorial {
     width: min(100%, 320px);
     min-width: 0;
   }
