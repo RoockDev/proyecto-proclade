@@ -1,9 +1,12 @@
-import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
-import './AboutSection.css';
+import { SectionTitle } from "../../components/SectionTitle/SectionTitle";
+import "./AboutSection.css";
 
 export const AboutSection = () => {
   return (
-    <section className="about-section section-padding reveal-up reveal-delay-1">
+    <section
+      id="conocenos"
+      className="about-section section-padding reveal-up reveal-delay-1"
+    >
       <div className="container text-center">
         <SectionTitle
           title="¿Qué es Equipo PUCH?"

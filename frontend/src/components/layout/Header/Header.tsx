@@ -1,30 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   clearAuthSession,
   getAuthSession,
   subscribeToAuthSession,
   userHasAdminRole,
-} from '../../../features/auth/utils/auth-session.storage';
-import { ProfileModal } from '../../../features/profile/components/ProfileModal/ProfileModal';
-import './Header.css';
-import { HeaderBrand } from './shared/HeaderBrand/HeaderBrand';
-import { HeaderNav, type HeaderNavItem } from './shared/HeaderNav/HeaderNav';
-import { HeaderActions } from './shared/HeaderActions/HeaderActions';
+} from "../../../features/auth/utils/auth-session.storage";
+import { ProfileModal } from "../../../features/profile/components/ProfileModal/ProfileModal";
+import "./Header.css";
+import { HeaderBrand } from "./shared/HeaderBrand/HeaderBrand";
+import { HeaderNav, type HeaderNavItem } from "./shared/HeaderNav/HeaderNav";
+import { HeaderActions } from "./shared/HeaderActions/HeaderActions";
 
 const navItems: HeaderNavItem[] = [
-  { label: 'Inicio', to: '/', end: true },
-  { label: '¿Qué es?', to: '/conocenos' },
-  { label: '¿Qué buscamos?', to: '/campanas' },
-  { label: 'Superhéroes', to: '/superheroes' },
+  { label: "Inicio", to: "/", end: true },
+  { label: "Conócenos", to: "/#conocenos", matchHash: "#conocenos" },
+  { label: "Superhéroes", to: "/superheroes" },
   {
-    label: 'Bibliotecas Humanas',
-    to: '/bibliotecas-humanas',
-    className: 'nav-link--libraries',
+    label: "Bibliotecas Humanas",
+    to: "/bibliotecas-humanas",
+    className: "nav-link--libraries",
   },
-  { label: 'Noticias', to: '/noticias' },
-  { label: 'Colabora', to: '/colabora' },
-  { label: 'Contacto', to: '/contacto' },
+  { label: "Noticias", to: "/noticias" },
+  { label: "Colabora", to: "/colabora" },
+  { label: "Contacto", to: "/contacto" },
 ];
 
 export const Header = () => {
@@ -59,14 +58,14 @@ export const Header = () => {
   const handlePasswordChanged = () => {
     clearAuthSession();
     setIsProfileOpen(false);
-    navigate('/auth/login', { replace: true });
+    navigate("/auth/login", { replace: true });
   };
 
   const handleLogout = () => {
     clearAuthSession();
     closeMenu();
     setIsProfileOpen(false);
-    navigate('/', { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (
@@ -86,7 +85,10 @@ export const Header = () => {
             <span className="navbar-toggler-icon" />
           </button>
 
-          <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="mainNav">
+          <div
+            className={`collapse navbar-collapse ${isMenuOpen ? "show" : ""}`}
+            id="mainNav"
+          >
             <HeaderNav items={navItems} onLinkClick={closeMenu} />
             <HeaderActions
               isAdmin={isAdmin}

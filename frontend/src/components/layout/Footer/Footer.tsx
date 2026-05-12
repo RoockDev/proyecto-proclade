@@ -1,7 +1,7 @@
-import './Footer.css';
-import { FooterBrand } from './shared/FooterBrand/FooterBrand';
-import { FooterColumn } from './shared/FooterColumn/FooterColumn';
-import { FooterLegal } from './shared/FooterLegal/FooterLegal';
+import "./Footer.css";
+import { FooterBrand } from "./shared/FooterBrand/FooterBrand";
+import { FooterColumn } from "./shared/FooterColumn/FooterColumn";
+import { FooterLegal } from "./shared/FooterLegal/FooterLegal";
 
 export const Footer = () => (
   <footer className="brand-footer section-padding">
@@ -14,9 +14,8 @@ export const Footer = () => (
           <FooterColumn
             title="Equipo PUCH"
             links={[
-              { label: '¿Qué es?', href: '/conocenos' },
-              { label: '¿Qué buscamos?', href: '/campanas' },
-              { label: 'Superhéroes', href: '/superheroes?page=1' },
+              { label: "Conócenos", href: "/#conocenos" },
+              { label: "Superhéroes", href: "/superheroes?page=1" },
             ]}
           />
         </div>
@@ -24,9 +23,9 @@ export const Footer = () => (
           <FooterColumn
             title="Participa"
             links={[
-              { label: 'Colabora', href: '/colabora' },
-              { label: 'Voluntariado', href: '/colabora#voluntariado' },
-              { label: 'Hazte socio', href: '/colabora#hazte-socio' },
+              { label: "Colabora", href: "/colabora" },
+              { label: "Voluntariado", href: "/colabora#voluntariado" },
+              { label: "Hazte socio", href: "/colabora#hazte-socio" },
             ]}
           />
         </div>
@@ -34,10 +33,16 @@ export const Footer = () => (
           <FooterColumn
             title="Contacto"
             links={[
-              { label: 'Madrid, España', href: 'mailto:info@fundacionproclade.org' },
-              { label: '+34 91 000 00 00', href: 'tel:+34910000000' },
-              { label: 'equipo@equipopuch.org', href: 'mailto:equipo@equipopuch.org' },
-              { label: 'Horario: Lun - Vie 09:00 - 18:00', href: '/contacto' },
+              {
+                label: "Madrid, España",
+                href: "mailto:info@fundacionproclade.org",
+              },
+              { label: "+34 91 000 00 00", href: "tel:+34910000000" },
+              {
+                label: "equipo@equipopuch.org",
+                href: "mailto:equipo@equipopuch.org",
+              },
+              { label: "Horario: Lun - Vie 09:00 - 18:00", href: "/contacto" },
             ]}
           />
         </div>

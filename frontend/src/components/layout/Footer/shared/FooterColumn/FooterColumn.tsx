@@ -1,4 +1,5 @@
-import './FooterColumn.css';
+import { Link } from "react-router-dom";
+import "./FooterColumn.css";
 
 type FooterColumnProps = {
   title: string;
@@ -11,7 +12,11 @@ export const FooterColumn = ({ title, links }: FooterColumnProps) => (
     <ul className="footer-column__list">
       {links.map((link) => (
         <li key={link.label}>
-          <a href={link.href}>{link.label}</a>
+          {link.href.startsWith("/") ? (
+            <Link to={link.href}>{link.label}</Link>
+          ) : (
+            <a href={link.href}>{link.label}</a>
+          )}
         </li>
       ))}
     </ul>
