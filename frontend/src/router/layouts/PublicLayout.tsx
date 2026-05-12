@@ -10,6 +10,7 @@ export function PublicLayout() {
 
   useEffect(() => {
     if (!location.hash) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
