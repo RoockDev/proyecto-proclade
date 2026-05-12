@@ -16,6 +16,9 @@ export type HomeCountryProject = {
   description: string;
   imageUrl: string | null;
   imageAlt: string;
+  imagePendingLabel?: string;
+  imagePendingTitle?: string;
+  imagePendingDescription?: string;
 };
 
 export type HomeJoinReason = {

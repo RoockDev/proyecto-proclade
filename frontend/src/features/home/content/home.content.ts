@@ -42,7 +42,11 @@ export const HOME_COUNTRY_PROJECTS: HomeCountryProject[] = [
     description:
       "Apoyamos a mujeres Dalit en situación de pobreza estructural con entrega de ganado, formación en gestión económica y liderazgo, y talleres familiares para fomentar la igualdad y la convivencia.",
     imageUrl: null,
-    imageAlt: "Placeholder del proyecto de India",
+    imageAlt: "Proyecto en India con contenido visual en actualización",
+    imagePendingLabel: "Proyecto en actualización",
+    imagePendingTitle: "Contenido visual en camino",
+    imagePendingDescription:
+      "Estamos incorporando la imagen definitiva del proyecto en India para completar esta sección.",
   },
   {
     id: "burkina-faso",

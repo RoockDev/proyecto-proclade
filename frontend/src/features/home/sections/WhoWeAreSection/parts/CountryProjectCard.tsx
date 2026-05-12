@@ -1,9 +1,27 @@
-import type { HomeCountryProject } from '../../../types/home.types';
+import type { HomeCountryProject } from "../../../types/home.types";
 
-const projectImageFallback = (
+const getProjectImageFallback = (project: HomeCountryProject) => (
   <div className="who-we-are__image-placeholder" aria-hidden="true">
-    <i className="bi bi-image" />
-    <span>Imagen en actualización</span>
+    <div className="who-we-are__image-placeholder-glow" />
+    {project.imagePendingLabel ? (
+      <span className="who-we-are__image-placeholder-badge">
+        {project.imagePendingLabel}
+      </span>
+    ) : null}
+
+    <div className="who-we-are__image-placeholder-icon">
+      <i className="bi bi-camera" />
+    </div>
+
+    <div className="who-we-are__image-placeholder-copy">
+      <strong>
+        {project.imagePendingTitle || "Contenido visual en actualización"}
+      </strong>
+      <span>
+        {project.imagePendingDescription ||
+          "Estamos preparando la imagen de este proyecto para mostrarla aquí muy pronto."}
+      </span>
+    </div>
   </div>
 );
 
@@ -21,7 +39,7 @@ export const CountryProjectCard = ({ project }: CountryProjectCardProps) => (
           className="who-we-are__image"
         />
       ) : (
-        projectImageFallback
+        getProjectImageFallback(project)
       )}
     </div>
 
