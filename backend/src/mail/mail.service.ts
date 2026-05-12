@@ -6,22 +6,28 @@ import type { Transporter } from 'nodemailer';
 @Injectable()
 export class MailService {
   private readonly transporter: Transporter;
+  private readonly isSmtpConfigured: boolean;
   private readonly mailFrom: string;
+  private readonly contactFormTo: string;
   private readonly frontendUrl: string;
   private readonly logger = new Logger(MailService.name);
 
   constructor(private readonly configService: ConfigService) {
-    this.mailFrom =
-      this.configService.get<string>('MAIL_FROM') || 'noreply@proclade.org';
-    this.frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost';
-
     const smtpHost = this.configService.get<string>('SMTP_HOST');
     const smtpPort = Number(this.configService.get<string>('SMTP_PORT') || '587');
     const smtpUser = this.configService.get<string>('SMTP_USER');
     const smtpPass = this.configService.get<string>('SMTP_PASS');
 
-    if (!smtpHost || !smtpUser || !smtpPass) {
+    this.isSmtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+    this.mailFrom =
+      this.configService.get<string>('MAIL_FROM') || 'noreply@proclade.org';
+    this.contactFormTo =
+      this.configService.get<string>('CONTACT_FORM_TO') ||
+      'info@fundacionproclade.org';
+    this.frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost';
+
+    if (!this.isSmtpConfigured) {
       this.logger.warn(
         'SMTP no está configurado. Los correos se simularán en desarrollo y no se enviarán realmente.',
       );
@@ -107,11 +113,18 @@ Equipo Proclade
     telefono?: string;
     mensaje?: string;
   }): Promise<void> {
+    if (!this.isSmtpConfigured) {
+      this.logger.error(
+        'Formulario de contacto sin SMTP configurado. Configura SMTP_HOST, SMTP_USER y SMTP_PASS para habilitar envios reales.',
+      );
+      throw new Error('SMTP no está configurado para el formulario de contacto');
+    }
+
     const { nombre, apellidos, email, telefono, mensaje } = contactData;
 
     const mailOptions = {
       from: this.mailFrom,
-      to: 'carlosramii2304@gmail.com', // Destinatario especificado por el usuario
+      to: this.contactFormTo,
       subject: 'Nuevo mensaje de contacto - Colabora',
       text: `Nuevo mensaje de contacto desde el formulario de colaboración.\n\nNombre: ${nombre}\nApellidos: ${apellidos}\nEmail: ${email}\nTeléfono: ${telefono || 'No proporcionado'}\nMensaje: ${mensaje || 'No proporcionado'}\n\nSistema Proclade`,
       html: `

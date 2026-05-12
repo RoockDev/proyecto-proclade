@@ -23,7 +23,7 @@ const navItems: HeaderNavItem[] = [
   },
   { label: "Noticias", to: "/noticias" },
   { label: "Colabora", to: "/colabora" },
-  { label: "Contacto", to: "/contacto" },
+  { label: "Contacto", to: "/#contacto", matchHash: "#contacto" },
 ];
 
 export const Header = () => {

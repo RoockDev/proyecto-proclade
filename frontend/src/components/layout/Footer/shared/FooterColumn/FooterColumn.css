@@ -13,7 +13,16 @@
   gap: 0.35rem;
 }
 
-.footer-column__list a {
+.footer-column__list li {
+  line-height: 1.5;
+}
+
+.footer-column__list a,
+.footer-column__list span {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
+}
+
+.footer-column__list span {
+  cursor: default;
 }

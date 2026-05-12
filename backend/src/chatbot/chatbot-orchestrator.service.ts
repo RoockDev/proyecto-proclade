@@ -689,8 +689,8 @@ export class ChatbotOrchestratorService {
             to: 'https://www.fundacionproclade.org/dona/',
           },
           {
-            label: 'Escribir a equipo@equipopuch.org',
-            to: 'mailto:equipo@equipopuch.org',
+            label: 'Escribir a info@fundacionproclade.org',
+            to: 'mailto:info@fundacionproclade.org',
           },
         ],
       };

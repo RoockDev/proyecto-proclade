@@ -170,7 +170,8 @@ export const ColaboraPage = () => {
               <textarea name="mensaje" rows={4} placeholder="Cuentanos como te gustaria colaborar..." />
             </label>
             <small>
-              * Las respuestas se enviarán a carlosramii2304@gmail.com.
+              * Este formulario se envía a info@fundacionproclade.org y te
+              responderemos usando los datos que nos facilites.
             </small>
             <button type="submit" disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}

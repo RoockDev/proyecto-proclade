@@ -701,7 +701,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     route: '/colabora',
     ctaLinks: [
       { label: 'Ir a Colabora', to: '/colabora' },
-      { label: 'Ver contacto', to: '/contacto' },
+      { label: 'Ver contacto', to: '/#contacto' },
     ],
     isActive: true,
   },
@@ -816,17 +816,17 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'como contactar',
     answer:
-      'Puedes contactar por correo en equipo@equipopuch.org o info@fundacionproclade.org. Tambien hay telefono de contacto +34 91 000 00 00 en la informacion visible de la web.',
+      'Puedes contactar por correo en info@fundacionproclade.org, por telefono en 913 14 78 71 o en la direccion C. del Conde de Serrallo, 15, Tetuan, 28029 Madrid.',
     tags: ['contacto', 'correo', 'telefono', 'horario'],
     route: null,
     ctaLinks: [
       {
-        label: 'Escribir a equipo@equipopuch.org',
-        to: 'mailto:equipo@equipopuch.org',
-      },
-      {
         label: 'Escribir a info@fundacionproclade.org',
         to: 'mailto:info@fundacionproclade.org',
+      },
+      {
+        label: 'Llamar al 913 14 78 71',
+        to: 'tel:+34913147871',
       },
     ],
     isActive: true,
@@ -835,13 +835,13 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'horario de atencion',
     answer:
-      'El horario visible actualmente es de lunes a viernes de 09:00 a 18:00. Si necesitas una respuesta formal, usa los canales de correo para dejar tu solicitud.',
+      'La web muestra los canales principales de contacto, pero no un horario cerrado de atencion. Si necesitas una respuesta formal, escribe a info@fundacionproclade.org o llama al 913 14 78 71.',
     tags: ['horario', 'atencion', 'lunes a viernes'],
     route: null,
     ctaLinks: [
       {
-        label: 'Enviar correo de contacto',
-        to: 'mailto:equipo@equipopuch.org',
+        label: 'Enviar correo a info@fundacionproclade.org',
+        to: 'mailto:info@fundacionproclade.org',
       },
     ],
     isActive: true,
@@ -850,13 +850,13 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'quiero solicitar informacion',
     answer:
-      'Si quieres solicitar informacion, voluntariado o una colaboracion personalizada, puedes escribir a equipo@equipopuch.org y te orientamos segun tu caso.',
+      'Si quieres solicitar informacion, voluntariado o una colaboracion personalizada, puedes escribir a info@fundacionproclade.org y te orientamos segun tu caso.',
     tags: ['solicitar', 'informacion', 'ayuda', 'voluntariado', 'colaboracion'],
     route: '/colabora',
     ctaLinks: [
       {
-        label: 'Escribir a equipo@equipopuch.org',
-        to: 'mailto:equipo@equipopuch.org',
+        label: 'Escribir a info@fundacionproclade.org',
+        to: 'mailto:info@fundacionproclade.org',
       },
       { label: 'Ir a Colabora', to: '/colabora' },
     ],

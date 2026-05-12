@@ -342,7 +342,7 @@ export class ChatbotDynamicContextService {
       answer:
         activeChallenges > 0
           ? `Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Ahora mismo hay ${activeChallenges} retos activos en curso.`
-          : 'Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Tambien puedes escribir a equipo@equipopuch.org para voluntariado.',
+          : 'Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Si quieres voluntariado o una colaboracion personalizada, puedes escribir a info@fundacionproclade.org.',
       ctaLinks: [
         {
           label: 'Ir a donar en PROCLADE',
@@ -500,15 +500,15 @@ export class ChatbotDynamicContextService {
 
     return {
       answer:
-        'Puedes contactar por correo en equipo@equipopuch.org o info@fundacionproclade.org, y por telefono en +34 91 000 00 00. Horario habitual: Lun-Vie 09:00 a 18:00.',
+        'Puedes contactar con Fundacion PROCLADE por correo en info@fundacionproclade.org, por telefono en 913 14 78 71 o en C. del Conde de Serrallo, 15, Tetuan, 28029 Madrid.',
       ctaLinks: [
-        {
-          label: 'Escribir a equipo@equipopuch.org',
-          to: 'mailto:equipo@equipopuch.org',
-        },
         {
           label: 'Escribir a info@fundacionproclade.org',
           to: 'mailto:info@fundacionproclade.org',
+        },
+        {
+          label: 'Llamar al 913 14 78 71',
+          to: 'tel:+34913147871',
         },
       ],
       suggestions: ['que delegaciones hay', 'quiero solicitar informacion'],

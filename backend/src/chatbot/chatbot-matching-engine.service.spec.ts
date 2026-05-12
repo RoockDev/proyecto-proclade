@@ -61,7 +61,7 @@ describe('ChatbotMatchingEngineService', () => {
       answer: 'Puedes escribirnos para solicitar información.',
       tags: ['solicitar', 'informacion', 'contacto'],
       route: '/colabora',
-      ctaLinks: [{ label: 'Contactar', to: 'mailto:equipo@equipopuch.org' }],
+      ctaLinks: [{ label: 'Contactar', to: 'mailto:info@fundacionproclade.org' }],
       phrases: ['necesito ayuda', 'quiero solicitar'],
     },
   ];
