@@ -5,9 +5,9 @@ export type MissionCard = {
 };
 
 export type HomeCountryProjectId =
-  | 'india'
-  | 'burkina-faso'
-  | 'haiti-republica-dominicana';
+  | "india"
+  | "burkina-faso"
+  | "haiti-republica-dominicana";
 
 export type HomeCountryProject = {
   id: HomeCountryProjectId;
@@ -24,7 +24,7 @@ export type HomeJoinReason = {
 };
 
 export type HomeCounter = {
-  value: number;
+  value: number | string;
   label: string;
   suffix?: string;
 };

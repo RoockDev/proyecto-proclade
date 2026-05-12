@@ -89,6 +89,6 @@ export const HOME_JOIN_CLOSING_MESSAGE =
   "Una misma insignia. Un mismo equipo. Una misma meta: acabar con el hambre.";
 
 export const HOME_REAL_HEROES_COUNTER: HomeCounter = {
-  value: 1247,
-  label: "superhéroes reales y contando",
+  value: "∞",
+  label: "posibilidades de cambiarlo todo",
 };
