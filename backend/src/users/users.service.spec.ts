@@ -43,7 +43,6 @@ describe('UsersService', () => {
       passwordHash: 'hashed-password',
       name: args.data.name,
       surname: args.data.surname,
-      google: false,
       resetPasswordTokenHash: null,
       resetPasswordExpiresAt: null,
       deletedAt: null,

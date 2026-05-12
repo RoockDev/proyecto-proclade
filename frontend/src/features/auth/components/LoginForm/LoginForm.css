@@ -26,7 +26,9 @@
   background-color: var(--brand-white);
   border: 1.5px solid var(--auth-input-border);
   border-radius: var(--auth-input-radius);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   outline: none;
 }
 
@@ -70,35 +72,6 @@
 .auth-form__feedback--success {
   color: var(--auth-feedback-success);
   background-color: var(--auth-feedback-bg-success);
-}
-
-/* ── Divider ── */
-.auth-form__divider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1.25rem 0;
-  color: var(--brand-muted);
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.auth-form__divider::before,
-.auth-form__divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid var(--auth-input-border);
-}
-
-/* ── Google button wrapper ── */
-.auth-form__google {
-  display: flex;
-  justify-content: center;
-}
-
-.auth-form__google--disabled {
-  pointer-events: none;
-  opacity: 0.55;
 }
 
 /* ── Forgot password ── */
