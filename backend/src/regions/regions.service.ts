@@ -14,6 +14,9 @@ type RegionWithBooksCount = Region & {
   booksCount: number;
 };
 
+const normalizeRegionPhone = (value: string | null | undefined): string =>
+  (value ?? '').replace(/\D+/g, '').slice(0, 9);
+
 @Injectable()
 export class RegionsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -27,6 +30,7 @@ export class RegionsService {
         name: true,
         address: true,
         email: true,
+        phone: true,
       },
     });
   }
@@ -39,6 +43,7 @@ export class RegionsService {
     };
 
     const searchTerm = query.search?.trim();
+    const phoneSearchTerm = normalizeRegionPhone(searchTerm);
     if (searchTerm) {
       where.OR = [
         {
@@ -50,6 +55,18 @@ export class RegionsService {
         {
           email: {
             contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+        {
+          address: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        },
+        {
+          phone: {
+            contains: phoneSearchTerm || searchTerm,
             mode: 'insensitive',
           },
         },
@@ -85,12 +102,15 @@ export class RegionsService {
   }
 
   async create(createRegionDto: CreateRegionDto) {
+    const normalizedPhone = normalizeRegionPhone(createRegionDto.phone) || null;
+
     try {
       const region = await this.prisma.region.create({
         data: {
           name: createRegionDto.name.trim(),
           address: createRegionDto.address.trim(),
           email: createRegionDto.email.trim().toLowerCase(),
+          phone: normalizedPhone,
         },
       });
 
@@ -122,6 +142,10 @@ export class RegionsService {
 
     if (updateRegionDto.email !== undefined) {
       updateData.email = updateRegionDto.email.trim().toLowerCase();
+    }
+
+    if (updateRegionDto.phone !== undefined) {
+      updateData.phone = normalizeRegionPhone(updateRegionDto.phone) || null;
     }
 
     if (Object.keys(updateData).length === 0) {

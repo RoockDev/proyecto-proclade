@@ -1,4 +1,5 @@
 import type { DelegationContactView } from '../../types/human-libraries.types';
+import { formatRegionPhone } from '../../../../utils/region-phone';
 import './DelegationContactPanel.css';
 
 type DelegationContactPanelProps = {
@@ -9,6 +10,9 @@ export const DelegationContactPanel = ({ contact }: DelegationContactPanelProps)
   const encodedQuery = encodeURIComponent(contact.mapQuery);
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
   const mapOpenUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
+  const normalizedPhoneLink = contact.phone
+    ? `tel:${contact.phone.replace(/[^+\d]/g, '')}`
+    : null;
 
   return (
     <article className="delegation-contact-panel">
@@ -40,7 +44,13 @@ export const DelegationContactPanel = ({ contact }: DelegationContactPanelProps)
         </p>
         <p>
           <i className="bi bi-telephone" aria-hidden="true" />
-          <span>{contact.phone ?? 'Teléfono no disponible'}</span>
+          <span>
+            {contact.phone && normalizedPhoneLink ? (
+              <a href={normalizedPhoneLink}>{formatRegionPhone(contact.phone)}</a>
+            ) : (
+              'Teléfono no disponible'
+            )}
+          </span>
         </p>
         <p>
           <i className="bi bi-envelope" aria-hidden="true" />

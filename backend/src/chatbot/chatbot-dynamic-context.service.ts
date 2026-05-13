@@ -9,6 +9,16 @@ type DynamicIntentReply = {
   suggestions: string[];
 };
 
+const formatRegionPhone = (value: string | null | undefined): string => {
+  const digits = (value ?? '').replace(/\D+/g, '').slice(0, 9);
+
+  if (digits.length !== 9) {
+    return value ?? '';
+  }
+
+  return `${digits.slice(0, 3)} ${digits.slice(3, 5)} ${digits.slice(5, 7)} ${digits.slice(7, 9)}`;
+};
+
 @Injectable()
 export class ChatbotDynamicContextService {
   constructor(private readonly prisma: PrismaService) {}
@@ -420,6 +430,7 @@ export class ChatbotDynamicContextService {
         name: true,
         address: true,
         email: true,
+        phone: true,
       },
       orderBy: {
         name: 'asc',
@@ -445,8 +456,12 @@ export class ChatbotDynamicContextService {
     });
 
     if (specificRegion) {
+      const phoneLine = specificRegion.item.phone
+        ? `\nTeléfono: ${formatRegionPhone(specificRegion.item.phone)}`
+        : '';
+
       return {
-        answer: `Delegación ${specificRegion.item.name}:\nDirección: ${specificRegion.item.address}\nCorreo: ${specificRegion.item.email}`,
+        answer: `Delegación ${specificRegion.item.name}:\nDirección: ${specificRegion.item.address}${phoneLine}\nCorreo: ${specificRegion.item.email}`,
         ctaLinks: [
           {
             label: `Escribir a ${specificRegion.item.email}`,

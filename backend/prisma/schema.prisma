@@ -112,6 +112,7 @@ model Region {
   name      String    @unique
   address   String
   email     String    @unique
+  phone     String?
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

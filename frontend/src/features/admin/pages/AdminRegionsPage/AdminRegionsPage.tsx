@@ -5,6 +5,11 @@ import { RegionsGrid } from '../../components/regions/RegionsGrid/RegionsGrid';
 import { RegionsToolbar } from '../../components/regions/RegionsToolbar/RegionsToolbar';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useRegionsList } from '../../hooks/useRegionsList';
+import {
+  formatRegionPhone,
+  hasCompleteRegionPhone,
+  normalizeRegionPhone,
+} from '../../../../utils/region-phone';
 import type {
   AdminRegion,
   CreateRegionPayload,
@@ -19,12 +24,14 @@ const initialFormState: RegionFormData = {
   name: '',
   address: '',
   email: '',
+  phone: '',
 };
 
 const validateRegionForm = (formData: RegionFormData): string | null => {
   const name = formData.name.trim();
   const address = formData.address.trim();
   const email = formData.email.trim().toLowerCase();
+  const phone = formData.phone.trim();
 
   if (name.length < 2) {
     return 'El nombre debe tener al menos 2 caracteres.';
@@ -38,14 +45,23 @@ const validateRegionForm = (formData: RegionFormData): string | null => {
     return 'El email no es válido.';
   }
 
+  if (phone && !hasCompleteRegionPhone(phone)) {
+    return 'El teléfono debe tener exactamente 9 dígitos.';
+  }
+
   return null;
 };
 
-const buildRegionPayload = (formData: RegionFormData): CreateRegionPayload => ({
-  name: formData.name.trim(),
-  address: formData.address.trim(),
-  email: formData.email.trim().toLowerCase(),
-});
+const buildRegionPayload = (formData: RegionFormData): CreateRegionPayload => {
+  const normalizedPhone = normalizeRegionPhone(formData.phone);
+
+  return {
+    name: formData.name.trim(),
+    address: formData.address.trim(),
+    email: formData.email.trim().toLowerCase(),
+    ...(normalizedPhone ? { phone: normalizedPhone } : {}),
+  };
+};
 
 export const AdminRegionsPage = () => {
   const [formData, setFormData] = useState(initialFormState);
@@ -123,6 +139,7 @@ export const AdminRegionsPage = () => {
       name: region.name,
       address: region.address,
       email: region.email,
+      phone: formatRegionPhone(region.phone),
     });
     setFeedback(null);
     setIsFormOpen(true);
@@ -178,7 +195,10 @@ export const AdminRegionsPage = () => {
   };
 
   const handleFieldChange = (field: keyof RegionFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: field === 'phone' ? formatRegionPhone(value) : value,
+    }));
     setFeedback(null);
   };
 

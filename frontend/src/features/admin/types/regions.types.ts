@@ -3,6 +3,7 @@ export type AdminRegion = {
   name: string;
   address: string;
   email: string;
+  phone: string | null;
   booksCount: number;
   deletedAt: string | null;
   createdAt: string;
@@ -13,6 +14,7 @@ export type CreateRegionPayload = {
   name: string;
   address: string;
   email: string;
+  phone?: string;
 };
 
 export type UpdateRegionPayload = Partial<CreateRegionPayload> & {
@@ -23,4 +25,5 @@ export type RegionFormData = {
   name: string;
   address: string;
   email: string;
+  phone: string;
 };

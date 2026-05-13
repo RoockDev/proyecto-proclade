@@ -79,12 +79,13 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply?.answer).toContain('Faltan');
   });
 
-  it('resuelve una delegación concreta con dirección y correo', async () => {
+  it('resuelve una delegación concreta con dirección, teléfono y correo', async () => {
     const { service, prismaMock } = createService();
     prismaMock.region.findMany.mockResolvedValue([
       {
         name: 'Ciudad Real',
         address: 'Calle Mayor 10',
+        phone: '926000000',
         email: 'ciudadreal@proclade.org',
       },
     ]);
@@ -97,6 +98,7 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply).not.toBeNull();
     expect(reply?.answer).toContain('Ciudad Real');
     expect(reply?.answer).toContain('Calle Mayor 10');
+    expect(reply?.answer).toContain('926 00 00 00');
     expect(reply?.answer).toContain('ciudadreal@proclade.org');
   });
 
@@ -106,6 +108,7 @@ describe('ChatbotDynamicContextService', () => {
       {
         name: 'Ciudad Real',
         address: 'Calle Mayor 10',
+        phone: null,
         email: 'ciudadreal@proclade.org',
       },
     ]);
