@@ -94,6 +94,25 @@
   color: #5e6f83;
 }
 
+.news-form-card__excerpt-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.news-form-card__excerpt-sync {
+  border: 1px solid rgba(13, 59, 115, 0.16);
+  background: rgba(13, 59, 115, 0.05);
+  color: var(--brand-secondary);
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .news-form-card__image-meta {
   display: flex;
   align-items: center;
@@ -209,5 +228,10 @@
   .news-form-card__image-meta {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .news-form-card__excerpt-tools {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

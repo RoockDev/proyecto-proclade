@@ -26,20 +26,12 @@
 .news-table__title-cell {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
 }
 
 .news-table__title-cell strong {
   color: #122447;
   font-size: 0.95rem;
-}
-
-.news-table__title-cell span {
-  color: #51657e;
-  font-size: 0.78rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  line-height: 1.4;
 }
 
 .news-table__excerpt {
