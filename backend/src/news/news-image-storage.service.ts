@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync } from 'node:fs';
-import { writeFile } from 'node:fs/promises';
+import { unlink, writeFile } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 
 export type UploadedNewsImageFile = {
@@ -12,6 +12,8 @@ export type UploadedNewsImageFile = {
 };
 
 const MAX_NEWS_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const NEWS_UPLOADS_DIRECTORY = join(process.cwd(), 'uploads', 'news');
+const NEWS_IMAGE_URL_PREFIX = '/uploads/news/';
 
 const ALLOWED_IMAGE_EXTENSIONS = new Set([
   '.jpg',
@@ -45,7 +47,20 @@ export class NewsImageStorageService {
 
     await writeFile(destinationPath, file.buffer);
 
-    return `/uploads/news/${filename}`;
+    return `${NEWS_IMAGE_URL_PREFIX}${filename}`;
+  }
+
+  async removeNewsImage(imageUrl: string | null | undefined): Promise<void> {
+    const filePath = this.resolveLocalImagePath(imageUrl);
+    if (!filePath) {
+      return;
+    }
+
+    try {
+      await unlink(filePath);
+    } catch {
+      // El archivo puede no existir ya; no es un error critico.
+    }
   }
 
   private validateFile(file: UploadedNewsImageFile): void {
@@ -66,11 +81,10 @@ export class NewsImageStorageService {
   }
 
   private ensureNewsUploadsDirectory(): string {
-    const uploadsDirectory = join(process.cwd(), 'uploads', 'news');
-    if (!existsSync(uploadsDirectory)) {
-      mkdirSync(uploadsDirectory, { recursive: true });
+    if (!existsSync(NEWS_UPLOADS_DIRECTORY)) {
+      mkdirSync(NEWS_UPLOADS_DIRECTORY, { recursive: true });
     }
-    return uploadsDirectory;
+    return NEWS_UPLOADS_DIRECTORY;
   }
 
   private buildNewsImageFilename(originalName: string): string {
@@ -100,5 +114,20 @@ export class NewsImageStorageService {
       .replace(/^-+|-+$/g, '');
 
     return normalized || 'news-image';
+  }
+
+  private resolveLocalImagePath(
+    imageUrl: string | null | undefined,
+  ): string | null {
+    if (!imageUrl?.startsWith(NEWS_IMAGE_URL_PREFIX)) {
+      return null;
+    }
+
+    const filename = imageUrl.slice(NEWS_IMAGE_URL_PREFIX.length);
+    if (!filename || filename.includes('/') || filename.includes('\\')) {
+      return null;
+    }
+
+    return join(NEWS_UPLOADS_DIRECTORY, filename);
   }
 }

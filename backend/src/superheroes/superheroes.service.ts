@@ -9,6 +9,7 @@ import {
   type Prisma,
 } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { SuperheroImageStorageService } from './superhero-image-storage.service';
 import { CreateSuperheroDto } from './dto/create-superhero.dto';
 import { ListSuperheroesQueryDto } from './dto/list-superheroes-query.dto';
 import { UpdateSuperheroDto } from './dto/update-superhero.dto';
@@ -24,7 +25,10 @@ type SuperheroListData = {
 
 @Injectable()
 export class SuperheroesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly superheroImageStorageService: SuperheroImageStorageService,
+  ) {}
 
   async findAllPublished(
     query: ListSuperheroesQueryDto,
@@ -152,6 +156,9 @@ export class SuperheroesService {
   ) {
     const slug = await this.generateUniqueSlug(createSuperheroDto.name);
     const status = createSuperheroDto.status ?? SuperheroStatus.DRAFT;
+    const normalizedImageUrl = this.normalizeImageUrl(
+      imageUrl ?? createSuperheroDto.imageUrl ?? null,
+    );
 
     const superhero = await this.prisma.superhero.create({
       data: {
@@ -160,7 +167,7 @@ export class SuperheroesService {
         description: createSuperheroDto.description,
         quote: createSuperheroDto.quote,
         country: createSuperheroDto.country,
-        imageUrl: imageUrl ?? createSuperheroDto.imageUrl ?? null,
+        imageUrl: normalizedImageUrl,
         sortOrder: createSuperheroDto.sortOrder ?? 0,
         status,
         createdById,
@@ -212,7 +219,12 @@ export class SuperheroesService {
       updateData.status = updateSuperheroDto.status;
     }
 
-    const finalImageUrl = imageUrl ?? updateSuperheroDto.imageUrl ?? undefined;
+    const finalImageUrl =
+      imageUrl !== undefined
+        ? this.normalizeImageUrl(imageUrl)
+        : updateSuperheroDto.imageUrl !== undefined
+          ? this.normalizeImageUrl(updateSuperheroDto.imageUrl)
+          : undefined;
 
     if (finalImageUrl !== undefined) {
       updateData.imageUrl = finalImageUrl;
@@ -228,6 +240,10 @@ export class SuperheroesService {
       where: { id },
       data: updateData,
     });
+
+    if (this.shouldRemovePreviousImage(currentHero.imageUrl, superhero.imageUrl)) {
+      await this.superheroImageStorageService.removeImage(currentHero.imageUrl);
+    }
 
     return {
       message: 'Superhéroe actualizado correctamente',
@@ -315,6 +331,8 @@ export class SuperheroesService {
       }),
     ]);
 
+    await this.superheroImageStorageService.removeImage(superhero.imageUrl);
+
     return {
       message: 'Superhéroe eliminado definitivamente',
     };
@@ -396,5 +414,21 @@ export class SuperheroesService {
       .replace(/^-+|-+$/g, '');
 
     return normalized || 'superheroe';
+  }
+
+  private normalizeImageUrl(imageUrl: string | null | undefined): string | null {
+    if (typeof imageUrl !== 'string') {
+      return null;
+    }
+
+    const trimmedUrl = imageUrl.trim();
+    return trimmedUrl.length > 0 ? trimmedUrl : null;
+  }
+
+  private shouldRemovePreviousImage(
+    previousImageUrl: string | null,
+    nextImageUrl: string | null,
+  ): boolean {
+    return Boolean(previousImageUrl && previousImageUrl !== nextImageUrl);
   }
 }

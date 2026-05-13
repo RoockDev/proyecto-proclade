@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { NewsStatus, type News } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { NewsImageStorageService } from './news-image-storage.service';
 import { NewsService } from './news.service';
 
 jest.mock(
@@ -46,9 +47,13 @@ describe('NewsService', () => {
     },
   } as unknown as PrismaService;
 
+  const newsImageStorageServiceMock = {
+    removeNewsImage: jest.fn(),
+  } as unknown as NewsImageStorageService;
+
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new NewsService(prismaMock);
+    service = new NewsService(prismaMock, newsImageStorageServiceMock);
   });
 
   describe('buildBaseSlug (private)', () => {
@@ -263,12 +268,46 @@ describe('NewsService', () => {
       );
       expect(prismaMock.news.update).not.toHaveBeenCalled();
     });
+
+    it('borra la imagen anterior cuando cambia imageUrl', async () => {
+      (prismaMock.news.findFirst as jest.Mock).mockResolvedValue(
+        makeNews({ id: 6, imageUrl: '/uploads/news/news-antigua.png' }),
+      );
+      (prismaMock.news.update as jest.Mock).mockResolvedValue(
+        makeNews({ id: 6, imageUrl: '/uploads/news/news-nueva.png' }),
+      );
+
+      await service.update(6, { imageUrl: '/uploads/news/news-nueva.png' });
+
+      expect(newsImageStorageServiceMock.removeNewsImage).toHaveBeenCalledWith(
+        '/uploads/news/news-antigua.png',
+      );
+    });
+
+    it('al limpiar la imagen guarda null y elimina el archivo local previo', async () => {
+      (prismaMock.news.findFirst as jest.Mock).mockResolvedValue(
+        makeNews({ id: 7, imageUrl: '/uploads/news/news-antigua.png' }),
+      );
+      (prismaMock.news.update as jest.Mock).mockResolvedValue(
+        makeNews({ id: 7, imageUrl: null }),
+      );
+
+      await service.update(7, { imageUrl: '' });
+
+      expect(prismaMock.news.update).toHaveBeenCalledWith({
+        where: { id: 7 },
+        data: { imageUrl: null },
+      });
+      expect(newsImageStorageServiceMock.removeNewsImage).toHaveBeenCalledWith(
+        '/uploads/news/news-antigua.png',
+      );
+    });
   });
 
   describe('remove', () => {
-    it('aplica borrado logico con deletedAt', async () => {
+    it('aplica borrado logico con deletedAt y limpia la imagen local', async () => {
       (prismaMock.news.findFirst as jest.Mock).mockResolvedValue(
-        makeNews({ id: 5 }),
+        makeNews({ id: 5, imageUrl: '/uploads/news/news-antigua.png' }),
       );
       (prismaMock.news.update as jest.Mock).mockResolvedValue(
         makeNews({ id: 5, deletedAt: new Date() }),
@@ -280,8 +319,12 @@ describe('NewsService', () => {
         where: { id: 5 },
         data: {
           deletedAt: expect.any(Date),
+          imageUrl: null,
         },
       });
+      expect(newsImageStorageServiceMock.removeNewsImage).toHaveBeenCalledWith(
+        '/uploads/news/news-antigua.png',
+      );
       expect(result).toEqual({ message: 'Noticia eliminada correctamente' });
     });
   });
