@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ColaboraService } from './colabora.service';
+import { ContactFormDto } from './dto/contact-form.dto';
 
 @Controller('colabora')
 export class ColaboraController {
@@ -7,19 +8,9 @@ export class ColaboraController {
 
   @Post('contact')
   async sendContactForm(
-    @Body() body: {
-      nombre: string;
-      apellidos: string;
-      email: string;
-      telefono?: string;
-      mensaje?: string;
-    },
-  ): Promise<{ success: boolean; message: string }> {
-    try {
-      await this.colaboraService.sendContactForm(body);
-      return { success: true, message: 'Mensaje enviado correctamente' };
-    } catch (error) {
-      return { success: false, message: 'Error al enviar el mensaje' };
-    }
+    @Body() body: ContactFormDto,
+  ): Promise<{ message: string }> {
+    await this.colaboraService.sendContactForm(body);
+    return { message: 'Mensaje enviado correctamente' };
   }
 }

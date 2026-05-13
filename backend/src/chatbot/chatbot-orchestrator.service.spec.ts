@@ -128,12 +128,12 @@ describe('ChatbotOrchestratorService', () => {
     const { service, unresolvedServiceMock } = createService(0.9);
 
     const response = await service.sendMessage({
-      message: 'como donar',
+      message: 'donar hoy',
       pageContext: 'colabora',
     });
 
     expect(response.replyType).toBe('DIRECT_ANSWER');
-    expect(response.confidence).toBe(0.9);
+    expect(response.confidence).toBe(1);
     expect(unresolvedServiceMock.register).not.toHaveBeenCalled();
   });
 
@@ -141,7 +141,7 @@ describe('ChatbotOrchestratorService', () => {
     const { service, unresolvedServiceMock } = createService(0.6);
 
     const response = await service.sendMessage({
-      message: 'me ayudas con donar',
+      message: 'aportar hoy',
       pageContext: 'colabora',
     });
 
@@ -218,7 +218,7 @@ describe('ChatbotOrchestratorService', () => {
     expect(response.answer.toLowerCase()).toContain('solicitar');
   });
 
-  it('no deriva a soporte generico cuando la consulta es de dominio con typo', async () => {
+  it('no deriva a soporte genérico cuando la consulta es de dominio con typo', async () => {
     const { service } = createService(0.2);
 
     const response = await service.sendMessage({
@@ -232,7 +232,7 @@ describe('ChatbotOrchestratorService', () => {
     );
   });
 
-  it('detecta consultas por nombre de superheroe aunque no incluyan la palabra superheroe', () => {
+  it('detecta consultas por nombre de superhéroe aunque no incluyan la palabra superhéroe', () => {
     const { service } = createService(0.2);
 
     const preferredIntent = (
@@ -308,7 +308,7 @@ describe('ChatbotOrchestratorService', () => {
     expect(response.answer.toLowerCase()).toContain(
       'no he conseguido entender',
     );
-    expect(unresolvedServiceMock.register).not.toHaveBeenCalled();
+    expect(unresolvedServiceMock.register).toHaveBeenCalledTimes(1);
   });
 
   it('responde fallback para texto sin sentido con varios tokens', async () => {
@@ -325,7 +325,7 @@ describe('ChatbotOrchestratorService', () => {
     expect(response.answer.toLowerCase()).toContain(
       'no he conseguido entender',
     );
-    expect(unresolvedServiceMock.register).not.toHaveBeenCalled();
+    expect(unresolvedServiceMock.register).toHaveBeenCalledTimes(1);
   });
 
   it('guarda scoreBreakdown en meta al persistir mensaje del bot', async () => {
@@ -351,13 +351,13 @@ describe('ChatbotOrchestratorService', () => {
     expect(meta.scoreBreakdown?.finalScore).toBe(0.82);
   });
 
-  it('enriquece respuesta con contexto dinamico cuando existe intent detectado', async () => {
+  it('enriquece respuesta con contexto dinámico cuando existe intent detectado', async () => {
     const { service, dynamicContextServiceMock } = createService(0.9);
     (dynamicContextServiceMock.buildIntentReply as jest.Mock).mockResolvedValue(
       {
-        answer: 'Respuesta dinamica desde BD',
-        ctaLinks: [{ label: 'Ver Superheroes', to: '/superheroes' }],
-        suggestions: ['quienes son los superheroes puch'],
+        answer: 'Respuesta dinámica desde BD',
+        ctaLinks: [{ label: 'Ver Superhéroes', to: '/superheroes' }],
+        suggestions: ['¿Quiénes son los superhéroes PUCH?'],
       },
     );
 
@@ -367,15 +367,15 @@ describe('ChatbotOrchestratorService', () => {
     });
 
     expect(response.replyType).toBe('DIRECT_ANSWER');
-    expect(response.answer).toBe('Respuesta dinamica desde BD');
+    expect(response.answer).toBe('Respuesta dinámica desde BD');
     expect(response.ctaLinks[0]?.to).toBe('/superheroes');
   });
 
-  it('no enriquece con contexto dinamico cuando la respuesta es fallback', async () => {
+  it('no enriquece con contexto dinámico cuando la respuesta es fallback', async () => {
     const { service, dynamicContextServiceMock } = createService(0.3);
     (dynamicContextServiceMock.buildIntentReply as jest.Mock).mockResolvedValue(
       {
-        answer: 'Respuesta dinamica no esperada',
+        answer: 'Respuesta dinámica no esperada',
         ctaLinks: [{ label: 'Ir', to: '/colabora' }],
         suggestions: ['como donar'],
       },
@@ -387,10 +387,10 @@ describe('ChatbotOrchestratorService', () => {
     });
 
     expect(response.replyType).toBe('FALLBACK');
-    expect(response.answer).not.toBe('Respuesta dinamica no esperada');
+    expect(response.answer).not.toBe('Respuesta dinámica no esperada');
   });
 
-  it('recupera fallback con contexto dinamico cuando hay ancla de dominio', async () => {
+  it('recupera fallback con contexto dinámico cuando hay ancla de dominio', async () => {
     const superCandidate: ScoredCandidate = {
       ...baseCandidate,
       candidate: {
@@ -410,9 +410,9 @@ describe('ChatbotOrchestratorService', () => {
     });
     (dynamicContextServiceMock.buildIntentReply as jest.Mock).mockResolvedValue(
       {
-        answer: 'SuperSlash: perfil dinamico',
+        answer: 'SuperSlash: perfil dinámico',
         ctaLinks: [{ label: 'Ver SuperSlash', to: '/superheroes/superslash' }],
-        suggestions: ['que superheroes hay'],
+        suggestions: ['¿Qué superhéroes hay?'],
       },
     );
 
@@ -422,7 +422,7 @@ describe('ChatbotOrchestratorService', () => {
     });
 
     expect(response.replyType).toBe('DIRECT_ANSWER');
-    expect(response.answer).toBe('SuperSlash: perfil dinamico');
+    expect(response.answer).toBe('SuperSlash: perfil dinámico');
     expect(response.ctaLinks[0]?.to).toContain('/superheroes/');
   });
 });

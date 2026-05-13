@@ -8,6 +8,10 @@ import {
   getAuthSession,
   updateAuthSessionUser,
 } from '../../../auth/utils/auth-session.storage';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  validatePasswordPolicy,
+} from '../../../../utils/password-policy';
 import './ProfileModal.css';
 
 type ProfileModalProps = {
@@ -229,6 +233,16 @@ export const ProfileModal = ({ isOpen, onClose, onPasswordChanged }: ProfileModa
       return;
     }
 
+    const passwordError = validatePasswordPolicy(newPassword);
+
+    if (passwordError) {
+      setPasswordFeedback({
+        type: 'error',
+        message: passwordError,
+      });
+      return;
+    }
+
     if (newPassword === currentPassword) {
       setPasswordFeedback({
         type: 'error',
@@ -408,6 +422,7 @@ export const ProfileModal = ({ isOpen, onClose, onPasswordChanged }: ProfileModa
                       autoComplete={
                         field === 'currentPassword' ? 'current-password' : 'new-password'
                       }
+                      minLength={field === 'currentPassword' ? undefined : 8}
                       required
                     />
                     <button
@@ -427,6 +442,11 @@ export const ProfileModal = ({ isOpen, onClose, onPasswordChanged }: ProfileModa
                       />
                     </button>
                   </div>
+                  {field === 'newPassword' ? (
+                    <p className="auth-form__hint profile-modal__password-hint">
+                      {PASSWORD_POLICY_MESSAGE}
+                    </p>
+                  ) : null}
                 </div>
               ))}
 

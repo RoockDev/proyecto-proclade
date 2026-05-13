@@ -26,22 +26,22 @@ describe('ChatbotDynamicContextService', () => {
     return { service, prismaMock };
   };
 
-  it('construye respuesta dinamica con superheroes publicados', async () => {
+  it('construye respuesta dinámica con superhéroes publicados', async () => {
     const { service, prismaMock } = createService();
     prismaMock.superhero.findMany.mockResolvedValue([
-      { name: 'Superheroe India', country: 'India' },
-      { name: 'Superheroe Burkina Faso', country: 'Burkina Faso' },
+      { name: 'Superhéroe India', country: 'India' },
+      { name: 'Superhéroe Burkina Faso', country: 'Burkina Faso' },
     ]);
 
     const reply = await service.buildIntentReply('SUPERHEROES');
 
     expect(reply).not.toBeNull();
-    expect(reply?.answer).toContain('2 superheroes publicados');
-    expect(reply?.answer).toContain('Superheroe India (India)');
+    expect(reply?.answer).toContain('2 superhéroes publicados');
+    expect(reply?.answer).toContain('Superhéroe India (India)');
     expect(reply?.ctaLinks[0]?.to).toBe('/superheroes');
   });
 
-  it('construye respuesta dinamica de retos con progreso', async () => {
+  it('construye respuesta dinámica de retos con progreso', async () => {
     const { service, prismaMock } = createService();
     prismaMock.challenge.findMany.mockResolvedValue([
       {
@@ -79,12 +79,13 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply?.answer).toContain('Faltan');
   });
 
-  it('resuelve una delegacion concreta con direccion y correo', async () => {
+  it('resuelve una delegación concreta con dirección, teléfono y correo', async () => {
     const { service, prismaMock } = createService();
     prismaMock.region.findMany.mockResolvedValue([
       {
         name: 'Ciudad Real',
         address: 'Calle Mayor 10',
+        phone: '926000000',
         email: 'ciudadreal@proclade.org',
       },
     ]);
@@ -97,15 +98,17 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply).not.toBeNull();
     expect(reply?.answer).toContain('Ciudad Real');
     expect(reply?.answer).toContain('Calle Mayor 10');
+    expect(reply?.answer).toContain('926 00 00 00');
     expect(reply?.answer).toContain('ciudadreal@proclade.org');
   });
 
-  it('resuelve una delegacion concreta aunque venga con typo leve', async () => {
+  it('resuelve una delegación concreta aunque venga con typo leve', async () => {
     const { service, prismaMock } = createService();
     prismaMock.region.findMany.mockResolvedValue([
       {
         name: 'Ciudad Real',
         address: 'Calle Mayor 10',
+        phone: null,
         email: 'ciudadreal@proclade.org',
       },
     ]);
@@ -120,14 +123,14 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply?.answer).toContain('Calle Mayor 10');
   });
 
-  it('responde con detalle de un superheroe concreto cuando lo mencionan', async () => {
+  it('responde con detalle de un superhéroe concreto cuando lo mencionan', async () => {
     const { service, prismaMock } = createService();
     prismaMock.superhero.findMany.mockResolvedValue([
       {
         name: 'Super Slash',
         country: 'Noruega',
-        quote: 'No hay cambio pequeno',
-        description: 'Lidera acciones de sensibilizacion local.',
+        quote: 'No hay cambio pequeño',
+        description: 'Lidera acciones de sensibilización local.',
         slug: 'super-slash',
       },
     ]);
@@ -187,14 +190,14 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply?.answer).toContain('Reto 1');
   });
 
-  it('responde que no existe un superheroe cuando el nombre no coincide', async () => {
+  it('responde que no existe un superhéroe cuando el nombre no coincide', async () => {
     const { service, prismaMock } = createService();
     prismaMock.superhero.findMany.mockResolvedValue([
       {
         name: 'Super Slash',
         country: 'Noruega',
         quote: null,
-        description: 'Heroe de referencia',
+        description: 'Héroe de referencia',
         slug: 'super-slash',
       },
     ]);
@@ -206,19 +209,19 @@ describe('ChatbotDynamicContextService', () => {
 
     expect(reply).not.toBeNull();
     expect(reply?.answer.toLowerCase()).toContain(
-      'no he encontrado un superheroe',
+      'no he encontrado un superhéroe',
     );
     expect(reply?.ctaLinks[0]?.to).toBe('/superheroes');
   });
 
-  it('lista superheroes cuando la consulta es general', async () => {
+  it('lista superhéroes cuando la consulta es general', async () => {
     const { service, prismaMock } = createService();
     prismaMock.superhero.findMany.mockResolvedValue([
       {
         name: 'Super Slash',
         country: 'Noruega',
         quote: null,
-        description: 'Heroe de referencia',
+        description: 'Héroe de referencia',
         slug: 'super-slash',
       },
     ]);
@@ -229,20 +232,20 @@ describe('ChatbotDynamicContextService', () => {
     );
 
     expect(reply).not.toBeNull();
-    expect(reply?.answer.toLowerCase()).toContain('superheroes publicados');
+    expect(reply?.answer.toLowerCase()).toContain('superhéroes publicados');
     expect(reply?.answer.toLowerCase()).not.toContain(
-      'no he encontrado un superheroe',
+      'no he encontrado un superhéroe',
     );
   });
 
-  it('lista superheroes por pais cuando se pide ese tipo de vista', async () => {
+  it('lista superhéroes por país cuando se pide ese tipo de vista', async () => {
     const { service, prismaMock } = createService();
     prismaMock.superhero.findMany.mockResolvedValue([
       {
         name: 'Super Slash',
         country: 'Noruega',
         quote: null,
-        description: 'Heroe de referencia',
+        description: 'Héroe de referencia',
         slug: 'super-slash',
       },
     ]);
@@ -253,7 +256,7 @@ describe('ChatbotDynamicContextService', () => {
     );
 
     expect(reply).not.toBeNull();
-    expect(reply?.answer.toLowerCase()).toContain('superheroes publicados');
+    expect(reply?.answer.toLowerCase()).toContain('superhéroes publicados');
     expect(reply?.answer).toContain('(Noruega)');
   });
 
@@ -275,7 +278,7 @@ describe('ChatbotDynamicContextService', () => {
     expect(reply).not.toBeNull();
     expect(reply?.answer.toLowerCase()).toContain('delegaciones activas');
     expect(reply?.answer.toLowerCase()).not.toContain(
-      'no he encontrado una delegacion',
+      'no he encontrado una delegación',
     );
   });
 });

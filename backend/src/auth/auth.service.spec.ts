@@ -27,10 +27,6 @@ describe('AuthService', () => {
     get: jest.fn(),
   };
 
-  const googleAuthServiceMock = {
-    verifyIdToken: jest.fn(),
-  };
-
   const usersServiceMock = {
     findActiveByEmailWithRoles: jest.fn(),
   };
@@ -47,7 +43,6 @@ describe('AuthService', () => {
       prismaMock as never,
       jwtServiceMock as never,
       configServiceMock as never,
-      googleAuthServiceMock as never,
       usersServiceMock as never,
       mailServiceMock as never,
     );
@@ -57,7 +52,7 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
-  it('registra usuarios creando el rol USER si la base esta vacia', async () => {
+  it('registra usuarios creando el rol USER si la base está vacía', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
     prismaMock.user.create.mockImplementation(async (args) => ({
       id: 101,
@@ -65,7 +60,6 @@ describe('AuthService', () => {
       passwordHash: 'hashed-password',
       name: args.data.name,
       surname: args.data.surname,
-      google: false,
       resetPasswordTokenHash: null,
       resetPasswordExpiresAt: null,
       deletedAt: null,

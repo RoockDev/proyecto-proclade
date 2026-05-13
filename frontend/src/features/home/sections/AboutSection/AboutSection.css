@@ -1,5 +1,6 @@
 .about-section {
   background-color: var(--brand-white);
+  scroll-margin-top: 5.8rem;
 }
 
 .about-section.section-padding {

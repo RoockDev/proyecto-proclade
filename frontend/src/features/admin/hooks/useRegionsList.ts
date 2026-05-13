@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listRegions } from '../api/regions.api';
 import type { AdminRegion } from '../types/regions.types';
+import { normalizeRegionPhone } from '../../../utils/region-phone';
 
 type UseRegionsListOptions = {
   onError?: (message: string) => void;
@@ -39,15 +40,23 @@ export const useRegionsList = ({ onError }: UseRegionsListOptions = {}) => {
 
   const filteredRegions = useMemo(() => {
     const term = search.trim().toLowerCase();
+    const phoneTerm = normalizeRegionPhone(search);
+
     if (!term) {
       return orderedRegions;
     }
 
-    return orderedRegions.filter((region) =>
-      [region.name, region.email].some((field) =>
+    return orderedRegions.filter((region) => {
+      const matchesText = [region.name, region.email, region.address].some((field) =>
         field.toLowerCase().includes(term),
-      ),
-    );
+      );
+
+      const matchesPhone = phoneTerm
+        ? normalizeRegionPhone(region.phone).includes(phoneTerm)
+        : false;
+
+      return matchesText || matchesPhone;
+    });
   }, [orderedRegions, search]);
 
   return {

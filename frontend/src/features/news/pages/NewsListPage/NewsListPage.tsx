@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { getNewsList } from '../../api/news.api';
 import { NewsGrid } from '../../components/NewsGrid/NewsGrid';
 import { NewsPagination } from '../../components/NewsPagination/NewsPagination';
-import { getMockNewsList } from '../../mocks/news.mocks';
 import type { NewsItem, NewsListState } from '../../types/news.types';
 import { buildNewsListState } from '../../utils/news.mapper';
 import './NewsListPage.css';
@@ -15,7 +14,6 @@ export const NewsListPage = () => {
   const [allNewsItems, setAllNewsItems] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isFallback, setIsFallback] = useState(false);
 
   const rawPageParam = searchParams.get('page');
   const currentPage = sanitizePage(rawPageParam);
@@ -46,16 +44,14 @@ export const NewsListPage = () => {
         }
 
         setAllNewsItems(items);
-        setIsFallback(false);
       } catch {
         if (!isMounted) {
           return;
         }
 
-        setAllNewsItems(getMockNewsList());
-        setIsFallback(true);
+        setAllNewsItems([]);
         setErrorMessage(
-          'No se pudo cargar el listado en tiempo real. Mostramos contenido de respaldo temporal.',
+          'No se pudo cargar el listado de noticias. Inténtalo de nuevo más tarde.',
         );
       } finally {
         if (isMounted) {
@@ -77,9 +73,8 @@ export const NewsListPage = () => {
         items: allNewsItems,
         page: currentPage,
         pageSize: PAGE_SIZE,
-        isFallback,
       }),
-    [allNewsItems, currentPage, isFallback],
+    [allNewsItems, currentPage],
   );
 
   useEffect(() => {
@@ -102,51 +97,50 @@ export const NewsListPage = () => {
   };
 
   return (
-    <section className="news-list-page section-padding reveal-up">
-      <div className="container">
-        <header className="news-list-page__header text-center">
-          <h1 className="news-list-page__title">Noticias</h1>
-          <p className="news-list-page__subtitle">
-            Últimas publicaciones de Equipo PUCH para seguir de cerca nuestras
-            acciones y avances.
+    <div className="news-list-page">
+      <section className="news-list-page__hero page-hero gradient-hero reveal-up">
+        <div className="container text-center">
+          <span className="page-hero__eyebrow">Actualidad</span>
+          <h1>Noticias</h1>
+          <p>
+            Sigue de cerca las iniciativas, avances y novedades del Equipo PUCH
+            y de la comunidad que impulsa cada proyecto.
           </p>
-        </header>
+        </div>
+      </section>
 
-        {errorMessage && (
-          <div className="alert alert-warning news-list-page__alert" role="status">
-            {errorMessage}
-          </div>
-        )}
+      <section className="news-list-page__content section-padding reveal-up">
+        <div className="container">
+          {errorMessage && (
+            <div className="alert alert-warning news-list-page__alert" role="status">
+              {errorMessage}
+            </div>
+          )}
 
-        {isLoading ? (
-          <div className="news-list-page__state" role="status" aria-live="polite">
-            <div className="spinner-border text-secondary" role="presentation" />
-            <p>Cargando noticias...</p>
-          </div>
-        ) : listState.total === 0 ? (
-          <div className="news-list-page__state news-list-page__state--empty">
-            <i className="bi bi-newspaper" aria-hidden="true" />
-            <p>Próximamente publicaremos nuevas noticias.</p>
-          </div>
-        ) : (
-          <>
-            {listState.isFallback && (
-              <p className="news-list-page__fallback-note">
-                Mostrando datos de respaldo temporal.
-              </p>
-            )}
+          {isLoading ? (
+            <div className="news-list-page__state" role="status" aria-live="polite">
+              <div className="spinner-border text-secondary" role="presentation" />
+              <p>Cargando noticias...</p>
+            </div>
+          ) : listState.total === 0 ? (
+            <div className="news-list-page__state news-list-page__state--empty">
+              <i className="bi bi-newspaper" aria-hidden="true" />
+              <p>Próximamente publicaremos nuevas noticias.</p>
+            </div>
+          ) : (
+            <>
+              <NewsGrid items={listState.items} variant="list" />
 
-            <NewsGrid items={listState.items} variant="list" />
-
-            <NewsPagination
-              currentPage={listState.page}
-              totalPages={listState.totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
-      </div>
-    </section>
+              <NewsPagination
+                currentPage={listState.page}
+                totalPages={listState.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
+      </section>
+    </div>
   );
 };
 

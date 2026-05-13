@@ -73,3 +73,12 @@ export const uploadAdminNewsImage = async (file: File) => {
 
   return handleResponse(response);
 };
+
+export const deleteUploadedAdminNewsImage = async (imageUrl: string) => {
+  const response = await api.delete<ApiResponse<null>>('/admin/news/upload-image', {
+    data: { imageUrl },
+    headers: authHeaders(),
+  });
+
+  return handleResponse(response);
+};

@@ -1,0 +1,187 @@
+.superhero-detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.superhero-detail-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+.superhero-detail-modal__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 58rem);
+  max-height: min(84vh, 46rem);
+  overflow: hidden;
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(246, 250, 248, 0.98)
+    );
+  box-shadow: 0 28px 64px rgba(15, 23, 42, 0.26);
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.superhero-detail-modal__content--scrollable {
+  height: min(84vh, 46rem);
+}
+
+.superhero-detail-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--brand-secondary);
+  box-shadow: 0 10px 24px rgba(13, 59, 115, 0.14);
+}
+
+.superhero-detail-modal__media {
+  min-height: clamp(18rem, 56vh, 25rem);
+  background: linear-gradient(
+    160deg,
+    rgba(107, 170, 117, 0.28),
+    rgba(13, 59, 115, 0.18)
+  );
+  padding: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.superhero-detail-modal__image {
+  width: auto;
+  max-width: min(100%, 13.75rem);
+  height: auto;
+  max-height: min(70vh, 21rem);
+  object-fit: contain;
+  object-position: center center;
+}
+
+.superhero-detail-modal__placeholder {
+  width: 100%;
+  min-height: 18rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: rgba(13, 59, 115, 0.58);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.superhero-detail-modal__placeholder i {
+  font-size: 2rem;
+}
+
+.superhero-detail-modal__body {
+  padding: 2.25rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.superhero-detail-modal__country {
+  margin: 0 0 0.55rem;
+  color: var(--brand-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.superhero-detail-modal__title {
+  margin: 0 0 1rem;
+  color: var(--brand-secondary);
+  font-size: clamp(1.8rem, 2.8vw, 2.45rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.superhero-detail-modal__copy {
+  margin-top: 0.25rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.superhero-detail-modal__content--scrollable .superhero-detail-modal__body {
+  overflow: hidden;
+}
+
+.superhero-detail-modal__content--scrollable .superhero-detail-modal__copy {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-right: 0.35rem;
+}
+
+.superhero-detail-modal__copy p {
+  margin: 0;
+  color: var(--brand-dark);
+  line-height: 1.72;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.superhero-detail-modal__quote {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  background: rgba(107, 170, 117, 0.1);
+  border: 1px solid rgba(107, 170, 117, 0.2);
+}
+
+.superhero-detail-modal__quote p {
+  color: var(--brand-secondary);
+  font-style: italic;
+}
+
+@media (max-width: 767.98px) {
+  .superhero-detail-modal {
+    padding: 0.75rem;
+  }
+
+  .superhero-detail-modal__content {
+    height: auto;
+    max-height: 92vh;
+    grid-template-columns: 1fr;
+  }
+
+  .superhero-detail-modal__media {
+    min-height: 14rem;
+    max-height: 18rem;
+  }
+
+  .superhero-detail-modal__body {
+    padding: 1.5rem 1.15rem 1.35rem;
+  }
+
+  .superhero-detail-modal__content--scrollable .superhero-detail-modal__copy,
+  .superhero-detail-modal__copy {
+    overflow-y: visible;
+    padding-right: 0;
+  }
+}

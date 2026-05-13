@@ -4,6 +4,10 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { resetPassword } from '../../api/auth.api';
 import type { ApiResponse } from '../../../../types/api';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  validatePasswordPolicy,
+} from '../../../../utils/password-policy';
 import './ResetPasswordForm.css';
 
 type ResetPasswordFormProps = {
@@ -46,6 +50,17 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
       error: null,
       successMessage: null,
     }));
+
+    const passwordError = validatePasswordPolicy(formState.newPassword);
+
+    if (passwordError) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        error: passwordError,
+      }));
+      return;
+    }
 
     if (formState.newPassword !== formState.confirmPassword) {
       setFormState((prev) => ({
@@ -114,9 +129,10 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
           placeholder="••••••••"
           disabled={formState.loading || !!formState.successMessage}
           required
-          minLength={6}
+          minLength={8}
           autoComplete="new-password"
         />
+        <p className="auth-form__hint">{PASSWORD_POLICY_MESSAGE}</p>
       </div>
 
       <div className="auth-form__field">
@@ -133,7 +149,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
           placeholder="••••••••"
           disabled={formState.loading || !!formState.successMessage}
           required
-          minLength={6}
+          minLength={8}
           autoComplete="new-password"
         />
       </div>

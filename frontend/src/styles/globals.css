@@ -83,13 +83,67 @@ img {
 }
 
 .gradient-hero {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(
-    125deg,
+    180deg,
     #6baa75 0%,
-    #2f7f6b 45%,
-    var(--puch-indigo) 100%
+    #4f8f74 40%,
+    #2d6f66 78%,
+    #245f54 100%
   );
   color: var(--brand-white);
+}
+
+.gradient-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 80% 20%,
+    rgba(255, 255, 255, 0.12),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.gradient-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero {
+  padding: clamp(3rem, 8vw, 4.8rem) 0;
+}
+
+.page-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  margin-bottom: 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+}
+
+.page-hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  color: var(--brand-white);
+}
+
+.page-hero p {
+  margin: 0 auto;
+  max-width: 48rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .gradient-warm {

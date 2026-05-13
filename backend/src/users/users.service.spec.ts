@@ -43,7 +43,6 @@ describe('UsersService', () => {
       passwordHash: 'hashed-password',
       name: args.data.name,
       surname: args.data.surname,
-      google: false,
       resetPasswordTokenHash: null,
       resetPasswordExpiresAt: null,
       deletedAt: null,
@@ -80,5 +79,8 @@ describe('UsersService', () => {
       include: { roles: true },
     });
     expect(result.roles).toEqual([RoleName.USER]);
+    expect(result).not.toHaveProperty('passwordHash');
+    expect(result).not.toHaveProperty('resetPasswordTokenHash');
+    expect(result).not.toHaveProperty('resetPasswordExpiresAt');
   });
 });

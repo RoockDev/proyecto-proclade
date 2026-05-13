@@ -193,6 +193,10 @@
   outline-offset: 2px;
 }
 
+.profile-modal__password-hint {
+  margin-top: 0.35rem;
+}
+
 @media (max-width: 1199.98px) {
   .profile-modal__grid {
     grid-template-columns: 1fr;

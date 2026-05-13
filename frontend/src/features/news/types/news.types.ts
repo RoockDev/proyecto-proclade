@@ -33,5 +33,4 @@ export type NewsListState = {
   pageSize: number;
   total: number;
   totalPages: number;
-  isFallback: boolean;
 };

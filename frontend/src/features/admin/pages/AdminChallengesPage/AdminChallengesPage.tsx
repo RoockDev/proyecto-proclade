@@ -56,7 +56,7 @@ export const AdminChallengesPage = () => {
   const { filteredChallenges, isFetching, refresh, search, setSearch } =
     useAdminChallengesList({ onError: handleListError });
 
-  const rowsPerPage = 3;
+  const rowsPerPage = 4;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredChallenges.length / rowsPerPage));
   const paginatedChallenges = useMemo(
@@ -141,11 +141,11 @@ export const AdminChallengesPage = () => {
       return;
     }
     if (!Number.isInteger(targetAmount) || targetAmount <= 0) {
-      setFormFeedback('El monto objetivo debe ser un entero mayor que 0.');
+      setFormFeedback('El monto objetivo debe ser una cantidad entera en euros mayor que 0.');
       return;
     }
     if (!Number.isInteger(currentAmount) || currentAmount < 0) {
-      setFormFeedback('El monto actual debe ser un entero no negativo.');
+      setFormFeedback('El monto actual debe ser una cantidad entera en euros no negativa.');
       return;
     }
     if (currentAmount > targetAmount) {
@@ -346,6 +346,7 @@ export const AdminChallengesPage = () => {
       </div>
 
       <UpdateAmountModal
+        key={pendingAmount?.id ?? 'closed'}
         isOpen={Boolean(pendingAmount)}
         challenge={pendingAmount}
         isProcessing={isProcessing}

@@ -1,10 +1,10 @@
-import './Footer.css';
-import { FooterBrand } from './shared/FooterBrand/FooterBrand';
-import { FooterColumn } from './shared/FooterColumn/FooterColumn';
-import { FooterLegal } from './shared/FooterLegal/FooterLegal';
+import "./Footer.css";
+import { FooterBrand } from "./shared/FooterBrand/FooterBrand";
+import { FooterColumn } from "./shared/FooterColumn/FooterColumn";
+import { FooterLegal } from "./shared/FooterLegal/FooterLegal";
 
 export const Footer = () => (
-  <footer className="brand-footer section-padding">
+  <footer id="contacto" className="brand-footer section-padding">
     <div className="container">
       <div className="row g-4">
         <div className="col-lg-4">
@@ -14,9 +14,10 @@ export const Footer = () => (
           <FooterColumn
             title="Equipo PUCH"
             links={[
-              { label: '¿Qué es?', href: '/conocenos' },
-              { label: '¿Qué buscamos?', href: '/campanas' },
-              { label: 'Superhéroes', href: '/superheroes?page=1' },
+              { label: "Conócenos", href: "/#conocenos" },
+              { label: "Noticias", href: "/noticias" },
+              { label: "Bibliotecas Humanas", href: "/bibliotecas-humanas" },
+              { label: "Superhéroes", href: "/superheroes?page=1" },
             ]}
           />
         </div>
@@ -24,20 +25,40 @@ export const Footer = () => (
           <FooterColumn
             title="Participa"
             links={[
-              { label: 'Colabora', href: '/colabora' },
-              { label: 'Voluntariado', href: '/colabora#voluntariado' },
-              { label: 'Hazte socio', href: '/colabora#hazte-socio' },
+              { label: "Colabora", href: "/colabora" },
+              {
+                label: "Donar",
+                href: "https://www.fundacionproclade.org/dona/",
+                external: true,
+              },
+              {
+                label: "Voluntariado",
+                href: "https://www.fundacionproclade.org/voluntario/",
+                external: true,
+              },
+              {
+                label: "Hazte socio/a",
+                href: "https://www.fundacionproclade.org/quiero-ser-socio/",
+                external: true,
+              },
             ]}
           />
         </div>
         <div className="col-lg-4">
           <FooterColumn
-            title="Contacto"
+            title="Contacto PROCLADE"
             links={[
-              { label: 'Madrid, España', href: 'mailto:info@fundacionproclade.org' },
-              { label: '+34 91 000 00 00', href: 'tel:+34910000000' },
-              { label: 'equipo@equipopuch.org', href: 'mailto:equipo@equipopuch.org' },
-              { label: 'Horario: Lun - Vie 09:00 - 18:00', href: '/contacto' },
+              {
+                label: "C. del Conde de Serrallo, 15, Tetuán, 28029 Madrid, Spain",
+              },
+              {
+                label: "913 14 78 71",
+                href: "tel:+34913147871",
+              },
+              {
+                label: "info@fundacionproclade.org",
+                href: "mailto:info@fundacionproclade.org",
+              },
             ]}
           />
         </div>

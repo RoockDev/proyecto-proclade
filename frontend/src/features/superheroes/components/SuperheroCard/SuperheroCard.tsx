@@ -4,9 +4,10 @@ import './SuperheroCard.css';
 
 type SuperheroCardProps = {
   hero: SuperheroItem;
+  onOpen: (hero: SuperheroItem) => void;
 };
 
-export const SuperheroCard = ({ hero }: SuperheroCardProps) => {
+export const SuperheroCard = ({ hero, onOpen }: SuperheroCardProps) => {
   const [imageError, setImageError] = useState(false);
   const hasImage = Boolean(hero.imageUrl) && !imageError;
 
@@ -29,7 +30,7 @@ export const SuperheroCard = ({ hero }: SuperheroCardProps) => {
         )}
       </div>
 
-      <div className="superhero-card__body d-flex flex-column">
+      <div className="superhero-card__body">
         <header className="superhero-card__header">
           <h3>{hero.name}</h3>
           {hero.country && <p className="superhero-card__country">{hero.country}</p>}
@@ -42,6 +43,14 @@ export const SuperheroCard = ({ hero }: SuperheroCardProps) => {
             <p>{hero.quote}</p>
           </blockquote>
         )}
+
+        <button
+          type="button"
+          className="superhero-card__link"
+          onClick={() => onOpen(hero)}
+        >
+          Ver historia completa <i className="bi bi-arrow-right" />
+        </button>
       </div>
     </article>
   );

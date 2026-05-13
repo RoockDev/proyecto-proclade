@@ -1,18 +1,21 @@
-import { HOME_REAL_HEROES_COUNTER } from '../../content/home.content';
-import './RealHeroesCounterSection.css';
+import { HOME_REAL_HEROES_COUNTER } from "../../content/home.content";
+import "./RealHeroesCounterSection.css";
 
 export const RealHeroesCounterSection = () => {
-  const formattedValue = HOME_REAL_HEROES_COUNTER.value.toLocaleString('es-ES');
+  const formattedValue =
+    typeof HOME_REAL_HEROES_COUNTER.value === "number"
+      ? HOME_REAL_HEROES_COUNTER.value.toLocaleString("es-ES")
+      : HOME_REAL_HEROES_COUNTER.value;
 
   return (
     <section className="real-heroes-counter section-padding gradient-teal reveal-up reveal-delay-4">
       <div className="container text-center">
         <h2 className="real-heroes-counter__title">
-          ¿Cuántos superhéroes se han sumado al Equipo PUCH?
+          ¿Quieres convertirte en un superhéroe real?
         </h2>
         <p className="real-heroes-counter__description">
-          Cada persona que colabora, dona o difunde se convierte en un
-          superhéroe real.
+          Cada persona que colabora, dona o difunde puede formar parte del
+          cambio. No hay límite para quienes deciden actuar.
         </p>
 
         <p className="real-heroes-counter__value">{formattedValue}</p>

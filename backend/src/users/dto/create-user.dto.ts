@@ -4,9 +4,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  MinLength,
+  Matches,
 } from 'class-validator';
 import { RoleName } from '../../common/types/role-name.enum';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  PASSWORD_POLICY_REGEX,
+} from '../../common/utils/password-policy';
 
 export class CreateUserDto {
   @IsEmail(
@@ -25,8 +29,10 @@ export class CreateUserDto {
   surname: string;
 
   @IsString()
-  @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
   @IsNotEmpty({ message: 'La contraseña es obligatoria' })
+  @Matches(PASSWORD_POLICY_REGEX, {
+    message: PASSWORD_POLICY_MESSAGE,
+  })
   password: string;
 
   @IsOptional()
