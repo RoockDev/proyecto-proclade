@@ -92,7 +92,7 @@ export const RegisterForm = () => {
       saveAuthSession(response.data);
       navigateAfterAuth();
     } catch (error) {
-      let errorMessage = 'No se pudo completar el registro. Intentalo de nuevo.';
+      let errorMessage = 'No se pudo completar el registro. Inténtalo de nuevo.';
 
       if (axios.isAxiosError(error)) {
         const backendError = error.response?.data as

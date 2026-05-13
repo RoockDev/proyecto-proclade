@@ -120,8 +120,6 @@
 .news-table__icon-button--delete:hover {
   background: rgba(220, 38, 38, 0.12);
 }
-  background: rgba(220, 38, 38, 0.12);
-}
 
 .admin-data-table__actions-column,
 .admin-data-table__actions-cell {

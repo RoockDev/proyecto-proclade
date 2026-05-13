@@ -14,7 +14,7 @@ import type { LoginFormState } from "../../types/auth.types";
 import { ForgotPasswordModal } from "../ForgotPasswordModal/ForgotPasswordModal";
 import "./LoginForm.css";
 
-const LOGIN_ERROR_MESSAGE = "No se pudo iniciar sesion. Intentalo de nuevo.";
+const LOGIN_ERROR_MESSAGE = "No se pudo iniciar sesión. Inténtalo de nuevo.";
 
 const getBackendErrorMessage = (
   error: unknown,

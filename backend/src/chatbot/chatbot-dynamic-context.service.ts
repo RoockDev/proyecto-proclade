@@ -76,9 +76,9 @@ export class ChatbotDynamicContextService {
     if (heroes.length === 0) {
       return {
         answer:
-          'Ahora mismo no hay superheroes publicados en la web. En cuanto el equipo publique nuevos perfiles, apareceran aqui automaticamente.',
-        ctaLinks: [{ label: 'Ir a Superheroes', to: '/superheroes' }],
-        suggestions: ['como colaborar sin donar', 'como donar'],
+          'Ahora mismo no hay superhéroes publicados en la web. En cuanto el equipo publique nuevos perfiles, aparecerán aquí automáticamente.',
+        ctaLinks: [{ label: 'Ir a Superhéroes', to: '/superheroes' }],
+        suggestions: ['¿Cómo colaborar sin donar?', '¿Cómo donar?'],
       };
     }
 
@@ -102,14 +102,14 @@ export class ChatbotDynamicContextService {
             to: `/superheroes/${specificHero.item.slug}`,
           },
           {
-            label: 'Ver todos los superheroes',
+            label: 'Ver todos los superhéroes',
             to: '/superheroes',
           },
         ],
         suggestions: [
-          'que superheroes hay',
-          'como colaborar sin donar',
-          'como donar',
+          '¿Qué superhéroes hay?',
+          '¿Cómo colaborar sin donar?',
+          '¿Cómo donar?',
         ],
       };
     }
@@ -117,12 +117,14 @@ export class ChatbotDynamicContextService {
     if (this.isSpecificSuperheroQuery(query)) {
       return {
         answer:
-          'No he encontrado un superheroe con ese nombre. Si quieres, te muestro los superheroes publicados para que elijas uno.',
-        ctaLinks: [{ label: 'Ver todos los superheroes', to: '/superheroes' }],
+          'No he encontrado un superhéroe con ese nombre. Si quieres, te muestro los superhéroes publicados para que elijas uno.',
+        ctaLinks: [
+          { label: 'Ver todos los superhéroes', to: '/superheroes' },
+        ],
         suggestions: [
-          'que superheroes hay',
-          'quienes son los superheroes puch',
-          'superheroes por pais',
+          '¿Qué superhéroes hay?',
+          '¿Quiénes son los superhéroes PUCH?',
+          'Superhéroes por país',
         ],
       };
     }
@@ -136,14 +138,14 @@ export class ChatbotDynamicContextService {
     });
 
     return {
-      answer: `Actualmente hay ${heroes.length} superheroes publicados:\n${heroLines.join(
+      answer: `Actualmente hay ${heroes.length} superhéroes publicados:\n${heroLines.join(
         '\n',
-      )}\n\nSi quieres, te puedo contar tambien como colaborar o donar para apoyar estos proyectos.`,
-      ctaLinks: [{ label: 'Ver todos los superheroes', to: '/superheroes' }],
+      )}\n\nSi quieres, te puedo contar también cómo colaborar o donar para apoyar estos proyectos.`,
+      ctaLinks: [{ label: 'Ver todos los superhéroes', to: '/superheroes' }],
       suggestions: [
-        'como colaborar sin donar',
-        'como donar',
-        'que es equipo puch',
+        '¿Cómo colaborar sin donar?',
+        '¿Cómo donar?',
+        '¿Qué es Equipo PUCH?',
       ],
     };
   }
@@ -167,9 +169,9 @@ export class ChatbotDynamicContextService {
     if (news.length === 0) {
       return {
         answer:
-          'Ahora mismo no hay noticias publicadas. Cuando el equipo publique nuevas noticias en el panel admin, apareceran en esta seccion.',
+          'Ahora mismo no hay noticias publicadas. Cuando el equipo publique nuevas noticias en el panel admin, aparecerán en esta sección.',
         ctaLinks: [{ label: 'Ir a Noticias', to: '/noticias' }],
-        suggestions: ['que es equipo puch', 'como colaborar sin donar'],
+        suggestions: ['¿Qué es Equipo PUCH?', '¿Cómo colaborar sin donar?'],
       };
     }
 
@@ -197,8 +199,8 @@ export class ChatbotDynamicContextService {
           },
         ],
         suggestions: [
-          'donde ver noticias del proyecto',
-          'que tipo de noticias publican',
+          '¿Dónde ver noticias del proyecto?',
+          '¿Qué tipo de noticias publican?',
         ],
       };
     }
@@ -206,13 +208,13 @@ export class ChatbotDynamicContextService {
     const newsLines = news.map((item) => `- ${item.title}`);
 
     return {
-      answer: `Estas son las noticias mas recientes (${news.length}):\n${newsLines.join(
+      answer: `Estas son las noticias más recientes (${news.length}):\n${newsLines.join(
         '\n',
-      )}\n\nSi quieres, puedo ayudarte a ir a la seccion de noticias para leerlas completas.`,
+      )}\n\nSi quieres, puedo ayudarte a ir a la sección de noticias para leerlas completas.`,
       ctaLinks: [{ label: 'Ver noticias', to: '/noticias' }],
       suggestions: [
-        'donde ver noticias del proyecto',
-        'que tipo de noticias publican',
+        '¿Dónde ver noticias del proyecto?',
+        '¿Qué tipo de noticias publican?',
       ],
     };
   }
@@ -238,9 +240,9 @@ export class ChatbotDynamicContextService {
     if (challenges.length === 0) {
       return {
         answer:
-          'Ahora mismo no hay retos activos publicados. Cuando se active un nuevo reto desde admin, el chatbot lo detectara automaticamente.',
+          'Ahora mismo no hay retos activos publicados. Cuando se active un nuevo reto desde admin, el chatbot lo detectará automáticamente.',
         ctaLinks: [{ label: 'Ir a Colabora', to: '/colabora' }],
-        suggestions: ['como donar', 'como colaborar sin donar'],
+        suggestions: ['¿Cómo donar?', '¿Cómo colaborar sin donar?'],
       };
     }
 
@@ -270,9 +272,9 @@ export class ChatbotDynamicContextService {
         )} EUR\nFaltan: ${amountFormatter.format(remaining)} EUR (${progress}%)`,
         ctaLinks: [{ label: 'Ir a Colabora', to: '/colabora' }],
         suggestions: [
-          'que retos hay',
-          'como donar',
-          'ejemplos de impacto de una donacion',
+          '¿Qué retos hay?',
+          '¿Cómo donar?',
+          'Ejemplos de impacto de una donación',
         ],
       };
     }
@@ -284,12 +286,12 @@ export class ChatbotDynamicContextService {
         .join(', ');
 
       return {
-        answer: `No he encontrado un reto activo con ese nombre o numero. Retos disponibles ahora: ${challengeTitles}.`,
+        answer: `No he encontrado un reto activo con ese nombre o número. Retos disponibles ahora: ${challengeTitles}.`,
         ctaLinks: [{ label: 'Ir a Colabora', to: '/colabora' }],
         suggestions: [
-          'que retos hay',
-          'como donar',
-          'ejemplos de impacto de una donacion',
+          '¿Qué retos hay?',
+          '¿Cómo donar?',
+          'Ejemplos de impacto de una donación',
         ],
       };
     }
@@ -311,7 +313,7 @@ export class ChatbotDynamicContextService {
         '\n',
       )}`,
       ctaLinks: [{ label: 'Ir a Colabora', to: '/colabora' }],
-      suggestions: ['como donar', 'ejemplos de impacto de una donacion'],
+      suggestions: ['¿Cómo donar?', 'Ejemplos de impacto de una donación'],
     };
   }
 
@@ -325,8 +327,8 @@ export class ChatbotDynamicContextService {
         ...regionReply,
         suggestions: [
           ...regionReply.suggestions,
-          'como colaborar sin donar',
-          'como donar',
+          '¿Cómo colaborar sin donar?',
+          '¿Cómo donar?',
         ].slice(0, 5),
       };
     }
@@ -342,7 +344,7 @@ export class ChatbotDynamicContextService {
       answer:
         activeChallenges > 0
           ? `Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Ahora mismo hay ${activeChallenges} retos activos en curso.`
-          : 'Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Si quieres voluntariado o una colaboracion personalizada, puedes escribir a info@fundacionproclade.org.',
+          : 'Puedes colaborar de varias formas: donar en PROCLADE, difundir el proyecto y participar en acciones solidarias. Si quieres voluntariado o una colaboración personalizada, puedes escribir a info@fundacionproclade.org.',
       ctaLinks: [
         {
           label: 'Ir a donar en PROCLADE',
@@ -351,9 +353,9 @@ export class ChatbotDynamicContextService {
         { label: 'Ir a Colabora', to: '/colabora' },
       ],
       suggestions: [
-        'como donar',
-        'formulario de colaboracion',
-        'como contactar',
+        '¿Cómo donar?',
+        'Formulario de colaboración',
+        '¿Cómo contactar?',
       ],
     };
   }
@@ -379,7 +381,7 @@ export class ChatbotDynamicContextService {
     if (books.length === 0) {
       return {
         answer:
-          'El proyecto de Bibliotecas Humanas esta activo conceptualmente, pero ahora mismo no hay libros humanos publicados en la plataforma.',
+          'El proyecto de Bibliotecas Humanas está activo conceptualmente, pero ahora mismo no hay libros humanos publicados en la plataforma.',
         ctaLinks: [
           {
             label: 'Ver delegaciones PROCLADE',
@@ -387,8 +389,8 @@ export class ChatbotDynamicContextService {
           },
         ],
         suggestions: [
-          'que son las bibliotecas humanas',
-          'que son los libros humanos',
+          '¿Qué son las bibliotecas humanas?',
+          '¿Qué son los libros humanos?',
         ],
       };
     }
@@ -405,7 +407,7 @@ export class ChatbotDynamicContextService {
           to: 'https://www.fundacionproclade.org/delegaciones/',
         },
       ],
-      suggestions: ['que son las bibliotecas humanas', 'delegaciones'],
+      suggestions: ['¿Qué son las bibliotecas humanas?', 'Delegaciones'],
     };
   }
 
@@ -434,7 +436,7 @@ export class ChatbotDynamicContextService {
             to: 'https://www.fundacionproclade.org/delegaciones/',
           },
         ],
-        suggestions: ['como contactar', 'que son las bibliotecas humanas'],
+        suggestions: ['¿Cómo contactar?', '¿Qué son las bibliotecas humanas?'],
       };
     }
 
@@ -444,21 +446,21 @@ export class ChatbotDynamicContextService {
 
     if (specificRegion) {
       return {
-        answer: `Delegacion ${specificRegion.item.name}:\nDireccion: ${specificRegion.item.address}\nCorreo: ${specificRegion.item.email}`,
+        answer: `Delegación ${specificRegion.item.name}:\nDirección: ${specificRegion.item.address}\nCorreo: ${specificRegion.item.email}`,
         ctaLinks: [
           {
             label: `Escribir a ${specificRegion.item.email}`,
             to: `mailto:${specificRegion.item.email}`,
           },
         ],
-        suggestions: ['que delegaciones hay', 'como contactar'],
+        suggestions: ['¿Qué delegaciones hay?', '¿Cómo contactar?'],
       };
     }
 
     if (this.isSpecificRegionQuery(query)) {
       return {
         answer:
-          'No he encontrado una delegacion con ese nombre. Si quieres, te enseño el listado de delegaciones activas.',
+          'No he encontrado una delegación con ese nombre. Si quieres, te enseño el listado de delegaciones activas.',
         ctaLinks: [
           {
             label: 'Delegaciones PROCLADE',
@@ -466,9 +468,9 @@ export class ChatbotDynamicContextService {
           },
         ],
         suggestions: [
-          'que delegaciones hay',
-          'delegacion madrid',
-          'delegacion ciudad real',
+          '¿Qué delegaciones hay?',
+          'Delegación Madrid',
+          'Delegación Ciudad Real',
         ],
       };
     }
@@ -486,9 +488,9 @@ export class ChatbotDynamicContextService {
         },
       ],
       suggestions: [
-        'delegacion madrid',
-        'delegacion ciudad real',
-        'como contactar',
+        'Delegación Madrid',
+        'Delegación Ciudad Real',
+        '¿Cómo contactar?',
       ],
     };
   }
@@ -500,7 +502,7 @@ export class ChatbotDynamicContextService {
 
     return {
       answer:
-        'Puedes contactar con Fundacion PROCLADE por correo en info@fundacionproclade.org, por telefono en 913 14 78 71 o en C. del Conde de Serrallo, 15, Tetuan, 28029 Madrid.',
+        'Puedes contactar con Fundación PROCLADE por correo en info@fundacionproclade.org, por teléfono en 913 14 78 71 o en C. del Conde de Serrallo, 15, Tetuán, 28029 Madrid.',
       ctaLinks: [
         {
           label: 'Escribir a info@fundacionproclade.org',
@@ -511,7 +513,7 @@ export class ChatbotDynamicContextService {
           to: 'tel:+34913147871',
         },
       ],
-      suggestions: ['que delegaciones hay', 'quiero solicitar informacion'],
+      suggestions: ['¿Qué delegaciones hay?', 'Quiero solicitar información'],
     };
   }
 

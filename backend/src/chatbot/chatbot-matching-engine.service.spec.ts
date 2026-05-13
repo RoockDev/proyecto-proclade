@@ -51,7 +51,7 @@ describe('ChatbotMatchingEngineService', () => {
       answer: 'Estos son los superhéroes del proyecto.',
       tags: ['superheroes', 'testimonios'],
       route: '/superheroes',
-      ctaLinks: [{ label: 'Superheroes', to: '/superheroes' }],
+      ctaLinks: [{ label: 'Superhéroes', to: '/superheroes' }],
       phrases: ['ver superheroes', 'equipo de superheroes'],
     },
     {
@@ -93,7 +93,7 @@ describe('ChatbotMatchingEngineService', () => {
     ).toBe(true);
   });
 
-  it('calcula fuzzyScore para typos y mantiene score util', () => {
+  it('calcula fuzzyScore para typos y mantiene score útil', () => {
     const engine = createEngine();
 
     const scored = engine.scoreCandidates({

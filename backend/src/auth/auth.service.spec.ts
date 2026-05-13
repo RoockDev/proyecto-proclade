@@ -52,7 +52,7 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
-  it('registra usuarios creando el rol USER si la base esta vacia', async () => {
+  it('registra usuarios creando el rol USER si la base está vacía', async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
     prismaMock.user.create.mockImplementation(async (args) => ({
       id: 101,

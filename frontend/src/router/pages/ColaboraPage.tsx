@@ -88,7 +88,7 @@ export const ColaboraPage = () => {
         <div className="colabora-page__container">
           <h1>Colabora</h1>
           <p>
-            Hay muchas formas de unirte al Equipo PUCH. Elige la tuya y ayudanos a construir
+            Hay muchas formas de unirte al Equipo PUCH. Elige la tuya y ayúdanos a construir
             un mundo sin hambre.
           </p>
         </div>
@@ -125,19 +125,19 @@ export const ColaboraPage = () => {
 
       <div className="colabora-page__block">
         <div className="colabora-page__container">
-          <h2>¿Como participar?</h2>
+          <h2>¿Cómo participar?</h2>
           <div className="colabora-page__steps">
             <article className="colabora-page__step-card">
               <span>1</span>
-              <p>Rellena el formulario de contacto y cuentanos como quieres ayudar.</p>
+              <p>Rellena el formulario de contacto y cuéntanos cómo quieres ayudar.</p>
             </article>
             <article className="colabora-page__step-card">
               <span>2</span>
-              <p>Nuestro equipo te contactara para coordinar tu participacion.</p>
+              <p>Nuestro equipo te contactará para coordinar tu participación.</p>
             </article>
             <article className="colabora-page__step-card">
               <span>3</span>
-              <p>Empieza a cambiar vidas. Cada accion suma.</p>
+              <p>Empieza a cambiar vidas. Cada acción suma.</p>
             </article>
           </div>
         </div>
@@ -158,16 +158,16 @@ export const ColaboraPage = () => {
               </label>
             </div>
             <label>
-              Correo electronico *
+              Correo electrónico *
               <input type="email" name="email" placeholder="tu@email.com" required />
             </label>
             <label>
-              Telefono
+              Teléfono
               <input type="tel" name="telefono" placeholder="+34 600 000 000" />
             </label>
             <label>
               Mensaje (opcional)
-              <textarea name="mensaje" rows={4} placeholder="Cuentanos como te gustaria colaborar..." />
+              <textarea name="mensaje" rows={4} placeholder="Cuéntanos cómo te gustaría colaborar..." />
             </label>
             <small>
               * Este formulario se envía a info@fundacionproclade.org y te
@@ -192,14 +192,14 @@ export const ColaboraPage = () => {
 
       <div className="colabora-page__donation">
         <div className="colabora-page__container">
-          <h2>Prefieres donar directamente?</h2>
-          <p>Tu donacion ayuda a financiar proyectos contra el hambre en Espana y en el mundo.</p>
+          <h2>¿Prefieres donar directamente?</h2>
+          <p>Tu donación ayuda a financiar proyectos contra el hambre en España y en el mundo.</p>
           <a
             href="https://www.fundacionproclade.org/colabora/"
             target="_blank"
             rel="noreferrer"
           >
-            Ir a la pagina de donacion
+            Ir a la página de donación
           </a>
         </div>
       </div>

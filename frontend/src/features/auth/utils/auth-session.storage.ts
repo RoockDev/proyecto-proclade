@@ -3,13 +3,13 @@ import type { AuthResponseData, AuthUser } from "../types/auth.api.types";
 /*
   Comentarios dejados a consciencia para ayuda propia y del equipo cuando volvamos a revisar este archivo
   He querido dejar todo este comentario ya que este helper es un poco lioso pero la verdad
-   que cuando he buscado como hacerlo
-  junto a la ia, me ha gustado mucho y creo puede ser una buena práctica hacerlo de esta manera,
-  y como siempre estoy pregúntandome como pueden mejorarse las cosas arquitéctonicamente pues he 
-  querido dejarlo, aunque lo más facil para mi hubiese sido guardar el user.role en el localstorage
+   que cuando he buscado cómo hacerlo
+  junto a la IA, me ha gustado mucho y creo puede ser una buena práctica hacerlo de esta manera,
+  y como siempre estoy preguntándome cómo pueden mejorarse las cosas arquitectónicamente pues he
+  querido dejarlo, aunque lo más fácil para mí hubiese sido guardar el user.role en localStorage
   desde loginform.tsx y fuera
-  y me iba a funcionar igual pero me chirriaba verlo así por lo tanto he decidido buscar como separar
-  responsabilidades y como se haría en entorno corporativo he visto esta opción y he decicido hacerlo así
+  y me iba a funcionar igual, pero me chirriaba verlo así. Por lo tanto he decidido buscar cómo separar
+  responsabilidades y cómo se haría en un entorno corporativo. He visto esta opción y he decidido hacerlo así.
   
   Este archivo centraliza la gestión de la sesión en frontend (token + usuario).
 

@@ -247,13 +247,13 @@ export class ChatbotOrchestratorService {
       sessionId,
       replyType: ChatReplyType.FALLBACK,
       answer:
-        'No puedo responder con ese contenido. Si quieres, te ayudo con informacion de Equipo PUCH: donaciones, colaboracion, noticias, delegaciones y contacto.',
+        'No puedo responder con ese contenido. Si quieres, te ayudo con información de Equipo PUCH: donaciones, colaboración, noticias, delegaciones y contacto.',
       confidence: 0,
       detectedIntentCode: null,
       suggestions: [
-        'como donar',
-        'como colaborar sin donar',
-        'donde ver noticias del proyecto',
+        '¿Cómo donar?',
+        '¿Cómo colaborar sin donar?',
+        '¿Dónde ver noticias del proyecto?',
       ],
       ctaLinks: [],
     };
@@ -264,13 +264,13 @@ export class ChatbotOrchestratorService {
       sessionId,
       replyType: ChatReplyType.FALLBACK,
       answer:
-        'No puedo ayudarte con ese tema, pero si con Equipo PUCH y Fundacion PROCLADE. Puedo ayudarte con donaciones, colaboracion, noticias, superheroes, retos, delegaciones y contacto.',
+        'No puedo ayudarte con ese tema, pero sí con Equipo PUCH y Fundación PROCLADE. Puedo ayudarte con donaciones, colaboración, noticias, superhéroes, retos, delegaciones y contacto.',
       confidence: 0,
       detectedIntentCode: null,
       suggestions: [
-        'que es equipo puch',
-        'como donar',
-        'como colaborar sin donar',
+        '¿Qué es Equipo PUCH?',
+        '¿Cómo donar?',
+        '¿Cómo colaborar sin donar?',
       ],
       ctaLinks: [],
     };
@@ -302,8 +302,8 @@ export class ChatbotOrchestratorService {
 
     if (!bestMatch || bestMatch.score < thresholds.clarification) {
       const fallbackAnswer = bestQuestion
-        ? `No te entendi del todo. Te refieres a "${bestQuestion}"? Si quieres, tambien puedo ayudarte con donaciones, noticias, superheroes o como colaborar.`
-        : 'No he entendido bien tu mensaje. Reformulalo y te ayudo con donaciones, noticias, superheroes, delegaciones o colaboracion.';
+        ? `No te entendí del todo. ¿Te refieres a "${this.formatSuggestionLabel(bestQuestion)}"? Si quieres, también puedo ayudarte con donaciones, noticias, superhéroes o cómo colaborar.`
+        : 'No he entendido bien tu mensaje. Reformúlalo y te ayudo con donaciones, noticias, superhéroes, delegaciones o colaboración.';
 
       return {
         sessionId,
@@ -348,7 +348,42 @@ export class ChatbotOrchestratorService {
     return candidates
       .filter((item) => item.score > 0.2)
       .slice(0, 3)
-      .map((item) => item.candidate.questionCanonical);
+      .map((item) =>
+        this.formatSuggestionLabel(item.candidate.questionCanonical),
+      );
+  }
+
+  private formatSuggestionLabel(questionCanonical: string) {
+    const labels: Record<string, string> = {
+      'que es equipo puch': '¿Qué es Equipo PUCH?',
+      'como unirse al equipo puch': '¿Cómo unirse al Equipo PUCH?',
+      'en que paises trabaja equipo puch': '¿En qué países trabaja Equipo PUCH?',
+      'que hacen en india': '¿Qué hacen en India?',
+      'que hacen en burkina faso': '¿Qué hacen en Burkina Faso?',
+      'que hacen en haiti y republica dominicana':
+        '¿Qué hacen en Haití y República Dominicana?',
+      'como donar': '¿Cómo donar?',
+      'ejemplos de impacto de una donacion':
+        'Ejemplos de impacto de una donación',
+      'como colaborar sin donar': '¿Cómo colaborar sin donar?',
+      'formulario de colaboracion': 'Formulario de colaboración',
+      'donde ver noticias del proyecto':
+        '¿Dónde ver noticias del proyecto?',
+      'que tipo de noticias publican': '¿Qué tipo de noticias publican?',
+      'quienes son los superheroes puch':
+        '¿Quiénes son los superhéroes PUCH?',
+      'superheroes por pais': 'Superhéroes por país',
+      'que retos solidarios hay': '¿Qué retos solidarios hay?',
+      'que son las bibliotecas humanas':
+        '¿Qué son las bibliotecas humanas?',
+      'que son los libros humanos': '¿Qué son los libros humanos?',
+      'que delegaciones participan': '¿Qué delegaciones participan?',
+      'como contactar': '¿Cómo contactar?',
+      'horario de atencion': 'Horario de atención',
+      'quiero solicitar informacion': 'Quiero solicitar información',
+    };
+
+    return labels[questionCanonical] ?? questionCanonical;
   }
 
   private buildSuggestions(input: {
@@ -382,7 +417,7 @@ export class ChatbotOrchestratorService {
         }
 
         return {
-          text: candidate.questionCanonical,
+          text: this.formatSuggestionLabel(candidate.questionCanonical),
           score,
         };
       })
@@ -628,9 +663,9 @@ export class ChatbotOrchestratorService {
         confidence: 1,
         detectedIntentCode: null,
         suggestions: [
-          'como donar',
-          'donde ver noticias del proyecto',
-          'que es equipo puch',
+          '¿Cómo donar?',
+          '¿Dónde ver noticias del proyecto?',
+          '¿Qué es Equipo PUCH?',
         ],
         ctaLinks: [],
       };
@@ -645,9 +680,9 @@ export class ChatbotOrchestratorService {
         confidence: 1,
         detectedIntentCode: null,
         suggestions: [
-          'como donar',
-          'como colaborar sin donar',
-          'quienes son los superheroes puch',
+          '¿Cómo donar?',
+          '¿Cómo colaborar sin donar?',
+          '¿Quiénes son los superhéroes PUCH?',
         ],
         ctaLinks: [],
       };
@@ -662,9 +697,9 @@ export class ChatbotOrchestratorService {
         confidence: 1,
         detectedIntentCode: null,
         suggestions: [
-          'como colaborar sin donar',
-          'que tipo de noticias publican',
-          'quienes son los superheroes puch',
+          '¿Cómo colaborar sin donar?',
+          '¿Qué tipo de noticias publican?',
+          '¿Quiénes son los superhéroes PUCH?',
         ],
         ctaLinks: [],
       };
@@ -679,9 +714,9 @@ export class ChatbotOrchestratorService {
         confidence: 1,
         detectedIntentCode: 'CONTACTO',
         suggestions: [
-          'como donar',
-          'como colaborar sin donar',
-          'formulario de colaboracion',
+          '¿Cómo donar?',
+          '¿Cómo colaborar sin donar?',
+          'Formulario de colaboración',
         ],
         ctaLinks: [
           {
@@ -705,9 +740,9 @@ export class ChatbotOrchestratorService {
         confidence: 0,
         detectedIntentCode: null,
         suggestions: [
-          'como donar',
-          'donde ver noticias del proyecto',
-          'quienes son los superheroes puch',
+          '¿Cómo donar?',
+          '¿Dónde ver noticias del proyecto?',
+          '¿Quiénes son los superhéroes PUCH?',
         ],
         ctaLinks: [],
       };

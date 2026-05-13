@@ -115,7 +115,7 @@ Equipo Proclade
   }): Promise<void> {
     if (!this.isSmtpConfigured) {
       this.logger.error(
-        'Formulario de contacto sin SMTP configurado. Configura SMTP_HOST, SMTP_USER y SMTP_PASS para habilitar envios reales.',
+        'Formulario de contacto sin SMTP configurado. Configura SMTP_HOST, SMTP_USER y SMTP_PASS para habilitar envíos reales.',
       );
       throw new Error('SMTP no está configurado para el formulario de contacto');
     }
