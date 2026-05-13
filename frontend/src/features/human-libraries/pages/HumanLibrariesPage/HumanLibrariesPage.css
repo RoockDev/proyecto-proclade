@@ -1,18 +1,5 @@
-.human-libraries-page__hero {
-  padding: clamp(3rem, 8vw, 4.8rem) 0;
-}
-
 .human-libraries-page__hero h1 {
-  margin: 0 0 0.75rem;
-  font-size: clamp(2rem, 4.5vw, 3rem);
-  color: var(--brand-white);
-}
-
-.human-libraries-page__hero p {
-  margin: 0 auto;
-  max-width: 48rem;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.02em;
 }
 
 .human-libraries-page__content {

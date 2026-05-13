@@ -10,52 +10,8 @@
   margin: 0 auto;
 }
 
-.colabora-page__hero {
-  background:
-    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.14), transparent 22%),
-    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.1), transparent 24%),
-    linear-gradient(
-      180deg,
-      #6baa75 0%,
-      #4f8f74 40%,
-      #2d6f66 78%,
-      #245f54 100%
-    );
-  color: var(--brand-white);
-  text-align: center;
-  padding: clamp(4.4rem, 7vw, 6.25rem) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.colabora-page__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.38rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .colabora-page__hero h1 {
-  margin: 1rem 0 0;
-  font-size: clamp(2.35rem, 5vw, 4rem);
-  font-weight: 800;
   letter-spacing: -0.03em;
-}
-
-.colabora-page__hero p {
-  max-width: 760px;
-  margin: 1.2rem auto 0;
-  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-  line-height: 1.72;
-  opacity: 0.95;
 }
 
 .colabora-page__block {

@@ -1,13 +1,11 @@
 ﻿.superheroes-page {
-  background-color: var(--brand-bg);
+  background:
+    radial-gradient(circle at top left, rgba(107, 170, 117, 0.08), transparent 24%),
+    linear-gradient(180deg, var(--brand-white) 0%, var(--brand-bg) 100%);
 }
 
-.superheroes-page__header {
-  margin-bottom: 2rem;
-}
-
-.superheroes-page__header .section-title h2::after {
-  display: none;
+.superheroes-page__content.section-padding {
+  padding-top: clamp(4rem, 7vw, 5.5rem);
 }
 
 .superheroes-page__alert {

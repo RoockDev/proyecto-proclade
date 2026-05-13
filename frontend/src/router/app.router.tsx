@@ -18,6 +18,7 @@ import { ColaboraPage } from './pages/ColaboraPage';
 import { NewsListPage } from '../features/news/pages/NewsListPage/NewsListPage';
 import { NewsDetailPage } from '../features/news/pages/NewsDetailPage/NewsDetailPage';
 import { HumanLibrariesPage } from '../features/human-libraries/pages/HumanLibrariesPage/HumanLibrariesPage';
+import { ContactoPage } from './pages/ContactoPage';
 
 const SuperheroesPage = lazy(() =>
   import('../features/superheroes/pages/SuperheroesPage/SuperheroesPage').then((module) => ({
@@ -81,6 +82,10 @@ export const appRouter = createBrowserRouter([
       {
         path: 'colabora',
         element: <ColaboraPage />,
+      },
+      {
+        path: 'contacto',
+        element: <ContactoPage />,
       },
       {
         path: '*',

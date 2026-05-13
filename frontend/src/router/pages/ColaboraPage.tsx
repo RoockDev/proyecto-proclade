@@ -88,9 +88,9 @@ export const ColaboraPage = () => {
 
   return (
     <section className="colabora-page">
-      <header className="colabora-page__hero">
-        <div className="colabora-page__container">
-          <span className="colabora-page__eyebrow">Únete al cambio</span>
+      <header className="colabora-page__hero page-hero gradient-hero">
+        <div className="container text-center">
+          <span className="page-hero__eyebrow">Únete al cambio</span>
           <h1>Colabora</h1>
           <p>
             Hay muchas formas de unirte al Equipo PUCH. Elige la tuya y ayúdanos a construir
@@ -197,7 +197,11 @@ export const ColaboraPage = () => {
             </label>
             <label>
               Mensaje (opcional)
-              <textarea name="mensaje" rows={4} placeholder="Cuéntanos cómo te gustaría colaborar..." />
+              <textarea
+                name="mensaje"
+                rows={4}
+                placeholder="Cuéntanos en qué podemos ayudarte, qué información necesitas o cómo te gustaría participar..."
+              />
             </label>
             <small>
               * Este formulario se envía a info@fundacionproclade.org y te

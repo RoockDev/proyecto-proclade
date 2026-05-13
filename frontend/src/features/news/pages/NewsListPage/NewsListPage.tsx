@@ -102,51 +102,56 @@ export const NewsListPage = () => {
   };
 
   return (
-    <section className="news-list-page section-padding reveal-up">
-      <div className="container">
-        <header className="news-list-page__header text-center">
-          <h1 className="news-list-page__title">Noticias</h1>
-          <p className="news-list-page__subtitle">
-            Últimas publicaciones de Equipo PUCH para seguir de cerca nuestras
-            acciones y avances.
+    <div className="news-list-page">
+      <section className="news-list-page__hero page-hero gradient-hero reveal-up">
+        <div className="container text-center">
+          <span className="page-hero__eyebrow">Actualidad</span>
+          <h1>Noticias</h1>
+          <p>
+            Sigue de cerca las iniciativas, avances y novedades del Equipo PUCH
+            y de la comunidad que impulsa cada proyecto.
           </p>
-        </header>
+        </div>
+      </section>
 
-        {errorMessage && (
-          <div className="alert alert-warning news-list-page__alert" role="status">
-            {errorMessage}
-          </div>
-        )}
+      <section className="news-list-page__content section-padding reveal-up">
+        <div className="container">
+          {errorMessage && (
+            <div className="alert alert-warning news-list-page__alert" role="status">
+              {errorMessage}
+            </div>
+          )}
 
-        {isLoading ? (
-          <div className="news-list-page__state" role="status" aria-live="polite">
-            <div className="spinner-border text-secondary" role="presentation" />
-            <p>Cargando noticias...</p>
-          </div>
-        ) : listState.total === 0 ? (
-          <div className="news-list-page__state news-list-page__state--empty">
-            <i className="bi bi-newspaper" aria-hidden="true" />
-            <p>Próximamente publicaremos nuevas noticias.</p>
-          </div>
-        ) : (
-          <>
-            {listState.isFallback && (
-              <p className="news-list-page__fallback-note">
-                Mostrando datos de respaldo temporal.
-              </p>
-            )}
+          {isLoading ? (
+            <div className="news-list-page__state" role="status" aria-live="polite">
+              <div className="spinner-border text-secondary" role="presentation" />
+              <p>Cargando noticias...</p>
+            </div>
+          ) : listState.total === 0 ? (
+            <div className="news-list-page__state news-list-page__state--empty">
+              <i className="bi bi-newspaper" aria-hidden="true" />
+              <p>Próximamente publicaremos nuevas noticias.</p>
+            </div>
+          ) : (
+            <>
+              {listState.isFallback && (
+                <p className="news-list-page__fallback-note">
+                  Mostrando datos de respaldo temporal.
+                </p>
+              )}
 
-            <NewsGrid items={listState.items} variant="list" />
+              <NewsGrid items={listState.items} variant="list" />
 
-            <NewsPagination
-              currentPage={listState.page}
-              totalPages={listState.totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
-      </div>
-    </section>
+              <NewsPagination
+                currentPage={listState.page}
+                totalPages={listState.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
+      </section>
+    </div>
   );
 };
 

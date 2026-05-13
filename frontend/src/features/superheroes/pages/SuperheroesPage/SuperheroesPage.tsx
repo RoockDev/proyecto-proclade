@@ -1,6 +1,5 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SectionTitle } from '../../../home/components/SectionTitle/SectionTitle';
 import { getSuperheroesList } from '../../api/superheroes.api';
 import { SuperheroDetailModal } from '../../components/SuperheroDetailModal/SuperheroDetailModal';
 import { SuperheroGrid } from '../../components/SuperheroGrid/SuperheroGrid';
@@ -141,49 +140,55 @@ export const SuperheroesPage = () => {
   };
 
   return (
-    <section className="superheroes-page section-padding reveal-up">
-      <div className="container">
-        <header className="superheroes-page__header text-center">
-          <SectionTitle
-            title="Superhéroes del Equipo PUCH"
-            description="Historias visuales de personas reales que impulsan la transformación comunitaria con compromiso y colaboración internacional."
-          />
-        </header>
+    <div className="superheroes-page">
+      <section className="superheroes-page__hero page-hero gradient-hero reveal-up">
+        <div className="container text-center">
+          <span className="page-hero__eyebrow">Historias reales</span>
+          <h1>Superhéroes del Equipo PUCH</h1>
+          <p>
+            Testimonios visuales de personas que impulsan la transformación
+            comunitaria con compromiso, cooperación y esperanza.
+          </p>
+        </div>
+      </section>
 
-        {errorMessage && (
-          <div className="alert alert-warning superheroes-page__alert" role="status">
-            {errorMessage}
-          </div>
-        )}
+      <section className="superheroes-page__content section-padding reveal-up">
+        <div className="container">
+          {errorMessage && (
+            <div className="alert alert-warning superheroes-page__alert" role="status">
+              {errorMessage}
+            </div>
+          )}
 
-        {isLoading ? (
-          <div className="superheroes-page__state" role="status" aria-live="polite">
-            <div className="spinner-border text-secondary" role="presentation" />
-            <p>Cargando superhéroes...</p>
-          </div>
-        ) : listState.items.length === 0 ? (
-          <div className="superheroes-page__state superheroes-page__state--empty">
-            <i className="bi bi-people" aria-hidden="true" />
-            <p>Estamos preparando las historias de los superhéroes. Pronto las compartiremos.</p>
-          </div>
-        ) : (
-          <>
-            {listState.isFallback && (
-              <p className="superheroes-page__fallback-note">
-                Mostrando contenido de respaldo temporal mientras recuperamos la versión en vivo.
-              </p>
-            )}
+          {isLoading ? (
+            <div className="superheroes-page__state" role="status" aria-live="polite">
+              <div className="spinner-border text-secondary" role="presentation" />
+              <p>Cargando superhéroes...</p>
+            </div>
+          ) : listState.items.length === 0 ? (
+            <div className="superheroes-page__state superheroes-page__state--empty">
+              <i className="bi bi-people" aria-hidden="true" />
+              <p>Estamos preparando las historias de los superhéroes. Pronto las compartiremos.</p>
+            </div>
+          ) : (
+            <>
+              {listState.isFallback && (
+                <p className="superheroes-page__fallback-note">
+                  Mostrando contenido de respaldo temporal mientras recuperamos la versión en vivo.
+                </p>
+              )}
 
-            <SuperheroGrid items={listState.items} onOpenHero={handleOpenHero} />
+              <SuperheroGrid items={listState.items} onOpenHero={handleOpenHero} />
 
-            <SuperheroPagination
-              currentPage={listState.page}
-              totalPages={listState.totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
-      </div>
+              <SuperheroPagination
+                currentPage={listState.page}
+                totalPages={listState.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
+      </section>
 
       {selectedHero && (
         <SuperheroDetailModal
@@ -191,7 +196,7 @@ export const SuperheroesPage = () => {
           onClose={handleCloseHeroModal}
         />
       )}
-    </section>
+    </div>
   );
 };
 

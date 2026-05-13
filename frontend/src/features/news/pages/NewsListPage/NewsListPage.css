@@ -1,21 +1,11 @@
 .news-list-page {
-  background-color: var(--brand-bg);
+  background:
+    radial-gradient(circle at top left, rgba(107, 170, 117, 0.08), transparent 24%),
+    linear-gradient(180deg, var(--brand-white) 0%, var(--brand-bg) 100%);
 }
 
-.news-list-page__header {
-  margin-bottom: 2rem;
-}
-
-.news-list-page__title {
-  color: var(--brand-secondary);
-  font-size: clamp(2rem, 3.6vw, 3rem);
-  margin-bottom: 0.55rem;
-}
-
-.news-list-page__subtitle {
-  color: var(--brand-muted);
-  max-width: 44rem;
-  margin: 0 auto;
+.news-list-page__content.section-padding {
+  padding-top: clamp(4rem, 7vw, 5.5rem);
 }
 
 .news-list-page__alert {

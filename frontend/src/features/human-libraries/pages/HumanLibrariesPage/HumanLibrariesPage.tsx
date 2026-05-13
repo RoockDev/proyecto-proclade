@@ -153,7 +153,7 @@ export const HumanLibrariesPage = () => {
 
   return (
     <div className="human-libraries-page">
-      <section className="human-libraries-page__hero gradient-hero">
+      <section className="human-libraries-page__hero page-hero gradient-hero">
         <div className="container text-center">
           <h1>{HUMAN_LIBRARY_HERO.title}</h1>
           <p>{HUMAN_LIBRARY_HERO.subtitle}</p>
