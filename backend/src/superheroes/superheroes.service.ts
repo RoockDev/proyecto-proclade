@@ -9,7 +9,10 @@ import {
   type Prisma,
 } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { SuperheroImageStorageService } from './superhero-image-storage.service';
+import {
+  SuperheroImageStorageService,
+  type UploadedSuperheroImageFile,
+} from './superhero-image-storage.service';
 import { CreateSuperheroDto } from './dto/create-superhero.dto';
 import { ListSuperheroesQueryDto } from './dto/list-superheroes-query.dto';
 import { UpdateSuperheroDto } from './dto/update-superhero.dto';
@@ -152,41 +155,55 @@ export class SuperheroesService {
   async create(
     createSuperheroDto: CreateSuperheroDto,
     createdById: number,
-    imageUrl?: string,
+    imageFile?: UploadedSuperheroImageFile,
   ) {
     const slug = await this.generateUniqueSlug(createSuperheroDto.name);
     const status = createSuperheroDto.status ?? SuperheroStatus.DRAFT;
-    const normalizedImageUrl = this.normalizeImageUrl(
-      imageUrl ?? createSuperheroDto.imageUrl ?? null,
-    );
 
-    const superhero = await this.prisma.superhero.create({
-      data: {
-        name: createSuperheroDto.name,
-        slug,
-        description: createSuperheroDto.description,
-        quote: createSuperheroDto.quote,
-        country: createSuperheroDto.country,
-        imageUrl: normalizedImageUrl,
-        sortOrder: createSuperheroDto.sortOrder ?? 0,
-        status,
-        createdById,
-      },
-    });
+    let uploadedImageUrl: string | undefined;
 
-    return {
-      message: 'Superhéroe creado correctamente',
-      superhero,
-    };
+    try {
+      uploadedImageUrl = await this.superheroImageStorageService.saveImage(
+        imageFile,
+        createSuperheroDto.name,
+      );
+
+      const normalizedImageUrl = this.normalizeImageUrl(
+        uploadedImageUrl ?? createSuperheroDto.imageUrl ?? null,
+      );
+
+      const superhero = await this.prisma.superhero.create({
+        data: {
+          name: createSuperheroDto.name,
+          slug,
+          description: createSuperheroDto.description,
+          quote: createSuperheroDto.quote,
+          country: createSuperheroDto.country,
+          imageUrl: normalizedImageUrl,
+          sortOrder: createSuperheroDto.sortOrder ?? 0,
+          status,
+          createdById,
+        },
+      });
+
+      return {
+        message: 'Superhéroe creado correctamente',
+        superhero,
+      };
+    } catch (error) {
+      await this.superheroImageStorageService.removeImage(uploadedImageUrl);
+      throw error;
+    }
   }
 
   async update(
     id: number,
     updateSuperheroDto: UpdateSuperheroDto,
-    imageUrl?: string,
+    imageFile?: UploadedSuperheroImageFile,
   ) {
     const currentHero = await this.findActiveById(id);
     const updateData: Prisma.SuperheroUpdateInput = {};
+    let uploadedImageUrl: string | undefined;
 
     if (updateSuperheroDto.name !== undefined) {
       updateData.name = updateSuperheroDto.name;
@@ -219,36 +236,50 @@ export class SuperheroesService {
       updateData.status = updateSuperheroDto.status;
     }
 
-    const finalImageUrl =
-      imageUrl !== undefined
-        ? this.normalizeImageUrl(imageUrl)
-        : updateSuperheroDto.imageUrl !== undefined
-          ? this.normalizeImageUrl(updateSuperheroDto.imageUrl)
-          : undefined;
-
-    if (finalImageUrl !== undefined) {
-      updateData.imageUrl = finalImageUrl;
-    }
-
-    if (Object.keys(updateData).length === 0) {
-      throw new BadRequestException(
-        'Debes enviar al menos un campo para actualizar',
+    try {
+      uploadedImageUrl = await this.superheroImageStorageService.saveImage(
+        imageFile,
+        updateSuperheroDto.name ?? currentHero.name,
       );
+
+      const finalImageUrl =
+        uploadedImageUrl !== undefined
+          ? this.normalizeImageUrl(uploadedImageUrl)
+          : updateSuperheroDto.imageUrl !== undefined
+            ? this.normalizeImageUrl(updateSuperheroDto.imageUrl)
+            : undefined;
+
+      if (finalImageUrl !== undefined) {
+        updateData.imageUrl = finalImageUrl;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        throw new BadRequestException(
+          'Debes enviar al menos un campo para actualizar',
+        );
+      }
+
+      const superhero = await this.prisma.superhero.update({
+        where: { id },
+        data: updateData,
+      });
+
+      if (
+        this.shouldRemovePreviousImage(currentHero.imageUrl, superhero.imageUrl)
+      ) {
+        await this.superheroImageStorageService.removeImage(
+          currentHero.imageUrl,
+        );
+      }
+
+      return {
+        message: 'Superhéroe actualizado correctamente',
+        superhero,
+      };
+    } catch (error) {
+      await this.superheroImageStorageService.removeImage(uploadedImageUrl);
+      throw error;
     }
-
-    const superhero = await this.prisma.superhero.update({
-      where: { id },
-      data: updateData,
-    });
-
-    if (this.shouldRemovePreviousImage(currentHero.imageUrl, superhero.imageUrl)) {
-      await this.superheroImageStorageService.removeImage(currentHero.imageUrl);
-    }
-
-    return {
-      message: 'Superhéroe actualizado correctamente',
-      superhero,
-    };
   }
 
   async updateStatus(id: number, updateStatusDto: UpdateSuperheroStatusDto) {

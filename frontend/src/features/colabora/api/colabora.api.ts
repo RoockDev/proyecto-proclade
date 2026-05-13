@@ -11,7 +11,7 @@ export type ContactFormData = {
 
 export async function sendContactForm(
   data: ContactFormData,
-): Promise<ApiResponse<{ message: string }>> {
-  const response = await api.post<ApiResponse<{ message: string }>>('/colabora/contact', data);
+): Promise<ApiResponse<null>> {
+  const response = await api.post<ApiResponse<null>>('/colabora/contact', data);
   return response.data;
 }

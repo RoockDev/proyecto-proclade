@@ -1,4 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
@@ -117,10 +121,19 @@ Equipo Proclade
       this.logger.error(
         'Formulario de contacto sin SMTP configurado. Configura SMTP_HOST, SMTP_USER y SMTP_PASS para habilitar envíos reales.',
       );
-      throw new Error('SMTP no está configurado para el formulario de contacto');
+      throw new ServiceUnavailableException(
+        'El servicio de correo no está disponible. Inténtalo de nuevo más tarde.',
+      );
     }
 
     const { nombre, apellidos, email, telefono, mensaje } = contactData;
+    const safeNombre = this.escapeHtml(nombre);
+    const safeApellidos = this.escapeHtml(apellidos);
+    const safeEmail = this.escapeHtml(email);
+    const safeTelefono = this.escapeHtml(telefono || 'No proporcionado');
+    const safeMensajeHtml = mensaje
+      ? this.escapeHtml(mensaje).replace(/\n/g, '<br />')
+      : 'No proporcionado';
 
     const mailOptions = {
       from: this.mailFrom,
@@ -139,19 +152,19 @@ Equipo Proclade
                 <tbody>
                   <tr>
                     <td style="padding: 12px 0; font-weight: 700; width: 120px;">Nombre:</td>
-                    <td style="padding: 12px 0;">${nombre}</td>
+                    <td style="padding: 12px 0;">${safeNombre}</td>
                   </tr>
                   <tr style="background: #f3f4f6;">
                     <td style="padding: 12px 0; font-weight: 700;">Apellidos:</td>
-                    <td style="padding: 12px 0;">${apellidos}</td>
+                    <td style="padding: 12px 0;">${safeApellidos}</td>
                   </tr>
                   <tr>
                     <td style="padding: 12px 0; font-weight: 700;">Email:</td>
-                    <td style="padding: 12px 0;"><a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a></td>
+                    <td style="padding: 12px 0;"><a href="mailto:${safeEmail}" style="color: #2563eb; text-decoration: none;">${safeEmail}</a></td>
                   </tr>
                   <tr style="background: #f3f4f6;">
                     <td style="padding: 12px 0; font-weight: 700;">Teléfono:</td>
-                    <td style="padding: 12px 0;">${telefono || 'No proporcionado'}</td>
+                    <td style="padding: 12px 0;">${safeTelefono}</td>
                   </tr>
                 </tbody>
               </table>
@@ -159,7 +172,7 @@ Equipo Proclade
               <div style="margin-top: 24px;">
                 <p style="margin: 0 0 8px; font-weight: 700;">Mensaje:</p>
                 <div style="background: #f8f9fb; border-radius: 12px; padding: 16px; color: #111827; line-height: 1.7;">
-                  ${mensaje ? mensaje.replace(/\n/g, '<br />') : 'No proporcionado'}
+                  ${safeMensajeHtml}
                 </div>
               </div>
 
@@ -181,7 +194,18 @@ Equipo Proclade
         `Error al enviar email de contacto desde ${email}`,
         error instanceof Error ? error.stack : error,
       );
-      throw error;
+      throw new ServiceUnavailableException(
+        'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
+      );
     }
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }

@@ -16,9 +16,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { existsSync, mkdirSync } from 'fs';
-import { extname, join } from 'path';
+import { memoryStorage } from 'multer';
 import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt_strategy/jwt-auth.guard';
 import { Roles } from '../auth/roles/roles.decorator';
@@ -31,35 +29,8 @@ import { UpdateSuperheroStatusDto } from './dto/update-superhero-status.dto';
 import { SuperheroesService } from './superheroes.service';
 import type { File as MulterFile } from 'multer';
 
-const SUPERHERO_UPLOAD_PATH = join(process.cwd(), 'uploads', 'superheroes');
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 const ALLOWED_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
-const IMAGE_URL_PREFIX = '/uploads/superheroes';
-
-const superheroStorage = diskStorage({
-  destination: (_req, _file, cb) => {
-    if (!existsSync(SUPERHERO_UPLOAD_PATH)) {
-      mkdirSync(SUPERHERO_UPLOAD_PATH, { recursive: true });
-    }
-    cb(null, SUPERHERO_UPLOAD_PATH);
-  },
-  filename: (req: Request, file, cb) => {
-    const rawBaseName =
-      (req.body?.name as string) ?? file.originalname ?? 'superheroe';
-    const sanitizedBase = rawBaseName
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-    const safeBase = sanitizedBase || 'superheroe';
-    const timestamp = Date.now();
-    const randomPart = Math.floor(Math.random() * 9000 + 1000);
-    const extension = extname(file.originalname).toLowerCase() || '.png';
-    cb(null, `${timestamp}-${safeBase}-${randomPart}${extension}`);
-  },
-});
 
 const superheroFileFilter = (_req: Request, file, cb) => {
   if (ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
@@ -74,7 +45,7 @@ const superheroFileFilter = (_req: Request, file, cb) => {
 };
 
 const superheroUploadOptions = {
-  storage: superheroStorage,
+  storage: memoryStorage(),
   limits: {
     fileSize: MAX_IMAGE_SIZE,
   },
@@ -115,7 +86,7 @@ export class AdminSuperheroesController {
     return this.superheroesService.create(
       createSuperheroDto,
       request.user.id,
-      this.buildFileUrl(file),
+      file,
     );
   }
 
@@ -137,7 +108,7 @@ export class AdminSuperheroesController {
     return this.superheroesService.update(
       id,
       updateSuperheroDto,
-      this.buildFileUrl(file),
+      file,
     );
   }
 
@@ -162,13 +133,5 @@ export class AdminSuperheroesController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.superheroesService.remove(id);
-  }
-
-  private buildFileUrl(file?: MulterFile): string | undefined {
-    if (!file) {
-      return undefined;
-    }
-
-    return `${IMAGE_URL_PREFIX}/${file.filename}`;
   }
 }

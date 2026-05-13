@@ -52,6 +52,43 @@ describe('MailService', () => {
     );
   });
 
+  it('escapa HTML del formulario de contacto antes de construir el correo', async () => {
+    const sendMail = jest.fn().mockResolvedValue(undefined);
+
+    jest.mocked(nodemailer.createTransport).mockReturnValue({
+      sendMail,
+    } as never);
+
+    const service = new MailService(
+      createConfigService({
+        SMTP_HOST: 'smtp.gmail.com',
+        SMTP_PORT: '587',
+        SMTP_USER: 'sender@example.com',
+        SMTP_PASS: 'secret',
+        MAIL_FROM: 'sender@example.com',
+        CONTACT_FORM_TO: 'info@fundacionproclade.org',
+      }),
+    );
+
+    await service.sendContactEmail({
+      nombre: '<Ana>',
+      apellidos: 'López',
+      email: 'ana@example.com',
+      mensaje: '<script>alert("x")</script>',
+    });
+
+    expect(sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        html: expect.stringContaining('&lt;Ana&gt;'),
+      }),
+    );
+    expect(sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        html: expect.stringContaining('&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;'),
+      }),
+    );
+  });
+
   it('rechaza el formulario de contacto cuando falta SMTP', async () => {
     const sendMail = jest.fn().mockResolvedValue(undefined);
 
@@ -73,7 +110,9 @@ describe('MailService', () => {
         apellidos: 'Lopez',
         email: 'ana@example.com',
       }),
-    ).rejects.toThrow('SMTP no está configurado para el formulario de contacto');
+    ).rejects.toThrow(
+      'El servicio de correo no está disponible. Inténtalo de nuevo más tarde.',
+    );
 
     expect(sendMail).not.toHaveBeenCalled();
     expect(nodemailer.createTransport).toHaveBeenCalledWith({

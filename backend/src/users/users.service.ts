@@ -37,7 +37,13 @@ export class UsersService {
 
   private formatUserResponse(user: any) {
     if (!user) return null;
-    const { passwordHash, roles, ...rest } = user;
+    const {
+      passwordHash,
+      resetPasswordTokenHash,
+      resetPasswordExpiresAt,
+      roles,
+      ...rest
+    } = user;
     return {
       ...rest,
 

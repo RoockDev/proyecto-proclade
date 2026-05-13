@@ -68,7 +68,6 @@ export const ColaboraPage = () => {
 
     try {
       const response = await sendContactForm(data);
-      console.log('Colabora response:', response);
       if (response.success) {
         setMessage('Mensaje enviado correctamente. ¡Gracias por contactar!');
         setIsSuccess(true);

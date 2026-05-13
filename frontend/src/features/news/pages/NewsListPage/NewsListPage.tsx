@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { getNewsList } from '../../api/news.api';
 import { NewsGrid } from '../../components/NewsGrid/NewsGrid';
 import { NewsPagination } from '../../components/NewsPagination/NewsPagination';
-import { getMockNewsList } from '../../mocks/news.mocks';
 import type { NewsItem, NewsListState } from '../../types/news.types';
 import { buildNewsListState } from '../../utils/news.mapper';
 import './NewsListPage.css';
@@ -15,7 +14,6 @@ export const NewsListPage = () => {
   const [allNewsItems, setAllNewsItems] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isFallback, setIsFallback] = useState(false);
 
   const rawPageParam = searchParams.get('page');
   const currentPage = sanitizePage(rawPageParam);
@@ -46,16 +44,14 @@ export const NewsListPage = () => {
         }
 
         setAllNewsItems(items);
-        setIsFallback(false);
       } catch {
         if (!isMounted) {
           return;
         }
 
-        setAllNewsItems(getMockNewsList());
-        setIsFallback(true);
+        setAllNewsItems([]);
         setErrorMessage(
-          'No se pudo cargar el listado en tiempo real. Mostramos contenido de respaldo temporal.',
+          'No se pudo cargar el listado de noticias. Inténtalo de nuevo más tarde.',
         );
       } finally {
         if (isMounted) {
@@ -77,9 +73,8 @@ export const NewsListPage = () => {
         items: allNewsItems,
         page: currentPage,
         pageSize: PAGE_SIZE,
-        isFallback,
       }),
-    [allNewsItems, currentPage, isFallback],
+    [allNewsItems, currentPage],
   );
 
   useEffect(() => {
@@ -134,12 +129,6 @@ export const NewsListPage = () => {
             </div>
           ) : (
             <>
-              {listState.isFallback && (
-                <p className="news-list-page__fallback-note">
-                  Mostrando datos de respaldo temporal.
-                </p>
-              )}
-
               <NewsGrid items={listState.items} variant="list" />
 
               <NewsPagination

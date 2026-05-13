@@ -7,6 +7,7 @@ import {
 } from 'react';
 import {
   createAdminNews,
+  deleteUploadedAdminNewsImage,
   deleteAdminNews,
   uploadAdminNewsImage,
   updateAdminNews,
@@ -78,6 +79,7 @@ export const AdminNewsPage = () => {
   const [feedbackType, setFeedbackType] = useState<'success' | 'error' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [pendingUploadedImageUrl, setPendingUploadedImageUrl] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pendingDeleteNews, setPendingDeleteNews] = useState<AdminNewsItem | null>(
     null,
@@ -144,7 +146,20 @@ export const AdminNewsPage = () => {
     setIsExcerptAuto(true);
     setFormMode('create');
     setSelectedNews(null);
+    setPendingUploadedImageUrl(null);
   };
+
+  const discardUploadedImage = useCallback(async (imageUrl: string | null) => {
+    if (!imageUrl) {
+      return;
+    }
+
+    try {
+      await deleteUploadedAdminNewsImage(imageUrl);
+    } catch {
+      // La limpieza es auxiliar: no bloquea el cierre ni el guardado del formulario.
+    }
+  }, []);
 
   const handleCreateNews = () => {
     resetFormState();
@@ -201,6 +216,7 @@ export const AdminNewsPage = () => {
   };
 
   const handleCloseForm = () => {
+    void discardUploadedImage(pendingUploadedImageUrl);
     setIsFormOpen(false);
     setIsUploadingImage(false);
     resetFormState();
@@ -208,12 +224,24 @@ export const AdminNewsPage = () => {
   };
 
   const handleResetForm = () => {
+    void discardUploadedImage(pendingUploadedImageUrl);
     setFormData(initialFormState);
     setIsExcerptAuto(true);
+    setPendingUploadedImageUrl(null);
     clearFeedback();
   };
 
   const handleFieldChange = (field: keyof AdminNewsFormData, value: string) => {
+    if (
+      field === 'imageUrl' &&
+      value === '' &&
+      pendingUploadedImageUrl &&
+      formData.imageUrl === pendingUploadedImageUrl
+    ) {
+      void discardUploadedImage(pendingUploadedImageUrl);
+      setPendingUploadedImageUrl(null);
+    }
+
     if (field === 'content') {
       setFormData((prev) => ({
         ...prev,
@@ -257,7 +285,12 @@ export const AdminNewsPage = () => {
       const uploadedImageUrl = response.data?.imageUrl ?? null;
 
       if (response.success && uploadedImageUrl) {
+        if (pendingUploadedImageUrl && pendingUploadedImageUrl !== uploadedImageUrl) {
+          void discardUploadedImage(pendingUploadedImageUrl);
+        }
+
         setFormData((prev) => ({ ...prev, imageUrl: uploadedImageUrl }));
+        setPendingUploadedImageUrl(uploadedImageUrl);
         showFeedback('Imagen subida correctamente.', 'success');
       } else {
         showFeedback(response.message || 'No se pudo subir la imagen.', 'error');
@@ -333,6 +366,7 @@ export const AdminNewsPage = () => {
       if (response.success) {
         showFeedback(response.message || 'Operación realizada correctamente.', 'success');
         await refreshNews();
+        setPendingUploadedImageUrl(null);
         setIsFormOpen(false);
         resetFormState();
       } else {

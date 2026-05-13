@@ -59,11 +59,15 @@ describe('SuperheroesService', () => {
   } as unknown as PrismaService;
 
   const superheroImageStorageServiceMock = {
+    saveImage: jest.fn(),
     removeImage: jest.fn(),
   } as unknown as SuperheroImageStorageService;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (superheroImageStorageServiceMock.saveImage as jest.Mock).mockResolvedValue(
+      undefined,
+    );
     service = new SuperheroesService(
       prismaMock,
       superheroImageStorageServiceMock,

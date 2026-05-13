@@ -4,7 +4,6 @@ import { getSuperheroesList } from '../../api/superheroes.api';
 import { SuperheroDetailModal } from '../../components/SuperheroDetailModal/SuperheroDetailModal';
 import { SuperheroGrid } from '../../components/SuperheroGrid/SuperheroGrid';
 import { SuperheroPagination } from '../../components/SuperheroPagination/SuperheroPagination';
-import { getMockSuperheroes } from '../../mocks/superheroes.mocks';
 import type { SuperheroItem, SuperheroListState } from '../../types/superheroes.types';
 import './SuperheroesPage.css';
 
@@ -17,7 +16,6 @@ export const SuperheroesPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isFallback, setIsFallback] = useState(false);
 
   const rawPageParam = searchParams.get('page');
   const selectedHeroSlug = searchParams.get('hero');
@@ -52,19 +50,16 @@ export const SuperheroesPage = () => {
         setItems(response.data.items);
         setTotalPages(response.data.totalPages);
         setTotalItems(response.data.total);
-        setIsFallback(false);
       } catch {
         if (!isMounted) {
           return;
         }
 
-        const fallback = getMockSuperheroes();
-        setItems(fallback);
-        setTotalItems(fallback.length);
-        setTotalPages(fallback.length === 0 ? 0 : Math.ceil(fallback.length / PAGE_SIZE));
-        setIsFallback(true);
+        setItems([]);
+        setTotalItems(0);
+        setTotalPages(0);
         setErrorMessage(
-          'No se pudo cargar la información en tiempo real. Mostramos contenido temporal de respaldo.',
+          'No se pudo cargar la información de superhéroes. Inténtalo de nuevo más tarde.',
         );
       } finally {
         if (isMounted) {
@@ -113,9 +108,8 @@ export const SuperheroesPage = () => {
       pageSize: PAGE_SIZE,
       total: totalItems,
       totalPages,
-      isFallback,
     }),
-    [currentPage, isFallback, items, totalItems, totalPages],
+    [currentPage, items, totalItems, totalPages],
   );
 
   const handlePageChange = (nextPage: number) => {
@@ -172,12 +166,6 @@ export const SuperheroesPage = () => {
             </div>
           ) : (
             <>
-              {listState.isFallback && (
-                <p className="superheroes-page__fallback-note">
-                  Mostrando contenido de respaldo temporal mientras recuperamos la versión en vivo.
-                </p>
-              )}
-
               <SuperheroGrid items={listState.items} onOpenHero={handleOpenHero} />
 
               <SuperheroPagination

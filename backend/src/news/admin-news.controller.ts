@@ -18,6 +18,7 @@ import { Roles } from '../auth/roles/roles.decorator';
 import { RolesGuard } from '../auth/roles/roles.guard';
 import { RoleName } from '../common/types/role-name.enum';
 import { CreateNewsDto } from './dto/create-news.dto';
+import { DeleteNewsImageDto } from './dto/delete-news-image.dto';
 import {
   NewsImageStorageService,
   type UploadedNewsImageFile,
@@ -69,6 +70,17 @@ export class AdminNewsController {
     return {
       message: 'Imagen subida correctamente',
       imageUrl,
+    };
+  }
+
+  @Delete('upload-image')
+  async deleteUploadedImage(@Body() deleteNewsImageDto: DeleteNewsImageDto) {
+    await this.newsImageStorageService.removeNewsImage(
+      deleteNewsImageDto.imageUrl,
+    );
+
+    return {
+      message: 'Imagen descartada correctamente',
     };
   }
 

@@ -46,6 +46,13 @@
   cursor: not-allowed;
 }
 
+.auth-form__hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--brand-muted);
+}
+
 /* ── Submit button spacing ── */
 .auth-form__submit {
   margin-top: 0.6rem;

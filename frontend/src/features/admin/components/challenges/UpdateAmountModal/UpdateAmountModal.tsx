@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { AdminChallenge } from '../../../types/challenges.types';
 import { AdminButton } from '../../shared/AdminButton/AdminButton';
 import './UpdateAmountModal.css';
@@ -18,19 +18,8 @@ export const UpdateAmountModal = ({
   onConfirm,
   onCancel,
 }: UpdateAmountModalProps) => {
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(() => challenge?.currentAmount.toString() ?? '');
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isOpen || !challenge) {
-      setAmount('');
-      setError(null);
-      return;
-    }
-
-    setAmount(challenge.currentAmount.toString());
-    setError(null);
-  }, [challenge, isOpen]);
 
   if (!isOpen || !challenge) return null;
 

@@ -11,6 +11,10 @@ import {
 } from '../../utils/post-auth-redirect';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  validatePasswordPolicy,
+} from '../../../../utils/password-policy';
 
 type RegisterFormState = {
   name: string;
@@ -62,6 +66,18 @@ export const RegisterForm = () => {
       error: null,
       successMessage: null,
     }));
+
+    const passwordError = validatePasswordPolicy(formState.password);
+
+    if (passwordError) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        error: passwordError,
+        successMessage: null,
+      }));
+      return;
+    }
 
     if (formState.password !== formState.confirmPassword) {
       setFormState((prev) => ({
@@ -186,8 +202,10 @@ export const RegisterForm = () => {
           placeholder="••••••••"
           disabled={formState.loading}
           required
+          minLength={8}
           autoComplete="new-password"
         />
+        <p className="auth-form__hint">{PASSWORD_POLICY_MESSAGE}</p>
       </div>
 
       <div className="auth-form__field">
@@ -204,6 +222,7 @@ export const RegisterForm = () => {
           placeholder="••••••••"
           disabled={formState.loading}
           required
+          minLength={8}
           autoComplete="new-password"
         />
       </div>

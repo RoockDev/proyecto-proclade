@@ -2,6 +2,10 @@ import 'dotenv/config';
 import * as bcrypt from 'bcrypt';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  isPasswordPolicyValid,
+} from '../src/common/utils/password-policy';
 import { seedChatbotKnowledge } from './seeds/chatbot-knowledge.seed';
 import { seedRoles } from './seeds/roles.seed';
 
@@ -22,6 +26,12 @@ async function ensureSystemAdmin() {
   const adminRole = await prisma.role.findUnique({
     where: { name: 'ADMIN' },
   });
+
+  if (!isPasswordPolicyValid(DEFAULT_ADMIN.password)) {
+    throw new Error(
+      `SYSTEM_ADMIN_PASSWORD no cumple la política de contraseñas. ${PASSWORD_POLICY_MESSAGE}.`,
+    );
+  }
 
   if (!adminRole) {
     throw new Error('No se pudo inicializar el administrador porque el rol ADMIN no existe.');

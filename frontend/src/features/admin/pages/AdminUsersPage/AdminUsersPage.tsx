@@ -15,6 +15,8 @@ import type { AdminUser } from '../../types/users.types';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
 import { useUserConfirmation } from '../../hooks/useUserConfirmation';
 import { useUsersList } from '../../hooks/useUsersList';
+import type { ApiResponse } from '../../../../types/api';
+import { validatePasswordPolicy } from '../../../../utils/password-policy';
 import './AdminUsersPage.css';
 
 type NotificationType = 'success' | 'error';
@@ -63,7 +65,7 @@ export const AdminUsersPage = () => {
     setViewFilter,
   } = useUsersList({ onError: handleUsersError });
 
-  const rowsPerPage = 5;
+  const rowsPerPage = 4;
   const [page, setPage] = useState(0);
   const totalPages = Math.max(1, Math.ceil(filteredUsers.length / rowsPerPage));
   const paginatedUsers = useMemo(
@@ -131,6 +133,19 @@ export const AdminUsersPage = () => {
       return;
     }
 
+    if (!trimmedPassword && trimmedConfirm) {
+      setFeedback('Introduce una nueva contraseña o deja ambos campos vacíos.');
+      return;
+    }
+
+    if (trimmedPassword) {
+      const passwordError = validatePasswordPolicy(trimmedPassword);
+      if (passwordError) {
+        setFeedback(passwordError);
+        return;
+      }
+    }
+
     if (trimmedPassword && trimmedPassword !== trimmedConfirm) {
       setFeedback('Las contraseñas no coinciden.');
       return;
@@ -180,16 +195,24 @@ export const AdminUsersPage = () => {
           setFeedback(errorMessage);
           showNotification(errorMessage, 'error');
         }
-      } catch (error) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response?.status === 409) {
-          const conflictMsg =
-            'Ya existe un usuario con ese email. Reactiva el existente o usa otro email.';
-          setFeedback(conflictMsg);
-          showNotification(conflictMsg, 'error');
-        } else {
-          console.error('Error al guardar usuario', error);
-          const genericError = 'Error al intentar guardar el usuario.';
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 409) {
+        const conflictMsg =
+          'Ya existe un usuario con ese email. Reactiva el existente o usa otro email.';
+        setFeedback(conflictMsg);
+        showNotification(conflictMsg, 'error');
+      } else if (axiosError.response?.data) {
+        const backendError = axiosError.response.data as ApiResponse<null>;
+        const backendMessage =
+          typeof backendError?.message === 'string' && backendError.message.trim()
+            ? backendError.message
+            : 'Error al intentar guardar el usuario.';
+        setFeedback(backendMessage);
+        showNotification(backendMessage, 'error');
+      } else {
+        console.error('Error al guardar usuario', error);
+        const genericError = 'Error al intentar guardar el usuario.';
           setFeedback(genericError);
           showNotification(genericError, 'error');
         }

@@ -68,6 +68,10 @@ Esto realiza los siguientes pasos:
 
 La aplicación quedará disponible en: [http://localhost](http://localhost)
 
+Antes de arrancar, revisa que existan los `.env` locales a partir de los `.env.example`.
+En Docker el frontend debe usar `VITE_API_BASE_URL=/api` y el backend necesita un
+`JWT_SECRET` largo y privado para poder iniciar.
+
 ### 🧠 Importante: yarn install (solo para VS Code)
 
 Para que Visual Studio Code no marque errores de TypeScript, cada desarrollador debe ejecutar una vez:
@@ -311,7 +315,9 @@ docker compose exec backend yarn prisma:init-system
 El administrador inicial se configura en `backend/.env` con estas variables:
 
 ```env
+JWT_SECRET=pon-aqui-un-secreto-largo-y-privado
 SYSTEM_ADMIN_EMAIL=admin@equipo-puch.local
+# Minimo 8 caracteres, una mayuscula, una minuscula y un numero
 SYSTEM_ADMIN_PASSWORD=CambiaEsta123!
 SYSTEM_ADMIN_NAME=Administrador
 SYSTEM_ADMIN_SURNAME=Equipo PUCH

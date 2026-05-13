@@ -663,7 +663,7 @@ export const AdminChatbotPage = () => {
 
   useEffect(() => {
     void loadUnresolved({ search: searchTerm, page: unresolvedPage });
-  }, [loadUnresolved, unresolvedPage]);
+  }, [loadUnresolved, searchTerm, unresolvedPage]);
 
   const metricCards = useMemo(() => {
     const base = metrics ?? {
