@@ -268,11 +268,14 @@
 }
 
 .who-we-are__hero-card {
+  width: 100%;
   border: 1px solid rgba(13, 59, 115, 0.08);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   background-color: var(--brand-white);
+  display: flex;
+  flex-direction: column;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -287,8 +290,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0.45rem;
-  aspect-ratio: 4 / 3;
+  height: clamp(13.5rem, 24vw, 15.5rem);
+  padding: 0.9rem 1rem 0.35rem;
   background: linear-gradient(
     135deg,
     rgba(107, 170, 117, 0.22),
@@ -297,9 +300,12 @@
 }
 
 .who-we-are__hero-image {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  max-width: min(84%, 14rem);
+  height: auto;
+  max-height: 100%;
   object-fit: contain;
+  object-position: center bottom;
 }
 
 .who-we-are__hero-image-placeholder {
@@ -313,19 +319,55 @@
 }
 
 .who-we-are__hero-content {
-  padding: 1rem 1rem 1.2rem;
+  flex: 1 1 auto;
+  padding: 1.15rem 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .who-we-are__hero-content h4 {
   color: var(--brand-secondary);
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
-.who-we-are__hero-content p {
+.who-we-are__hero-country {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.who-we-are__hero-summary {
   margin: 0;
   color: var(--brand-muted);
   font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: calc(1.6em * 4);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.who-we-are__hero-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-primary);
+  font-weight: 700;
+  padding-top: 0.15rem;
+}
+
+.who-we-are__hero-link:hover,
+.who-we-are__hero-link:focus {
+  color: var(--brand-secondary);
 }
 
 .who-we-are__superheroes-state {

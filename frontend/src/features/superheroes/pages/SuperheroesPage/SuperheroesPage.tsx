@@ -2,10 +2,11 @@
 import { useSearchParams } from 'react-router-dom';
 import { SectionTitle } from '../../../home/components/SectionTitle/SectionTitle';
 import { getSuperheroesList } from '../../api/superheroes.api';
+import { SuperheroDetailModal } from '../../components/SuperheroDetailModal/SuperheroDetailModal';
 import { SuperheroGrid } from '../../components/SuperheroGrid/SuperheroGrid';
 import { SuperheroPagination } from '../../components/SuperheroPagination/SuperheroPagination';
 import { getMockSuperheroes } from '../../mocks/superheroes.mocks';
-import type { SuperheroListState } from '../../types/superheroes.types';
+import type { SuperheroItem, SuperheroListState } from '../../types/superheroes.types';
 import './SuperheroesPage.css';
 
 const PAGE_SIZE = 8;
@@ -20,13 +21,16 @@ export const SuperheroesPage = () => {
   const [isFallback, setIsFallback] = useState(false);
 
   const rawPageParam = searchParams.get('page');
+  const selectedHeroSlug = searchParams.get('hero');
   const currentPage = sanitizePage(rawPageParam);
 
   useEffect(() => {
     if (rawPageParam === null || rawPageParam !== String(currentPage)) {
-      setSearchParams({ page: String(currentPage) }, { replace: true });
+      setSearchParams(buildSuperheroSearchParams(currentPage, selectedHeroSlug), {
+        replace: true,
+      });
     }
-  }, [currentPage, rawPageParam, setSearchParams]);
+  }, [currentPage, rawPageParam, selectedHeroSlug, setSearchParams]);
 
   useEffect(() => {
     let isMounted = true;
@@ -79,9 +83,29 @@ export const SuperheroesPage = () => {
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
-      setSearchParams({ page: String(totalPages) }, { replace: true });
+      setSearchParams(buildSuperheroSearchParams(totalPages), { replace: true });
     }
   }, [currentPage, totalPages, setSearchParams]);
+
+  const selectedHero = useMemo(
+    () =>
+      selectedHeroSlug
+        ? items.find((item) => item.slug === selectedHeroSlug) ?? null
+        : null,
+    [items, selectedHeroSlug],
+  );
+
+  useEffect(() => {
+    if (!selectedHeroSlug || isLoading) {
+      return;
+    }
+
+    if (!selectedHero) {
+      setSearchParams(buildSuperheroSearchParams(currentPage), {
+        replace: true,
+      });
+    }
+  }, [currentPage, isLoading, selectedHero, selectedHeroSlug, setSearchParams]);
 
   const listState: SuperheroListState = useMemo(
     () => ({
@@ -104,8 +128,16 @@ export const SuperheroesPage = () => {
       return;
     }
 
-    setSearchParams({ page: String(nextPage) });
+    setSearchParams(buildSuperheroSearchParams(nextPage));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenHero = (hero: SuperheroItem) => {
+    setSearchParams(buildSuperheroSearchParams(currentPage, hero.slug));
+  };
+
+  const handleCloseHeroModal = () => {
+    setSearchParams(buildSuperheroSearchParams(currentPage));
   };
 
   return (
@@ -142,7 +174,7 @@ export const SuperheroesPage = () => {
               </p>
             )}
 
-            <SuperheroGrid items={listState.items} />
+            <SuperheroGrid items={listState.items} onOpenHero={handleOpenHero} />
 
             <SuperheroPagination
               currentPage={listState.page}
@@ -152,6 +184,13 @@ export const SuperheroesPage = () => {
           </>
         )}
       </div>
+
+      {selectedHero && (
+        <SuperheroDetailModal
+          hero={selectedHero}
+          onClose={handleCloseHeroModal}
+        />
+      )}
     </section>
   );
 };
@@ -164,4 +203,15 @@ function sanitizePage(value: string | null): number {
   }
 
   return parsed;
+}
+
+function buildSuperheroSearchParams(page: number, heroSlug?: string | null) {
+  const nextParams = new URLSearchParams();
+  nextParams.set('page', String(page));
+
+  if (heroSlug) {
+    nextParams.set('hero', heroSlug);
+  }
+
+  return nextParams;
 }

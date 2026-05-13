@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { SuperheroItem } from '../../../../superheroes/types/superheroes.types';
 
 type SuperheroPreviewCardProps = {
@@ -19,7 +20,14 @@ export const SuperheroPreviewCard = ({
     </div>
     <div className="who-we-are__hero-content">
       <h4>{hero.name}</h4>
-      <p>{hero.quote || hero.description}</p>
+      {hero.country && <p className="who-we-are__hero-country">{hero.country}</p>}
+      <p className="who-we-are__hero-summary">{hero.quote || hero.description}</p>
+      <Link
+        to={`/superheroes?page=1&hero=${hero.slug}`}
+        className="who-we-are__hero-link"
+      >
+        Ver historia completa <i className="bi bi-arrow-right" />
+      </Link>
     </div>
   </article>
 );
