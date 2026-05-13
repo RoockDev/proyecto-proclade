@@ -4,5 +4,5 @@ set -eu
 
 yarn exec prisma generate
 yarn exec prisma migrate deploy
-yarn prisma:seed
+yarn prisma:init-system
 exec yarn start:dev
