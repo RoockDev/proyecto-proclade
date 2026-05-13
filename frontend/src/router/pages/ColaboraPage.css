@@ -1,6 +1,8 @@
 .colabora-page {
-  background: #ecebea;
-  color: #1d2233;
+  background:
+    radial-gradient(circle at top left, rgba(107, 170, 117, 0.08), transparent 28%),
+    linear-gradient(180deg, var(--brand-white) 0%, var(--brand-bg) 100%);
+  color: var(--brand-dark);
 }
 
 .colabora-page__container {
@@ -9,23 +11,50 @@
 }
 
 .colabora-page__hero {
-  background: linear-gradient(100deg, #2f9f95 0%, #45c0b8 100%);
-  color: #ffffff;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.14), transparent 22%),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.1), transparent 24%),
+    linear-gradient(
+      180deg,
+      #6baa75 0%,
+      #4f8f74 40%,
+      #2d6f66 78%,
+      #245f54 100%
+    );
+  color: var(--brand-white);
   text-align: center;
-  padding: clamp(4rem, 7vw, 6rem) 0;
+  padding: clamp(4.4rem, 7vw, 6.25rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.colabora-page__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .colabora-page__hero h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 700;
+  margin: 1rem 0 0;
+  font-size: clamp(2.35rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .colabora-page__hero p {
   max-width: 760px;
   margin: 1.2rem auto 0;
-  font-size: clamp(1.2rem, 2vw, 2rem);
-  line-height: 1.45;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.72;
   opacity: 0.95;
 }
 
@@ -34,9 +63,20 @@
 }
 
 .colabora-page h2 {
-  margin: 0 0 2rem;
-  font-size: clamp(2rem, 3.6vw, 3rem);
-  font-weight: 700;
+  margin: 0 0 0.95rem;
+  font-size: clamp(2rem, 3.4vw, 2.85rem);
+  font-weight: 800;
+  text-align: center;
+  color: var(--brand-secondary);
+  letter-spacing: -0.02em;
+}
+
+.colabora-page__section-intro {
+  max-width: 48rem;
+  margin: 0 auto 2rem;
+  color: var(--brand-muted);
+  font-size: 1.02rem;
+  line-height: 1.72;
   text-align: center;
 }
 
@@ -49,59 +89,123 @@
 .colabora-page__challenge-card,
 .colabora-page__step-card,
 .colabora-page__form-card {
-  background: #f4f4f4;
-  border: 1px solid #dfdfdf;
-  border-radius: 1.7rem;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(13, 59, 115, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 .colabora-page__challenge-card {
+  position: relative;
   padding: 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.colabora-page__challenge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.32rem;
+  background: linear-gradient(
+    90deg,
+    rgba(77, 152, 96, 0.96) 0%,
+    rgba(47, 127, 107, 0.96) 58%,
+    rgba(13, 59, 115, 0.18) 100%
+  );
+}
+
+.colabora-page__challenge-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(13, 59, 115, 0.06);
+  color: var(--brand-secondary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .colabora-page__challenge-card h3 {
   margin: 0;
-  font-size: clamp(1.55rem, 2.6vw, 2.2rem);
+  font-size: clamp(1.45rem, 2.1vw, 2rem);
+  line-height: 1.15;
+  color: var(--brand-secondary);
+  overflow-wrap: anywhere;
 }
 
-.colabora-page__challenge-card p {
-  margin: 1rem 0 1.25rem;
-  color: #5e6270;
-  font-size: 1.45rem;
+.colabora-page__challenge-description {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 1rem;
+  line-height: 1.72;
+  min-height: calc(1.72em * 4);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .colabora-page__amounts {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 700;
+  color: var(--brand-secondary);
 }
 
 .colabora-page__progress-track {
-  height: 0.9rem;
-  background: #dfdcd9;
+  height: 0.95rem;
+  background: rgba(13, 59, 115, 0.1);
   border-radius: 999px;
   overflow: hidden;
-  margin: 0.9rem 0;
+  margin: 0;
 }
 
 .colabora-page__progress-track div {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #ea7b2a 0%, #efc332 100%);
+  background: linear-gradient(90deg, #4d9860 0%, #2f7f6b 100%);
 }
 
 .colabora-page__challenge-card small {
-  font-size: 1.25rem;
-  color: #6b6f7c;
+  font-size: 0.95rem;
+  color: var(--brand-muted);
+}
+
+.colabora-page__challenge-link {
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-primary);
+  font-weight: 700;
+  text-align: left;
+}
+
+.colabora-page__challenge-link:hover,
+.colabora-page__challenge-link:focus-visible {
+  color: var(--brand-secondary);
 }
 
 .colabora-page__empty {
   grid-column: 1 / -1;
   margin: 0;
   text-align: center;
-  color: #5e6270;
-  font-size: 1.2rem;
+  color: var(--brand-muted);
+  font-size: 1.05rem;
 }
 
 .colabora-page__steps {
@@ -113,6 +217,10 @@
 .colabora-page__step-card {
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .colabora-page__step-card span {
@@ -122,16 +230,24 @@
   width: 3.2rem;
   height: 3.2rem;
   border-radius: 50%;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #ffffff;
-  background: linear-gradient(160deg, #ea7b2a 0%, #efc332 100%);
+  color: var(--brand-white);
+  background: linear-gradient(160deg, #4d9860 0%, #2f7f6b 100%);
+  box-shadow: 0 16px 28px rgba(47, 127, 107, 0.22);
+}
+
+.colabora-page__step-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--brand-secondary);
 }
 
 .colabora-page__step-card p {
-  margin: 1.1rem 0 0;
-  color: #5e6270;
-  font-size: 1.45rem;
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 1rem;
+  line-height: 1.68;
 }
 
 .colabora-page__form-wrap {
@@ -155,58 +271,119 @@
 .colabora-page__form-card label {
   display: grid;
   gap: 0.5rem;
-  font-size: 1.4rem;
+  font-size: 0.94rem;
   font-weight: 700;
+  color: var(--brand-secondary);
 }
 
 .colabora-page__form-card input,
 .colabora-page__form-card textarea {
   width: 100%;
-  border: 1px solid #d7d4d1;
+  border: 1px solid rgba(13, 59, 115, 0.14);
   border-radius: 0.9rem;
   padding: 0.9rem 1rem;
-  background: #ecebea;
-  color: #1d2233;
-  font-size: 1.3rem;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--brand-dark);
+  font-size: 1rem;
   font-family: var(--font-body);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.colabora-page__form-card input:focus,
+.colabora-page__form-card textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(107, 170, 117, 0.18);
+  background: var(--brand-white);
 }
 
 .colabora-page__form-card textarea {
   resize: vertical;
+  min-height: 8rem;
 }
 
 .colabora-page__form-card small {
-  color: #6b6f7c;
-  font-size: 1.15rem;
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .colabora-page__form-card button,
 .colabora-page__donation a {
   border: none;
   border-radius: 0.9rem;
-  padding: 0.9rem 1.2rem;
-  color: #ffffff;
-  font-size: 1.5rem;
+  padding: 0.95rem 1.3rem;
+  color: var(--brand-white);
+  font-size: 1rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #ea7b2a 0%, #efc332 100%);
+  background: linear-gradient(135deg, #4d9860, #2f7f6b);
+  box-shadow: 0 16px 28px rgba(39, 105, 70, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.colabora-page__form-card button:hover,
+.colabora-page__form-card button:focus-visible,
+.colabora-page__donation a:hover,
+.colabora-page__donation a:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 34px rgba(39, 105, 70, 0.26);
+  filter: saturate(1.05);
+}
+
+.colabora-page__form-card button:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.colabora-page__form-feedback {
+  margin: 0.2rem 0 0;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.colabora-page__form-feedback--success {
+  background: rgba(107, 170, 117, 0.14);
+  color: #28553a;
+}
+
+.colabora-page__form-feedback--error {
+  background: rgba(220, 38, 38, 0.1);
+  color: #8f1d1d;
 }
 
 .colabora-page__donation {
   text-align: center;
   padding: clamp(3.8rem, 7vw, 5.5rem) 0;
-  background: linear-gradient(90deg, #eb7a2a 0%, #efc332 100%);
-  color: #ffffff;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.12), transparent 22%),
+    linear-gradient(
+      180deg,
+      #6baa75 0%,
+      #4f8f74 40%,
+      #2d6f66 78%,
+      #245f54 100%
+    );
+  color: var(--brand-white);
+}
+
+.colabora-page__donation h2 {
+  color: var(--brand-white);
 }
 
 .colabora-page__donation p {
   max-width: 840px;
   margin: 0 auto 1.8rem;
-  font-size: clamp(1.2rem, 2vw, 2rem);
+  font-size: clamp(1.05rem, 1.8vw, 1.24rem);
+  line-height: 1.7;
 }
 
 .colabora-page__donation a {
   display: inline-block;
-  background: #4b9d7f;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-decoration: none;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.16);
 }
 
 @media (max-width: 992px) {
@@ -214,5 +391,28 @@
   .colabora-page__steps,
   .colabora-page__form-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .colabora-page__challenge-card,
+  .colabora-page__step-card,
+  .colabora-page__form-card {
+    padding: 1.4rem;
+  }
+
+  .colabora-page__section-intro {
+    margin-bottom: 1.6rem;
+    font-size: 0.98rem;
+  }
+
+  .colabora-page__amounts {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .colabora-page__challenge-description {
+    min-height: 0;
   }
 }

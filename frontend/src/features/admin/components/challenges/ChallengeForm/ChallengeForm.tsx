@@ -81,6 +81,7 @@ export const ChallengeForm = ({
                 <input
                   type="number"
                   min={1}
+                  step={1}
                   value={formData.targetAmount}
                   onChange={(e) => onFieldChange('targetAmount', e.target.value)}
                   required
@@ -92,6 +93,7 @@ export const ChallengeForm = ({
                 <input
                   type="number"
                   min={0}
+                  step={1}
                   value={formData.currentAmount}
                   onChange={(e) =>
                     onFieldChange('currentAmount', e.target.value)
@@ -128,7 +130,7 @@ export const ChallengeForm = ({
                 disabled={isSaveDisabled}
                 loading={isProcessing}
               >
-                Crear reto
+                {formMode === 'create' ? 'Crear reto' : 'Guardar cambios'}
               </AdminButton>
               <AdminButton variant="outline" type="button" onClick={onReset}>
                 Limpiar formulario

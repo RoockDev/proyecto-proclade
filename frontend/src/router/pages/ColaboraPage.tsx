@@ -5,6 +5,7 @@ import {
   type PublicChallenge,
 } from '../../features/challenges/api/challenges.api';
 import { sendContactForm } from '../../features/colabora/api/colabora.api';
+import { ChallengeDetailModal } from './components/ChallengeDetailModal';
 import './ColaboraPage.css';
 
 const euroFormat = new Intl.NumberFormat('es-ES', {
@@ -15,6 +16,9 @@ const euroFormat = new Intl.NumberFormat('es-ES', {
 
 export const ColaboraPage = () => {
   const [challenges, setChallenges] = useState<PublicChallenge[]>([]);
+  const [selectedChallenge, setSelectedChallenge] = useState<
+    (PublicChallenge & { progress: number; remaining: number }) | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -86,6 +90,7 @@ export const ColaboraPage = () => {
     <section className="colabora-page">
       <header className="colabora-page__hero">
         <div className="colabora-page__container">
+          <span className="colabora-page__eyebrow">Únete al cambio</span>
           <h1>Colabora</h1>
           <p>
             Hay muchas formas de unirte al Equipo PUCH. Elige la tuya y ayúdanos a construir
@@ -97,12 +102,19 @@ export const ColaboraPage = () => {
       <div className="colabora-page__block">
         <div className="colabora-page__container">
           <h2>Retos activos</h2>
+          <p className="colabora-page__section-intro">
+            Cada reto convierte una aportación concreta en apoyo directo para proyectos
+            reales. Sigue su avance y descubre cuánto falta para completarlos.
+          </p>
           <div className="colabora-page__challenges">
             {challengeCards.length ? (
               challengeCards.map((challenge) => (
                 <article key={challenge.id} className="colabora-page__challenge-card">
+                  <span className="colabora-page__challenge-badge">Reto activo</span>
                   <h3>{challenge.title}</h3>
-                  <p>{challenge.description}</p>
+                  <p className="colabora-page__challenge-description">
+                    {challenge.description}
+                  </p>
                   <div className="colabora-page__amounts">
                     <span>{euroFormat.format(challenge.currentAmount)}</span>
                     <span>Meta: {euroFormat.format(challenge.targetAmount)}</span>
@@ -114,6 +126,13 @@ export const ColaboraPage = () => {
                     Faltan {euroFormat.format(challenge.remaining)} - {challenge.progress}%
                     completado
                   </small>
+                  <button
+                    type="button"
+                    className="colabora-page__challenge-link"
+                    onClick={() => setSelectedChallenge(challenge)}
+                  >
+                    Ver detalles del reto <i className="bi bi-arrow-right" />
+                  </button>
                 </article>
               ))
             ) : (
@@ -126,17 +145,24 @@ export const ColaboraPage = () => {
       <div className="colabora-page__block">
         <div className="colabora-page__container">
           <h2>¿Cómo participar?</h2>
+          <p className="colabora-page__section-intro">
+            Queremos ponértelo fácil: déjanos tus datos, cuéntanos cómo quieres sumar y
+            coordinamos contigo la mejor forma de colaborar.
+          </p>
           <div className="colabora-page__steps">
             <article className="colabora-page__step-card">
               <span>1</span>
+              <h3>Cuéntanos tu idea</h3>
               <p>Rellena el formulario de contacto y cuéntanos cómo quieres ayudar.</p>
             </article>
             <article className="colabora-page__step-card">
               <span>2</span>
+              <h3>Te acompañamos</h3>
               <p>Nuestro equipo te contactará para coordinar tu participación.</p>
             </article>
             <article className="colabora-page__step-card">
               <span>3</span>
+              <h3>Empieza a sumar</h3>
               <p>Empieza a cambiar vidas. Cada acción suma.</p>
             </article>
           </div>
@@ -146,6 +172,10 @@ export const ColaboraPage = () => {
       <div className="colabora-page__block">
         <div className="colabora-page__container colabora-page__form-wrap">
           <h2>Formulario de contacto</h2>
+          <p className="colabora-page__section-intro">
+            Escríbenos y te responderemos para orientar tu colaboración, resolver dudas o
+            ayudarte a elegir la mejor forma de participar.
+          </p>
           <form className="colabora-page__form-card" onSubmit={handleSubmit}>
             <div className="colabora-page__form-grid">
               <label>
@@ -178,10 +208,11 @@ export const ColaboraPage = () => {
             </button>
             {message && (
               <p
-                style={{
-                  marginTop: '10px',
-                  color: isSuccess === null ? 'black' : isSuccess ? 'green' : 'red',
-                }}
+                className={`colabora-page__form-feedback ${
+                  isSuccess === true
+                    ? 'colabora-page__form-feedback--success'
+                    : 'colabora-page__form-feedback--error'
+                }`}
               >
                 {message}
               </p>
@@ -203,6 +234,14 @@ export const ColaboraPage = () => {
           </a>
         </div>
       </div>
+
+      {selectedChallenge && (
+        <ChallengeDetailModal
+          challenge={selectedChallenge}
+          euroFormat={euroFormat}
+          onClose={() => setSelectedChallenge(null)}
+        />
+      )}
     </section>
   );
 };
