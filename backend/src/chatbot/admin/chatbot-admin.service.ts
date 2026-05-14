@@ -12,6 +12,7 @@ import {
 } from 'generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ChatbotMatchingConfigService } from '../chatbot-matching-config.service';
+import { KnowledgeBaseService } from '../knowledge-base.service';
 import { ChatbotMetricsQueryDto } from './dto/chatbot-metrics-query.dto';
 import { ListKnowledgeQueryDto } from './dto/list-knowledge-query.dto';
 import { CreateKnowledgeItemDto } from './dto/create-knowledge-item.dto';
@@ -76,6 +77,7 @@ export class ChatbotAdminService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly chatbotMatchingConfigService: ChatbotMatchingConfigService,
+    private readonly knowledgeBaseService: KnowledgeBaseService,
   ) {}
 
   async onModuleInit() {
@@ -414,6 +416,8 @@ export class ChatbotAdminService implements OnModuleInit {
         });
       }
 
+      this.knowledgeBaseService.invalidateCache();
+
       return {
         knowledge: this.mapKnowledgeItem(knowledge),
       };
@@ -483,6 +487,8 @@ export class ChatbotAdminService implements OnModuleInit {
         },
       });
 
+      this.knowledgeBaseService.invalidateCache();
+
       return {
         knowledge: this.mapKnowledgeItem(knowledge),
       };
@@ -505,6 +511,8 @@ export class ChatbotAdminService implements OnModuleInit {
       await this.prisma.knowledgeItem.delete({
         where: { id },
       });
+
+      this.knowledgeBaseService.invalidateCache();
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
