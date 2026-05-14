@@ -20,13 +20,11 @@ export const ChallengeCard = ({
     ? Math.min((challenge.currentAmount / challenge.targetAmount) * 100, 100)
     : 0;
 
-  const formatAmount = (cents: number) => {
-    const euros = cents / 100;
-    return euros.toLocaleString('es-ES', {
+  const formatAmount = (amount: number) =>
+    amount.toLocaleString('es-ES', {
       style: 'currency',
       currency: 'EUR',
     });
-  };
 
   return (
     <article className="challenge-card">

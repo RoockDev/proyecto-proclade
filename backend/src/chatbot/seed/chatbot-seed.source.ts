@@ -7,14 +7,14 @@ import type {
 export const CHATBOT_SEED_INTENTS: ChatbotSeedIntent[] = [
   {
     code: 'EQUIPO_PUCH_OVERVIEW',
-    name: 'Que es Equipo PUCH',
-    description: 'Informacion general de la campana y objetivo ODS 2.',
+    name: 'Qué es Equipo PUCH',
+    description: 'Información general de la campaña y objetivo ODS 2.',
     priority: 100,
     isActive: true,
   },
   {
     code: 'UNIRSE_EQUIPO_PUCH',
-    name: 'Como unirse al equipo',
+    name: 'Cómo unirse al equipo',
     description: 'Formas de participar y sensibilizar.',
     priority: 95,
     isActive: true,
@@ -22,34 +22,34 @@ export const CHATBOT_SEED_INTENTS: ChatbotSeedIntent[] = [
   {
     code: 'PROYECTOS_INTERNACIONALES',
     name: 'Proyectos internacionales',
-    description: 'India, Burkina Faso y Haiti/Republica Dominicana.',
+    description: 'India, Burkina Faso y Haití/República Dominicana.',
     priority: 90,
     isActive: true,
   },
   {
     code: 'DONAR',
     name: 'Donaciones',
-    description: 'Donacion en enlace oficial de Fundacion PROCLADE.',
+    description: 'Donación en enlace oficial de Fundación PROCLADE.',
     priority: 120,
     isActive: true,
   },
   {
     code: 'COLABORAR',
     name: 'Colaborar y voluntariado',
-    description: 'Participacion, red solidaria y apoyo economico.',
+    description: 'Participación, red solidaria y apoyo económico.',
     priority: 85,
     isActive: true,
   },
   {
     code: 'NOTICIAS',
     name: 'Noticias del proyecto',
-    description: 'Informacion de la seccion de noticias.',
+    description: 'Información de la sección de noticias.',
     priority: 85,
     isActive: true,
   },
   {
     code: 'SUPERHEROES',
-    name: 'Superheroes PUCH',
+    name: 'Superhéroes PUCH',
     description: 'Historias y testimonios del equipo PUCH.',
     priority: 80,
     isActive: true,
@@ -57,7 +57,7 @@ export const CHATBOT_SEED_INTENTS: ChatbotSeedIntent[] = [
   {
     code: 'RETOS_SOLIDARIOS',
     name: 'Retos solidarios',
-    description: 'Retos de colaboracion vinculados a hambre cero.',
+    description: 'Retos de colaboración vinculados a Hambre Cero.',
     priority: 75,
     isActive: true,
   },
@@ -585,7 +585,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'EQUIPO_PUCH_OVERVIEW',
     questionCanonical: 'que es equipo puch',
     answer:
-      'Equipo PUCH significa Personas Unidas Contra el Hambre. Es una campana de sensibilizacion y accion social impulsada junto a Fundacion PROCLADE para avanzar hacia el ODS 2 Hambre Cero.',
+      'Equipo PUCH significa Personas Unidas Contra el Hambre. Es una campaña de sensibilización y acción social impulsada junto a Fundación PROCLADE para avanzar hacia el ODS 2 Hambre Cero.',
     tags: [
       'equipo puch',
       'equipo patch',
@@ -601,17 +601,17 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'UNIRSE_EQUIPO_PUCH',
     questionCanonical: 'como unirse al equipo puch',
     answer:
-      'Unirse al Equipo PUCH significa sensibilizar y contar historias invisibilizadas, formar parte de una red solidaria y apoyar economicamente proyectos contra el hambre.',
+      'Unirse al Equipo PUCH significa sensibilizar y contar historias invisibilizadas, formar parte de una red solidaria y apoyar económicamente proyectos contra el hambre.',
     tags: ['unirse', 'participar', 'sensibilizar', 'red solidaria'],
     route: '/',
-    ctaLinks: [{ label: 'Ver seccion de inicio', to: '/' }],
+    ctaLinks: [{ label: 'Ver sección de inicio', to: '/' }],
     isActive: true,
   },
   {
     intentCode: 'PROYECTOS_INTERNACIONALES',
     questionCanonical: 'en que paises trabaja equipo puch',
     answer:
-      'Actualmente se trabaja en India, Burkina Faso y Haiti/Republica Dominicana con proyectos de soberania y seguridad alimentaria, formacion y fortalecimiento comunitario.',
+      'Actualmente se trabaja en India, Burkina Faso y Haití/República Dominicana con proyectos de soberanía y seguridad alimentaria, formación y fortalecimiento comunitario.',
     tags: ['india', 'burkina faso', 'haiti', 'republica dominicana'],
     route: '/',
     ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
@@ -621,7 +621,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'PROYECTOS_INTERNACIONALES',
     questionCanonical: 'que hacen en india',
     answer:
-      'En India se apoya a mujeres Dalit con ganaderia, formacion en gestion economica y liderazgo, y talleres familiares para reforzar igualdad y convivencia.',
+      'En India se apoya a mujeres Dalit con ganadería, formación en gestión económica y liderazgo, y talleres familiares para reforzar igualdad y convivencia.',
     tags: ['india', 'dalit', 'ganaderia', 'liderazgo'],
     route: '/',
     ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
@@ -631,7 +631,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'PROYECTOS_INTERNACIONALES',
     questionCanonical: 'que hacen en burkina faso',
     answer:
-      'En Koudougou se crean huertas agroecologicas con riego solar, pozos de agua y granjas comunitarias, con formacion para mujeres y jovenes.',
+      'En Koudougou se crean huertas agroecológicas con riego solar, pozos de agua y granjas comunitarias, con formación para mujeres y jóvenes.',
     tags: ['burkina faso', 'koudougou', 'huertas', 'riego solar'],
     route: '/',
     ctaLinks: [{ label: 'Ver proyectos en home', to: '/' }],
@@ -641,7 +641,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'PROYECTOS_INTERNACIONALES',
     questionCanonical: 'que hacen en haiti y republica dominicana',
     answer:
-      'En Enriquillo y zonas de frontera se combina ayuda humanitaria inmediata con formacion para autosuficiencia y seguridad alimentaria.',
+      'En Enriquillo y zonas de frontera se combina ayuda humanitaria inmediata con formación para autosuficiencia y seguridad alimentaria.',
     tags: [
       'haiti',
       'republica dominicana',
@@ -656,7 +656,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'DONAR',
     questionCanonical: 'como donar',
     answer:
-      'La donacion se realiza en la pagina oficial de Fundacion PROCLADE, donde puedes donar por distintos metodos de pago.',
+      'La donación se realiza en la página oficial de Fundación PROCLADE, donde puedes donar por distintos métodos de pago.',
     tags: ['donar', 'donacion', 'aporte', 'proclade'],
     route: '/colabora',
     ctaLinks: [
@@ -686,22 +686,22 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'COLABORAR',
     questionCanonical: 'como colaborar sin donar',
     answer:
-      'Tambien puedes colaborar sensibilizando, difundiendo historias, participando en acciones comunitarias y sumandote a la red solidaria del proyecto.',
+      'También puedes colaborar sensibilizando, difundiendo historias, participando en acciones comunitarias y sumándote a la red solidaria del proyecto.',
     tags: ['colaborar', 'voluntariado', 'sensibilizar', 'difusion'],
     route: '/colabora',
-    ctaLinks: [{ label: 'Ver seccion Colabora', to: '/colabora' }],
+    ctaLinks: [{ label: 'Ver sección Colabora', to: '/colabora' }],
     isActive: true,
   },
   {
     intentCode: 'COLABORAR',
     questionCanonical: 'formulario de colaboracion',
     answer:
-      'La pagina de colaboracion se esta ampliando progresivamente. Mientras tanto, puedes dejar tu interes de colaboracion a traves de los canales de contacto del proyecto.',
+      'La página de colaboración se está ampliando progresivamente. Mientras tanto, puedes dejar tu interés de colaboración a través de los canales de contacto del proyecto.',
     tags: ['formulario', 'contacto', 'colaboracion'],
     route: '/colabora',
     ctaLinks: [
       { label: 'Ir a Colabora', to: '/colabora' },
-      { label: 'Ver contacto', to: '/contacto' },
+      { label: 'Ver contacto', to: '/#contacto' },
     ],
     isActive: true,
   },
@@ -709,7 +709,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'NOTICIAS',
     questionCanonical: 'donde ver noticias del proyecto',
     answer:
-      'Puedes consultar las noticias del proyecto en la seccion Noticias. Ahi veras publicaciones recientes, avances y testimonios.',
+      'Puedes consultar las noticias del proyecto en la sección Noticias. Ahí verás publicaciones recientes, avances y testimonios.',
     tags: ['noticias', 'actualidad', 'publicaciones'],
     route: '/noticias',
     ctaLinks: [{ label: 'Ir a Noticias', to: '/noticias' }],
@@ -719,7 +719,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'NOTICIAS',
     questionCanonical: 'que tipo de noticias publican',
     answer:
-      'Se publican avances de proyectos, acciones educativas, voluntariado, cooperacion y testimonios relacionados con hambre cero.',
+      'Se publican avances de proyectos, acciones educativas, voluntariado, cooperación y testimonios relacionados con Hambre Cero.',
     tags: ['avances', 'proyectos', 'voluntariado', 'cooperacion'],
     route: '/noticias',
     ctaLinks: [{ label: 'Ver noticias publicadas', to: '/noticias' }],
@@ -729,27 +729,27 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'SUPERHEROES',
     questionCanonical: 'quienes son los superheroes puch',
     answer:
-      'Los superheroes PUCH representan a personas comprometidas que luchan contra el hambre desde sus comunidades. No son personajes de ficcion aislados, sino simbolos de accion real y colectiva.',
+      'Los superhéroes PUCH representan a personas comprometidas que luchan contra el hambre desde sus comunidades. No son personajes de ficción aislados, sino símbolos de acción real y colectiva.',
     tags: ['superheroes', 'equipo puch', 'testimonios'],
     route: '/superheroes',
-    ctaLinks: [{ label: 'Ver Superheroes', to: '/superheroes' }],
+    ctaLinks: [{ label: 'Ver Superhéroes', to: '/superheroes' }],
     isActive: true,
   },
   {
     intentCode: 'SUPERHEROES',
     questionCanonical: 'superheroes por pais',
     answer:
-      'En la comunicacion del proyecto hay referencias especificas a superheroes vinculados a India, Burkina Faso y Haiti/Republica Dominicana, mostrando acciones reales en cada territorio.',
+      'En la comunicación del proyecto hay referencias específicas a superhéroes vinculados a India, Burkina Faso y Haití/República Dominicana, mostrando acciones reales en cada territorio.',
     tags: ['india', 'burkina faso', 'haiti', 'testimonios'],
     route: '/superheroes',
-    ctaLinks: [{ label: 'Abrir seccion de Superheroes', to: '/superheroes' }],
+    ctaLinks: [{ label: 'Abrir sección de Superhéroes', to: '/superheroes' }],
     isActive: true,
   },
   {
     intentCode: 'RETOS_SOLIDARIOS',
     questionCanonical: 'que retos solidarios hay',
     answer:
-      'Uno de los retos definidos es Una granja en 30 dias, orientado a recaudar fondos para fortalecer autosuficiencia alimentaria en frontera de Haiti y Republica Dominicana.',
+      'Uno de los retos definidos es Una granja en 30 días, orientado a recaudar fondos para fortalecer la autosuficiencia alimentaria en la frontera de Haití y República Dominicana.',
     tags: ['retos', 'granja en 30 dias', 'recaudacion'],
     route: '/colabora',
     ctaLinks: [{ label: 'Ver Colabora', to: '/colabora' }],
@@ -763,7 +763,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     tags: [
       'bibliotecas humanas',
       'personas que cuentan',
-      'educacion para el desarrollo',
+      'educación para el desarrollo',
     ],
     route: null,
     ctaLinks: [
@@ -778,7 +778,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'BIBLIOTECAS_HUMANAS',
     questionCanonical: 'que son los libros humanos',
     answer:
-      'Los libros humanos son personas que comparten su experiencia en primera persona sobre alimentacion, cooperacion y cambio social. En la plataforma se gestionan como recursos con su contenido asociado.',
+      'Los libros humanos son personas que comparten su experiencia en primera persona sobre alimentación, cooperación y cambio social. En la plataforma se gestionan como recursos con su contenido asociado.',
     tags: ['libros humanos', 'recursos', 'testimonios'],
     route: null,
     ctaLinks: [
@@ -793,7 +793,7 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'DELEGACIONES',
     questionCanonical: 'que delegaciones participan',
     answer:
-      'En la propuesta de bibliotecas humanas se contemplan delegaciones en Asturias, Cantabria, La Rioja, Zaragoza, Castilla y Leon y Madrid.',
+      'En la propuesta de bibliotecas humanas se contemplan delegaciones en Asturias, Cantabria, La Rioja, Zaragoza, Castilla y León y Madrid.',
     tags: [
       'delegaciones',
       'asturias',
@@ -816,17 +816,17 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'como contactar',
     answer:
-      'Puedes contactar por correo en equipo@equipopuch.org o info@fundacionproclade.org. Tambien hay telefono de contacto +34 91 000 00 00 en la informacion visible de la web.',
+      'Puedes contactar por correo en info@fundacionproclade.org, por teléfono en 913 14 78 71 o en la dirección C. del Conde de Serrallo, 15, Tetuán, 28029 Madrid.',
     tags: ['contacto', 'correo', 'telefono', 'horario'],
     route: null,
     ctaLinks: [
       {
-        label: 'Escribir a equipo@equipopuch.org',
-        to: 'mailto:equipo@equipopuch.org',
-      },
-      {
         label: 'Escribir a info@fundacionproclade.org',
         to: 'mailto:info@fundacionproclade.org',
+      },
+      {
+        label: 'Llamar al 913 14 78 71',
+        to: 'tel:+34913147871',
       },
     ],
     isActive: true,
@@ -835,13 +835,13 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'horario de atencion',
     answer:
-      'El horario visible actualmente es de lunes a viernes de 09:00 a 18:00. Si necesitas una respuesta formal, usa los canales de correo para dejar tu solicitud.',
+      'La web muestra los canales principales de contacto, pero no un horario cerrado de atención. Si necesitas una respuesta formal, escribe a info@fundacionproclade.org o llama al 913 14 78 71.',
     tags: ['horario', 'atencion', 'lunes a viernes'],
     route: null,
     ctaLinks: [
       {
-        label: 'Enviar correo de contacto',
-        to: 'mailto:equipo@equipopuch.org',
+        label: 'Enviar correo a info@fundacionproclade.org',
+        to: 'mailto:info@fundacionproclade.org',
       },
     ],
     isActive: true,
@@ -850,13 +850,13 @@ export const CHATBOT_SEED_KNOWLEDGE_ITEMS: ChatbotSeedKnowledgeItem[] = [
     intentCode: 'CONTACTO',
     questionCanonical: 'quiero solicitar informacion',
     answer:
-      'Si quieres solicitar informacion, voluntariado o una colaboracion personalizada, puedes escribir a equipo@equipopuch.org y te orientamos segun tu caso.',
+      'Si quieres solicitar información, voluntariado o una colaboración personalizada, puedes escribir a info@fundacionproclade.org y te orientamos según tu caso.',
     tags: ['solicitar', 'informacion', 'ayuda', 'voluntariado', 'colaboracion'],
     route: '/colabora',
     ctaLinks: [
       {
-        label: 'Escribir a equipo@equipopuch.org',
-        to: 'mailto:equipo@equipopuch.org',
+        label: 'Escribir a info@fundacionproclade.org',
+        to: 'mailto:info@fundacionproclade.org',
       },
       { label: 'Ir a Colabora', to: '/colabora' },
     ],

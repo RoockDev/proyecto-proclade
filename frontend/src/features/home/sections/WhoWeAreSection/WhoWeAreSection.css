@@ -29,7 +29,9 @@
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   border: 1px solid rgba(13, 59, 115, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .who-we-are__card:hover {
@@ -56,14 +58,93 @@
   height: 220px;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  align-items: center;
-  justify-content: center;
-  color: var(--brand-muted);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  color: var(--brand-secondary);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 16% 18%,
+      rgba(255, 153, 51, 0.22),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 84% 22%,
+      rgba(107, 170, 117, 0.2),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 250, 243, 0.96),
+      rgba(244, 249, 246, 0.98)
+    );
 }
 
-.who-we-are__image-placeholder i {
-  font-size: 2.2rem;
+.who-we-are__image-placeholder-glow {
+  position: absolute;
+  inset: auto -12% -30% auto;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(13, 59, 115, 0.16), transparent 68%);
+  pointer-events: none;
+}
+
+.who-we-are__image-placeholder-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.34rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(13, 59, 115, 0.12);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 10px 24px rgba(13, 59, 115, 0.08);
+  color: var(--brand-secondary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.who-we-are__image-placeholder-icon {
+  position: relative;
+  z-index: 1;
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(13, 59, 115, 0.1);
+  box-shadow: 0 14px 24px rgba(13, 59, 115, 0.08);
+}
+
+.who-we-are__image-placeholder-icon i {
+  font-size: 1.4rem;
+}
+
+.who-we-are__image-placeholder-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.34rem;
+  max-width: 15rem;
+}
+
+.who-we-are__image-placeholder-copy strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.who-we-are__image-placeholder-copy span {
+  color: var(--brand-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .who-we-are__card-body {
@@ -142,14 +223,18 @@
 }
 
 .who-we-are__join li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0.58rem;
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand-secondary), var(--brand-primary));
+  background: linear-gradient(
+    135deg,
+    var(--brand-secondary),
+    var(--brand-primary)
+  );
 }
 
 .who-we-are__join li + li {
@@ -183,12 +268,17 @@
 }
 
 .who-we-are__hero-card {
+  width: 100%;
   border: 1px solid rgba(13, 59, 115, 0.08);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   background-color: var(--brand-white);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .who-we-are__hero-card:hover {
@@ -200,8 +290,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0.45rem;
-  aspect-ratio: 4 / 3;
+  height: clamp(13.5rem, 24vw, 15.5rem);
+  padding: 0.9rem 1rem 0.35rem;
   background: linear-gradient(
     135deg,
     rgba(107, 170, 117, 0.22),
@@ -210,9 +300,12 @@
 }
 
 .who-we-are__hero-image {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  max-width: min(84%, 14rem);
+  height: auto;
+  max-height: 100%;
   object-fit: contain;
+  object-position: center bottom;
 }
 
 .who-we-are__hero-image-placeholder {
@@ -226,19 +319,55 @@
 }
 
 .who-we-are__hero-content {
-  padding: 1rem 1rem 1.2rem;
+  flex: 1 1 auto;
+  padding: 1.15rem 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .who-we-are__hero-content h4 {
   color: var(--brand-secondary);
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
-.who-we-are__hero-content p {
+.who-we-are__hero-country {
+  margin: 0;
+  color: var(--brand-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.who-we-are__hero-summary {
   margin: 0;
   color: var(--brand-muted);
   font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: calc(1.6em * 4);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.who-we-are__hero-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-primary);
+  font-weight: 700;
+  padding-top: 0.15rem;
+}
+
+.who-we-are__hero-link:hover,
+.who-we-are__hero-link:focus {
+  color: var(--brand-secondary);
 }
 
 .who-we-are__superheroes-state {

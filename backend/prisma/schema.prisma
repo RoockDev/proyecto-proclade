@@ -37,33 +37,31 @@ enum ChatReplyType {
 }
 
 model User {
-  id                       Int       @id @default(autoincrement())
-  email                    String    @unique
-  passwordHash             String
-  name                     String
-  surname                  String
-  google                   Boolean   @default(false)
-  resetPasswordTokenHash   String?
-  resetPasswordExpiresAt   DateTime?
-  deletedAt                DateTime?
-  isRealHero               Boolean   @default(false)
-  realHeroSuperheroId      Int?       @unique
-  realHeroSuperhero        Superhero? @relation("UserRealHero", fields: [realHeroSuperheroId], references: [id])
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
-  roles                    Role[]    @relation("UserRoles")
-  createdNews              News[]
-  createdSuperheroes       Superhero[]
-  createdHumanBooks        HumanBook[]
-  chatSessions             ChatSession[]
-  resolvedUnresolved       UnresolvedQuestion[] @relation("UnresolvedResolvedBy")
-  chatbotKnowledgeUpdates  KnowledgeItem[] @relation("KnowledgeItemUpdatedBy")
-  chatbotIntentUpdates     ChatbotIntent[] @relation("ChatbotIntentUpdatedBy")
+  id                         Int                   @id @default(autoincrement())
+  email                      String                @unique
+  passwordHash               String
+  name                       String
+  surname                    String
+  resetPasswordTokenHash     String?
+  resetPasswordExpiresAt     DateTime?
+  deletedAt                  DateTime?
+  isRealHero                 Boolean               @default(false)
+  realHeroSuperheroId        Int?                  @unique
+  realHeroSuperhero          Superhero?            @relation("UserRealHero", fields: [realHeroSuperheroId], references: [id])
+  createdAt                  DateTime              @default(now())
+  updatedAt                  DateTime              @updatedAt
+  roles                      Role[]                @relation("UserRoles")
+  createdNews                News[]
+  createdSuperheroes         Superhero[]
+  createdHumanBooks          HumanBook[]
+  chatSessions               ChatSession[]
+  resolvedUnresolved         UnresolvedQuestion[]  @relation("UnresolvedResolvedBy")
+  chatbotKnowledgeUpdates    KnowledgeItem[]       @relation("KnowledgeItemUpdatedBy")
+  chatbotIntentUpdates       ChatbotIntent[]       @relation("ChatbotIntentUpdatedBy")
   chatbotIntentPhraseUpdates ChatbotIntentPhrase[] @relation("ChatbotIntentPhraseUpdatedBy")
-  chatbotCreatedConfigs    ChatbotAdminConfig[] @relation("ChatbotConfigCreatedBy")
-  chatbotUpdatedConfigs    ChatbotAdminConfig[] @relation("ChatbotConfigUpdatedBy")
+  chatbotCreatedConfigs      ChatbotAdminConfig[]  @relation("ChatbotConfigCreatedBy")
+  chatbotUpdatedConfigs      ChatbotAdminConfig[]  @relation("ChatbotConfigUpdatedBy")
 }
-
 
 model Role {
   id        Int      @id @default(autoincrement())
@@ -105,18 +103,19 @@ model Superhero {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
-  createdBy User @relation(fields: [createdById], references: [id])
+  createdBy    User  @relation(fields: [createdById], references: [id])
   realHeroUser User? @relation("UserRealHero")
 }
 
 model Region {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
   address   String
-  email     String   @unique
+  email     String    @unique
+  phone     String?
   deletedAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   humanBooks HumanBook[]
 
@@ -160,16 +159,16 @@ model Challenge {
 }
 
 model ChatbotIntent {
-  id             Int                 @id @default(autoincrement())
-  code           String              @unique
+  id             Int                   @id @default(autoincrement())
+  code           String                @unique
   name           String
-  description    String              @db.Text
-  priority       Int                 @default(0)
-  isActive       Boolean             @default(true)
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
+  description    String                @db.Text
+  priority       Int                   @default(0)
+  isActive       Boolean               @default(true)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
   updatedById    Int?
-  updatedBy      User?               @relation("ChatbotIntentUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  updatedBy      User?                 @relation("ChatbotIntentUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   phrases        ChatbotIntentPhrase[]
   knowledgeItems KnowledgeItem[]
 
@@ -178,17 +177,17 @@ model ChatbotIntent {
 }
 
 model ChatbotIntentPhrase {
-  id        Int           @id @default(autoincrement())
-  intentId  Int
-  text      String
-  language  String        @default("es")
-  weight    Float         @default(1)
-  isActive  Boolean       @default(true)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id          Int           @id @default(autoincrement())
+  intentId    Int
+  text        String
+  language    String        @default("es")
+  weight      Float         @default(1)
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   updatedById Int?
-  updatedBy   User?        @relation("ChatbotIntentPhraseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-  intent    ChatbotIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+  updatedBy   User?         @relation("ChatbotIntentPhraseUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  intent      ChatbotIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
 
   @@unique([intentId, text, language])
   @@index([intentId])
@@ -211,7 +210,6 @@ model KnowledgeItem {
   intent            ChatbotIntent? @relation(fields: [intentId], references: [id], onDelete: SetNull)
 
   @@index([updatedById])
-
   @@index([intentId])
   @@index([isActive])
 }

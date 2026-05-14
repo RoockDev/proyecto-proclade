@@ -12,7 +12,7 @@
 }
 
 .home-cta::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: radial-gradient(
@@ -29,7 +29,7 @@
 }
 
 .home-cta::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   right: 0;
@@ -65,8 +65,7 @@
 }
 
 .home-cta__btn-main,
-.home-cta__btn-alt,
-.home-cta__btn-tutorial {
+.home-cta__btn-alt {
   min-width: 190px;
 }
 
@@ -90,8 +89,7 @@
   }
 
   .home-cta__btn-main,
-  .home-cta__btn-alt,
-  .home-cta__btn-tutorial {
+  .home-cta__btn-alt {
     width: min(100%, 320px);
     min-width: 0;
   }

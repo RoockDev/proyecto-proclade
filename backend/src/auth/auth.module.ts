@@ -6,9 +6,9 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt_strategy/jwt.strategy';
 import { PrismaModule } from '../prisma/prisma.module';
-import { GoogleAuthService } from './google/google-auth.service';
 import { MailModule } from '../mail/mail.module';
 import { UsersModule } from '../users/users.module';
+import { getRequiredJwtSecret } from './jwt_strategy/jwt-secret';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { UsersModule } from '../users/users.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
+        secret: getRequiredJwtSecret(config),
         signOptions: {
           expiresIn: (config.get<string>('JWT_EXPIRES_IN') || '1d') as any, // como estamos usando la versión 11 de @nestjs/jwt, el tipado es mucho más estricto que en la versión 10, por eso hemos puesto as any.
         },
@@ -28,7 +28,7 @@ import { UsersModule } from '../users/users.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GoogleAuthService],
+  providers: [AuthService, JwtStrategy],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

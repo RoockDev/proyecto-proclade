@@ -8,7 +8,6 @@ Proyecto base para el desarrollo de una plataforma web usando **Docker** como en
 - **Frontend:** React + Vite
 - **Backend:** NestJS + Prisma
 - **Base de datos:** PostgreSQL
-- **Cache / colas:** Redis
 - **Proxy inverso:** Nginx
 - **Contenedores:** Docker + Docker Compose
 
@@ -64,10 +63,14 @@ docker compose up --build
 Esto realiza los siguientes pasos:
 - Construye las imágenes.
 - Instala dependencias dentro de Docker.
-- Aplica migraciones y carga los seeds iniciales de desarrollo.
-- Levanta frontend, backend, base de datos, redis y nginx.
+- Aplica migraciones e inicializa los datos base del sistema.
+- Levanta frontend, backend, base de datos y nginx.
 
 La aplicación quedará disponible en: [http://localhost](http://localhost)
+
+Antes de arrancar, revisa que existan los `.env` locales a partir de los `.env.example`.
+En Docker el frontend debe usar `VITE_API_BASE_URL=/api` y el backend necesita un
+`JWT_SECRET` largo y privado para poder iniciar.
 
 ### 🧠 Importante: yarn install (solo para VS Code)
 
@@ -142,7 +145,6 @@ Verás algo como:
 - `proyectoproclade-backend-1`
 - `proyectoproclade-frontend-1`
 - `proyectoproclade-db-1`
-- `proyectoproclade-redis-1`
 
 **2. Entrar al backend:**
 
@@ -292,39 +294,33 @@ Debe verse `__metadata` y `version: 8`.
 
 ---
 
-## Seeds (Datos de prueba)
+## Inicialización del sistema
 
-El proyecto incluye un sistema de seeds reproducible e idempotente para poblar la base de datos con datos de prueba.
-Estos seeds se ejecutan automáticamente durante `docker compose up --build`, por lo que el proyecto queda listo para probar al terminar el arranque.
+El proyecto ya no carga usuarios fake ni datos de prueba de desarrollo al arrancar.
+Durante `docker compose up --build`, el backend ejecuta una inicialización mínima e idempotente para dejar la plataforma utilizable:
 
-### Ejecutar seeds
+- crea/verifica los roles base `ADMIN` y `USER`
+- crea/actualiza un administrador inicial
+- carga la base de conocimiento necesaria del chatbot
 
-Si necesitas relanzarlos manualmente:
+### Relanzar la inicialización manualmente
 
 ```bash
-# Aplicar migraciones a la DB
 docker compose exec backend yarn prisma migrate deploy
+docker compose exec backend yarn prisma:init-system
 ```
 
-```bash
-# Poblar datos de prueba otra vez
-docker compose exec backend yarn prisma:seed
+### Administrador inicial
+
+El administrador inicial se configura en `backend/.env` con estas variables:
+
+```env
+JWT_SECRET=pon-aqui-un-secreto-largo-y-privado
+SYSTEM_ADMIN_EMAIL=admin@equipo-puch.local
+# Minimo 8 caracteres, una mayuscula, una minuscula y un numero
+SYSTEM_ADMIN_PASSWORD=CambiaEsta123!
+SYSTEM_ADMIN_NAME=Administrador
+SYSTEM_ADMIN_SURNAME=Equipo PUCH
 ```
 
-### Datos creados
-
-| Tipo | Email | Contraseña | Rol |
-|------|-------|------------|-----|
-| Admin | admin@proclade.local | Admin123! | ADMIN |
-| Usuario | user@proclade.local | User123! | USER |
-| Batch (20) | test.user.001@test.com ... test.user.020@test.com | Test123! | USER |
-
-### Estructura de seeds
-
-```
-backend/prisma/seeds/
-├── seed.ts             # Orquestador principal
-├── roles.seed.ts       # Seed de roles (ADMIN, USER)
-├── admin-user.seed.ts  # Admin y usuario de pruebas
-└── users-batch.seed.ts # 20 usuarios fake con @faker-js/faker
-```
+Si mantienes esos valores por defecto, cambia la contraseña tras el primer acceso.

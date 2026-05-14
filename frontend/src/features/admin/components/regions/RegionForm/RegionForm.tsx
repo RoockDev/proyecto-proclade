@@ -83,6 +83,19 @@ export const RegionForm = ({
               />
             </label>
 
+            <label>
+              Teléfono
+              <input
+                type="text"
+                value={formData.phone}
+                onChange={(event) => onFieldChange('phone', event.target.value)}
+                placeholder="+34 600 000 000"
+                inputMode="numeric"
+                autoComplete="tel-national"
+                maxLength={12}
+              />
+            </label>
+
             <div className="region-form-card__actions">
               <AdminButton
                 type="submit"

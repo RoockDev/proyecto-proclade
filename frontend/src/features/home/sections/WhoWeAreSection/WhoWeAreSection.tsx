@@ -111,7 +111,7 @@ export const WhoWeAreSection = () => {
             </div>
           ) : (
             superheroes.map((hero) => (
-              <div className="col-12 col-sm-6 col-xl-3" key={hero.id}>
+              <div className="col-12 col-sm-6 col-xl-3 d-flex" key={hero.id}>
                 <SuperheroPreviewCard hero={hero} />
               </div>
             ))

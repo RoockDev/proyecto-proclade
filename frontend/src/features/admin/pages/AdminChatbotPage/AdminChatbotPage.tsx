@@ -421,7 +421,7 @@ export const AdminChatbotPage = () => {
       ).trim();
 
       if (!questionCanonical) {
-        setError('La consulta no puede estar vacia.');
+        setError('La consulta no puede estar vacía.');
         return;
       }
 
@@ -542,7 +542,7 @@ export const AdminChatbotPage = () => {
           canonicalByUnresolvedId[item.id] || item.normalizedText
         ).trim();
         if (!questionCanonical) {
-          setError('La pregunta no puede estar vacia.');
+          setError('La pregunta no puede estar vacía.');
           return;
         }
 
@@ -689,7 +689,7 @@ export const AdminChatbotPage = () => {
 
   useEffect(() => {
     void loadUnresolved({ search: searchTerm, page: unresolvedPage });
-  }, [loadUnresolved, unresolvedPage]);
+  }, [loadUnresolved, searchTerm, unresolvedPage]);
 
   useEffect(() => {
     let refreshTimer: ReturnType<typeof setTimeout> | null = null;
@@ -905,7 +905,7 @@ export const AdminChatbotPage = () => {
           <div className="admin-chatbot-page__table-row admin-chatbot-page__table-row--head">
             <span>Consultas</span>
             <span>Ocurrencias</span>
-            <span>Última vez visto</span>
+            <span>Última vez vista</span>
             <span>Acciones</span>
           </div>
 
@@ -1112,7 +1112,7 @@ export const AdminChatbotPage = () => {
                 setUnresolvedPage(nextPage);
               }}
               disabled={unresolvedPage === 0 || unresolvedLoading}
-              aria-label="Pagina anterior"
+              aria-label="Página anterior"
             >
               {'\u2190'}
             </button>
@@ -1128,7 +1128,7 @@ export const AdminChatbotPage = () => {
               disabled={
                 unresolvedPage >= unresolvedTotalPages - 1 || unresolvedLoading
               }
-              aria-label="Pagina siguiente"
+              aria-label="Página siguiente"
             >
               {'\u2192'}
             </button>

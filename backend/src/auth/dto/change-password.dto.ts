@@ -1,4 +1,8 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  PASSWORD_POLICY_REGEX,
+} from '../../common/utils/password-policy';
 
 export class ChangePasswordDto {
   @IsString()
@@ -7,8 +11,8 @@ export class ChangePasswordDto {
 
   @IsString()
   @IsNotEmpty({ message: 'La nueva contraseña es obligatoria' })
-  @MinLength(6, {
-    message: 'La nueva contraseña debe tener al menos 6 caracteres',
+  @Matches(PASSWORD_POLICY_REGEX, {
+    message: PASSWORD_POLICY_MESSAGE,
   })
   newPassword: string;
 

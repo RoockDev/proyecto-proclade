@@ -56,10 +56,10 @@ export class HumanBooksService {
     file: UploadedPdfFile | undefined,
     createdById: number,
   ) {
+    await this.validateRegionExists(createDto.regionId);
+
     const pdfData = await this.storageService.savePdf(file);
     const slug = await this.generateUniqueSlug(createDto.title);
-
-    await this.validateRegionExists(createDto.regionId);
 
     const humanBook = await this.prisma.humanBook.create({
       data: {
@@ -137,12 +137,14 @@ export class HumanBooksService {
   }
 
   async remove(id: number) {
-    await this.findActiveById(id);
+    const current = await this.findActiveById(id);
 
     await this.prisma.humanBook.update({
       where: { id },
       data: { deletedAt: new Date() },
     });
+
+    await this.storageService.removePdf(current.pdfUrl);
 
     return {
       message: 'Libro humano eliminado correctamente',

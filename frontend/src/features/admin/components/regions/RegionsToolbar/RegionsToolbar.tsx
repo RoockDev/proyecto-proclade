@@ -20,7 +20,7 @@ export const RegionsToolbar = ({
         <AdminSearchBar
           value={search}
           onChange={onSearchChange}
-          placeholder="Buscar por nombre o email..."
+          placeholder="Buscar por nombre, dirección, email o teléfono..."
         />
       }
       actionsSlot={

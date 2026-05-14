@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getNewsBySlug } from '../../api/news.api';
-import { getMockNewsBySlug } from '../../mocks/news.mocks';
 import type { NewsItem } from '../../types/news.types';
 import { formatNewsDate } from '../../utils/news.mapper';
 import './NewsDetailPage.css';
@@ -10,7 +9,6 @@ export const NewsDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isFallback, setIsFallback] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const [warningMessage, setWarningMessage] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
@@ -42,24 +40,14 @@ export const NewsDetailPage = () => {
         }
 
         setNewsItem(response.data);
-        setIsFallback(false);
       } catch {
         if (!isMounted) {
           return;
         }
 
-        const fallbackItem = getMockNewsBySlug(slug);
-
-        if (fallbackItem) {
-          setNewsItem(fallbackItem);
-          setIsFallback(true);
-          setWarningMessage(
-            'No se pudo recuperar la noticia en tiempo real. Mostramos contenido de respaldo temporal.',
-          );
-        } else {
-          setNewsItem(null);
-          setIsNotFound(true);
-        }
+        setNewsItem(null);
+        setWarningMessage('No se pudo cargar la noticia solicitada.');
+        setIsNotFound(true);
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -129,12 +117,6 @@ export const NewsDetailPage = () => {
             <div className="alert alert-warning news-detail-page__alert" role="status">
               {warningMessage}
             </div>
-          )}
-
-          {isFallback && (
-            <p className="news-detail-page__fallback-note">
-              Mostrando detalle desde contenido de respaldo temporal.
-            </p>
           )}
 
           <span className="news-detail-page__category">{newsItem.category}</span>

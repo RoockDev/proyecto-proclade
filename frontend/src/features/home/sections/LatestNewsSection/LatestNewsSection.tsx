@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getLatestNews } from '../../../news/api/news.api';
 import { NewsGrid } from '../../../news/components/NewsGrid/NewsGrid';
-import { getMockLatestNews } from '../../../news/mocks/news.mocks';
 import type { NewsItem } from '../../../news/types/news.types';
 import './LatestNewsSection.css';
 
@@ -37,9 +36,9 @@ export const LatestNewsSection = () => {
           return;
         }
 
-        setItems(getMockLatestNews(HOME_NEWS_LIMIT));
+        setItems([]);
         setErrorMessage(
-          'No se pudieron cargar las noticias en tiempo real. Mostramos contenido de respaldo temporal.',
+          'No se pudieron cargar las noticias. Inténtalo de nuevo más tarde.',
         );
       } finally {
         if (isMounted) {

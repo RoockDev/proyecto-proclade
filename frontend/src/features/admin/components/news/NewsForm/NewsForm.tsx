@@ -7,10 +7,12 @@ type NewsFormProps = {
   isOpen: boolean;
   formMode: 'create' | 'edit';
   formData: AdminNewsFormData;
+  isExcerptAuto: boolean;
   feedback?: string | null;
   isProcessing: boolean;
   isUploadingImage: boolean;
   onFieldChange: (field: keyof AdminNewsFormData, value: string) => void;
+  onRegenerateExcerpt: () => void;
   onImageUpload: (file: File) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onReset: () => void;
@@ -27,10 +29,12 @@ export const NewsForm = ({
   isOpen,
   formMode,
   formData,
+  isExcerptAuto,
   feedback,
   isProcessing,
   isUploadingImage,
   onFieldChange,
+  onRegenerateExcerpt,
   onImageUpload,
   onSubmit,
   onReset,
@@ -127,10 +131,24 @@ export const NewsForm = ({
                 <textarea
                   value={formData.excerpt}
                   onChange={(event) => onFieldChange('excerpt', event.target.value)}
-                  placeholder="Resumen breve de al menos 40 caracteres"
+                  placeholder="Resumen breve de la noticia"
                   rows={1}
                   required
                 />
+                <div className="news-form-card__excerpt-tools">
+                  <span className="news-form-card__hint">
+                    {isExcerptAuto
+                      ? 'Resumen sincronizado automáticamente con el contenido hasta que lo edites manualmente.'
+                      : 'Resumen personalizado. Puedes regenerarlo desde el contenido cuando quieras.'}
+                  </span>
+                  <button
+                    type="button"
+                    className="news-form-card__excerpt-sync"
+                    onClick={onRegenerateExcerpt}
+                  >
+                    Regenerar resumen
+                  </button>
+                </div>
               </label>
 
               <label className="news-form-card__full">

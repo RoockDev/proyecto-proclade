@@ -20,7 +20,7 @@ export const NewsToolbar = ({
         <AdminSearchBar
           value={search}
           onChange={onSearchChange}
-          placeholder="Buscar por título, resumen o slug..."
+          placeholder="Buscar por título o resumen..."
         />
       }
       actionsSlot={

@@ -1,8 +1,10 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
+  Matches,
   MinLength,
 } from 'class-validator';
 
@@ -23,4 +25,12 @@ export class CreateRegionDto {
   @IsNotEmpty({ message: 'El email es obligatorio' })
   @MaxLength(120, { message: 'El email no puede superar 120 caracteres' })
   email: string;
+
+  @IsOptional()
+  @IsString({ message: 'El teléfono debe ser texto' })
+  @Matches(/^(?:\d{9}|\d{3}(?:\s\d{2}){3})$/, {
+    message: 'El teléfono debe tener exactamente 9 dígitos',
+  })
+  @MaxLength(12, { message: 'El teléfono no puede superar 12 caracteres' })
+  phone?: string;
 }
