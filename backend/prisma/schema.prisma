@@ -45,6 +45,7 @@ model User {
   resetPasswordTokenHash     String?
   resetPasswordExpiresAt     DateTime?
   deletedAt                  DateTime?
+  privacyAcceptedAt          DateTime?
   isRealHero                 Boolean               @default(false)
   realHeroSuperheroId        Int?                  @unique
   realHeroSuperhero          Superhero?            @relation("UserRealHero", fields: [realHeroSuperheroId], references: [id])

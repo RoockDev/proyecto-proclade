@@ -41,6 +41,8 @@ describe('MailService', () => {
       email: 'ana@example.com',
       telefono: '600123123',
       mensaje: 'Quiero ayudar',
+      privacyAccepted: true,
+      acceptedAt: new Date('2026-05-15T12:00:00.000Z'),
     });
 
     expect(sendMail).toHaveBeenCalledWith(
@@ -75,6 +77,8 @@ describe('MailService', () => {
       apellidos: 'López',
       email: 'ana@example.com',
       mensaje: '<script>alert("x")</script>',
+      privacyAccepted: true,
+      acceptedAt: new Date('2026-05-15T12:00:00.000Z'),
     });
 
     expect(sendMail).toHaveBeenCalledWith(
@@ -109,6 +113,8 @@ describe('MailService', () => {
         nombre: 'Ana',
         apellidos: 'Lopez',
         email: 'ana@example.com',
+        privacyAccepted: true,
+        acceptedAt: new Date('2026-05-15T12:00:00.000Z'),
       }),
     ).rejects.toThrow(
       'El servicio de correo no está disponible. Inténtalo de nuevo más tarde.',

@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "../../components/layout/Header/Header";
 import { Footer } from "../../components/layout/Footer/Footer";
 import { ChatbotWidget } from "../../features/chatbot/components/ChatbotWidget/ChatbotWidget";
+import { CookiePreferencesModal } from "../../features/privacy/components/CookiePreferencesModal/CookiePreferencesModal";
 import "./PublicLayout.css";
 
 export function PublicLayout() {
   const location = useLocation();
+  const [showCookieModal, setShowCookieModal] = useState(false);
 
   useEffect(() => {
     if (!location.hash) {
@@ -39,8 +41,11 @@ export function PublicLayout() {
       <main className="public-layout__content">
         <Outlet />
       </main>
-      <Footer />
+      <Footer onCookiePreferencesClick={() => setShowCookieModal(true)} />
       <ChatbotWidget />
+      {showCookieModal && (
+        <CookiePreferencesModal onClose={() => setShowCookieModal(false)} />
+      )}
     </div>
   );
 }

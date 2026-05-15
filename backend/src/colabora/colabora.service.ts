@@ -7,6 +7,9 @@ export class ColaboraService {
   constructor(private readonly mailService: MailService) {}
 
   async sendContactForm(contactData: ContactFormDto): Promise<void> {
-    await this.mailService.sendContactEmail(contactData);
+    await this.mailService.sendContactEmail({
+      ...contactData,
+      acceptedAt: new Date(),
+    });
   }
 }

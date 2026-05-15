@@ -22,6 +22,8 @@ type RegisterFormState = {
   email: string;
   password: string;
   confirmPassword: string;
+  privacyAccepted: boolean;
+  privacyError: string | null;
   loading: boolean;
   error: string | null;
   successMessage: string | null;
@@ -36,6 +38,8 @@ export const RegisterForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    privacyAccepted: false,
+    privacyError: null,
     loading: false,
     error: null,
     successMessage: null,
@@ -48,23 +52,36 @@ export const RegisterForm = () => {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormState((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
       error: null,
       successMessage: null,
+      ...(name === 'privacyAccepted' ? { privacyError: null } : {}),
     }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!formState.privacyAccepted) {
+      setFormState((prev) => ({
+        ...prev,
+        privacyError:
+          'Debes aceptar la Política de privacidad para crear una cuenta',
+        error: null,
+        successMessage: null,
+      }));
+      return;
+    }
+
     setFormState((prev) => ({
       ...prev,
       loading: true,
       error: null,
       successMessage: null,
+      privacyError: null,
     }));
 
     const passwordError = validatePasswordPolicy(formState.password);
@@ -95,6 +112,7 @@ export const RegisterForm = () => {
         surname: formState.surname.trim(),
         email: formState.email.trim(),
         password: formState.password,
+        privacyAccepted: true,
       });
 
       if (!response.success || !response.data) {
@@ -240,6 +258,36 @@ export const RegisterForm = () => {
           {formState.error}
         </div>
       )}
+
+      <div className="auth-form__field auth-form__field--checkbox">
+        <label htmlFor="privacyAccepted" className="auth-form__checkbox-label">
+          <input
+            type="checkbox"
+            id="privacyAccepted"
+            name="privacyAccepted"
+            checked={formState.privacyAccepted}
+            onChange={handleChange}
+            disabled={formState.loading}
+            className="auth-form__checkbox"
+          />
+          <span>
+            He leído y acepto la{' '}
+            <a
+              href="https://www.fundacionproclade.org/politica-de-privacidad/"
+              target="_blank"
+              rel="noreferrer"
+              className="auth-form__privacy-link"
+            >
+              Política de privacidad
+            </a>
+          </span>
+        </label>
+        {formState.privacyError && (
+          <p className="auth-form__field-error" role="alert">
+            {formState.privacyError}
+          </p>
+        )}
+      </div>
 
       <button
         type="submit"

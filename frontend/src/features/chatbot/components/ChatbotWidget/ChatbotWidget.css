@@ -231,6 +231,25 @@
   font-weight: 700;
 }
 
+.chatbot-panel__privacy-notice {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  background: rgba(220, 38, 38, 0.06);
+  border-top: 1px solid rgba(13, 59, 115, 0.08);
+  color: var(--brand-dark);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.chatbot-panel__privacy-notice i {
+  color: #9f1239;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+
 .chatbot-panel__composer {
   border-top: 1px solid rgba(13, 59, 115, 0.08);
   padding: 0.72rem;

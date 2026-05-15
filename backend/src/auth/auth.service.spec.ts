@@ -76,6 +76,7 @@ describe('AuthService', () => {
       password: 'Secret123!',
       name: 'Nuevo',
       surname: 'Usuario',
+      privacyAccepted: true,
     });
 
     expect(prismaMock.user.create).toHaveBeenCalledWith({

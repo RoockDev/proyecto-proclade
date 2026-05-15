@@ -1,5 +1,7 @@
 import { Transform } from 'class-transformer';
 import {
+  Equals,
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -52,4 +54,10 @@ export class ContactFormDto {
   @IsString({ message: 'El mensaje debe ser texto' })
   @MaxLength(2000, { message: 'El mensaje no puede superar 2000 caracteres' })
   mensaje?: string;
+
+  @IsBoolean({ message: 'La aceptación de la Política de privacidad es obligatoria' })
+  @Equals(true, {
+    message: 'Debes aceptar la Política de privacidad para enviar el formulario',
+  })
+  privacyAccepted: boolean;
 }
