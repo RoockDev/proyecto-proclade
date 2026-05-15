@@ -147,6 +147,13 @@ export function ChatbotWidget() {
             </p>
           )}
 
+          <p className="chatbot-panel__privacy-notice" role="note">
+            <i className="bi bi-shield-exclamation" aria-hidden="true" />
+            <span>
+              No introduzcas datos sensibles. Las consultas pueden utilizarse para responderte y mejorar la información disponible en la web.
+            </span>
+          </p>
+
           <form className="chatbot-panel__composer" onSubmit={handleSubmit}>
             <label className="visually-hidden" htmlFor="chatbot-input">
               Escribe tu mensaje

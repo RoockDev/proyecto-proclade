@@ -30,6 +30,54 @@
   margin-bottom: 0.95rem;
 }
 
+.delegation-contact-panel__map-placeholder {
+  border: 2px dashed rgba(13, 59, 115, 0.22);
+  border-radius: var(--radius-md);
+  background: rgba(13, 59, 115, 0.04);
+  padding: 1.4rem 1rem;
+  margin-bottom: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.7rem;
+  min-height: 13rem;
+  justify-content: center;
+}
+
+.delegation-contact-panel__placeholder-icon {
+  font-size: 1.8rem;
+  color: var(--brand-secondary);
+}
+
+.delegation-contact-panel__placeholder-text {
+  margin: 0;
+  color: var(--brand-dark);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.delegation-contact-panel__placeholder-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.delegation-contact-panel__placeholder-actions .btn {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .delegation-contact-panel__placeholder-actions {
+    flex-direction: row;
+  }
+  .delegation-contact-panel__placeholder-actions .btn {
+    flex: 1;
+  }
+}
+
 .delegation-contact-panel__details {
   display: grid;
   gap: 0.55rem;

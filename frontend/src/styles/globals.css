@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+/* Tipografía: se usan fuentes del sistema con fallbacks por privacidad (no se cargan
+   recursos remotos de Google Fonts). Si en el futuro se reactiva una fuente externa,
+   debe cargarse condicionalmente según las preferencias de cookies/servicios externos. */
 
 :root {
   /* Paleta cliente */
@@ -9,8 +11,8 @@
   --puch-green: #6baa75;
 
   /* Tipografia */
-  --font-heading: 'Sora', 'Trebuchet MS', sans-serif;
-  --font-body: 'Nunito Sans', 'Segoe UI', sans-serif;
+  --font-heading: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Variables semanticas del proyecto */
   --brand-primary: var(--puch-green);
