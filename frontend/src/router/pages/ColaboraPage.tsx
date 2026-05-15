@@ -22,6 +22,8 @@ export const ColaboraPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState<string | null>(null);
 
   useEffect(() => {
     void getPublicChallenges()
@@ -52,6 +54,15 @@ export const ColaboraPage = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!privacyAccepted) {
+      setPrivacyError(
+        'Debes aceptar la Política de privacidad para enviar el formulario',
+      );
+      return;
+    }
+
+    setPrivacyError(null);
     setIsLoading(true);
     setMessage('');
     setIsSuccess(null);
@@ -64,6 +75,7 @@ export const ColaboraPage = () => {
       email: formData.get('email') as string,
       telefono: formData.get('telefono') as string || undefined,
       mensaje: formData.get('mensaje') as string || undefined,
+      privacyAccepted: true,
     };
 
     try {
@@ -72,6 +84,7 @@ export const ColaboraPage = () => {
         setMessage('Mensaje enviado correctamente. ¡Gracias por contactar!');
         setIsSuccess(true);
         form.reset();
+        setPrivacyAccepted(false);
       } else {
         setMessage(response.message || 'Error al enviar el mensaje. Inténtalo de nuevo.');
         setIsSuccess(false);
@@ -206,6 +219,40 @@ export const ColaboraPage = () => {
               * Este formulario se envía a info@fundacionproclade.org y te
               responderemos usando los datos que nos facilites.
             </small>
+
+            <p className="colabora-page__privacy-notice">
+              Usaremos tus datos únicamente para responder a tu consulta o gestionar tu solicitud de colaboración.
+            </p>
+
+            <label className="colabora-page__privacy-check">
+              <input
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(event) => {
+                  setPrivacyAccepted(event.target.checked);
+                  if (event.target.checked) {
+                    setPrivacyError(null);
+                  }
+                }}
+                disabled={isLoading}
+              />
+              <span>
+                He leído y acepto la{' '}
+                <a
+                  href="https://www.fundacionproclade.org/politica-de-privacidad/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Política de privacidad
+                </a>
+              </span>
+            </label>
+            {privacyError && (
+              <p className="colabora-page__form-feedback colabora-page__form-feedback--error" role="alert">
+                {privacyError}
+              </p>
+            )}
+
             <button type="submit" disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar'}
             </button>

@@ -7,6 +7,7 @@ export type ContactFormData = {
   email: string;
   telefono?: string;
   mensaje?: string;
+  privacyAccepted: boolean;
 };
 
 export async function sendContactForm(

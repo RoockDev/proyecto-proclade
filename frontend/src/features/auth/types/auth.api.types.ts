@@ -8,6 +8,7 @@ export type RegisterRequestDto = {
   surname: string;
   email: string;
   password: string;
+  privacyAccepted: boolean;
 };
 
 export type ForgotPasswordRequestDto = {
