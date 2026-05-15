@@ -86,6 +86,7 @@ export class AuthService {
         passwordHash: hashedPassword,
         name: registerDto.name,
         surname: registerDto.surname,
+        privacyAcceptedAt: new Date(),
         roles: {
           connectOrCreate: [
             {

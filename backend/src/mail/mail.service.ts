@@ -116,6 +116,8 @@ Equipo Proclade
     email: string;
     telefono?: string;
     mensaje?: string;
+    privacyAccepted: boolean;
+    acceptedAt: Date;
   }): Promise<void> {
     if (!this.isSmtpConfigured) {
       this.logger.error(
@@ -126,7 +128,7 @@ Equipo Proclade
       );
     }
 
-    const { nombre, apellidos, email, telefono, mensaje } = contactData;
+    const { nombre, apellidos, email, telefono, mensaje, privacyAccepted, acceptedAt } = contactData;
     const safeNombre = this.escapeHtml(nombre);
     const safeApellidos = this.escapeHtml(apellidos);
     const safeEmail = this.escapeHtml(email);
@@ -134,12 +136,19 @@ Equipo Proclade
     const safeMensajeHtml = mensaje
       ? this.escapeHtml(mensaje).replace(/\n/g, '<br />')
       : 'No proporcionado';
+    const acceptedAtIso = acceptedAt.toISOString();
+    const acceptedAtFormatted = acceptedAt.toLocaleString('es-ES', {
+      timeZone: 'Europe/Madrid',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+    const privacyLabel = privacyAccepted ? 'SÍ' : 'NO';
 
     const mailOptions = {
       from: this.mailFrom,
       to: this.contactFormTo,
       subject: 'Nuevo mensaje de contacto - Colabora',
-      text: `Nuevo mensaje de contacto desde el formulario de colaboración.\n\nNombre: ${nombre}\nApellidos: ${apellidos}\nEmail: ${email}\nTeléfono: ${telefono || 'No proporcionado'}\nMensaje: ${mensaje || 'No proporcionado'}\n\nSistema Proclade`,
+      text: `Nuevo mensaje de contacto desde el formulario de colaboración.\n\nNombre: ${nombre}\nApellidos: ${apellidos}\nEmail: ${email}\nTeléfono: ${telefono || 'No proporcionado'}\nMensaje: ${mensaje || 'No proporcionado'}\n\n--- Metadatos RGPD ---\nAceptación de la Política de privacidad: ${privacyLabel}\nFecha y hora de envío: ${acceptedAtFormatted} (${acceptedAtIso})\nOrigen: Formulario de Colabora\n\nSistema Proclade`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px; background: #f8fafc; color: #1f2937;">
           <div style="background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);">
@@ -174,6 +183,13 @@ Equipo Proclade
                 <div style="background: #f8f9fb; border-radius: 12px; padding: 16px; color: #111827; line-height: 1.7;">
                   ${safeMensajeHtml}
                 </div>
+              </div>
+
+              <div style="margin-top: 24px; padding: 16px; background: #ecfdf5; border-left: 4px solid #16a34a; border-radius: 8px;">
+                <p style="margin: 0 0 6px; font-weight: 700; color: #14532d;">Metadatos RGPD</p>
+                <p style="margin: 0 0 4px; color: #14532d;">✓ Aceptación de la Política de privacidad: <strong>${privacyLabel}</strong></p>
+                <p style="margin: 0 0 4px; color: #14532d;">Fecha y hora del envío: <strong>${acceptedAtFormatted}</strong> (${acceptedAtIso})</p>
+                <p style="margin: 0; color: #14532d;">Origen: Formulario de Colabora</p>
               </div>
 
               <p style="margin: 24px 0 0; font-size: 0.9rem; color: #6b7280;">Este correo se generó desde el formulario de colaboración de Equipo PUCH.</p>
