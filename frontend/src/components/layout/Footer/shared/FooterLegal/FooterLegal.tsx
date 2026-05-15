@@ -1,6 +1,10 @@
 import './FooterLegal.css';
 
-export const FooterLegal = () => (
+type FooterLegalProps = {
+  onCookiePreferencesClick?: () => void;
+};
+
+export const FooterLegal = ({ onCookiePreferencesClick }: FooterLegalProps) => (
   <div className="footer-legal">
     <p>© 2026 Equipo PUCH. Unidos contra el hambre.</p>
     <div className="footer-legal__links">
@@ -18,6 +22,15 @@ export const FooterLegal = () => (
       >
         Privacidad
       </a>
+      {onCookiePreferencesClick && (
+        <button
+          type="button"
+          className="footer-legal__link-button"
+          onClick={onCookiePreferencesClick}
+        >
+          Configurar cookies
+        </button>
+      )}
     </div>
   </div>
 );

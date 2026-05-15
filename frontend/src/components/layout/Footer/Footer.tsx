@@ -3,7 +3,11 @@ import { FooterBrand } from "./shared/FooterBrand/FooterBrand";
 import { FooterColumn } from "./shared/FooterColumn/FooterColumn";
 import { FooterLegal } from "./shared/FooterLegal/FooterLegal";
 
-export const Footer = () => (
+type FooterProps = {
+  onCookiePreferencesClick?: () => void;
+};
+
+export const Footer = ({ onCookiePreferencesClick }: FooterProps) => (
   <footer id="contacto" className="brand-footer section-padding">
     <div className="container">
       <div className="row g-4">
@@ -66,7 +70,7 @@ export const Footer = () => (
 
       <hr className="footer-separator" />
 
-      <FooterLegal />
+      <FooterLegal onCookiePreferencesClick={onCookiePreferencesClick} />
     </div>
   </footer>
 );
