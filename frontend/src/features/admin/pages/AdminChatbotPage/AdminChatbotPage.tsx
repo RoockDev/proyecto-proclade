@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   createChatbotKnowledge,
   deleteChatbotUnresolved,
@@ -10,6 +10,7 @@ import {
   updateChatbotKnowledge,
 } from '../../api/admin-chatbot.api';
 import { ConfirmModal } from '../../components/shared/ConfirmModal/ConfirmModal';
+import { adminChatbotWsService } from '../../../../services/http/admin-chatbot-websocket.service';
 import type {
   ChatbotKnowledgeItem,
   ChatbotMetricsData,
@@ -73,26 +74,35 @@ export const AdminChatbotPage = () => {
   const [answerDraftById, setAnswerDraftById] = useState<Record<number, string>>(
     {},
   );
+  const searchTermRef = useRef(searchTerm);
+  const unresolvedPageRef = useRef(unresolvedPage);
   const showNotification = useCallback((message: string, type: NotificationType) => {
     setNotification({ message, type });
   }, []);
 
-  const loadMetrics = useCallback(async () => {
-    setMetricLoading(true);
-    setError(null);
+  const loadMetrics = useCallback(async (options?: { silent?: boolean }) => {
+    const silent = options?.silent === true;
+    if (!silent) {
+      setMetricLoading(true);
+      setError(null);
+    }
 
     try {
       const response = await fetchChatbotMetrics();
       if (response.success && response.data?.metrics) {
         setMetrics(response.data.metrics);
-      } else {
+      } else if (!silent) {
         setError(response.message || 'Error al cargar métricas del asistente');
       }
     } catch (err) {
       console.error(err);
-      setError('Error al recuperar las métricas del chatbot');
+      if (!silent) {
+        setError('Error al recuperar las métricas del chatbot');
+      }
     } finally {
-      setMetricLoading(false);
+      if (!silent) {
+        setMetricLoading(false);
+      }
     }
   }, []);
 
@@ -100,12 +110,16 @@ export const AdminChatbotPage = () => {
     async ({
       search,
       page,
+      silent = false,
     }: {
       search?: string;
       page?: number;
+      silent?: boolean;
     } = {}) => {
-      setUnresolvedLoading(true);
-      setError(null);
+      if (!silent) {
+        setUnresolvedLoading(true);
+        setError(null);
+      }
 
       try {
         const searchValue = search?.trim() || undefined;
@@ -178,14 +192,18 @@ export const AdminChatbotPage = () => {
               knowledgeChecks.map((entry) => [entry.id, entry.canonical]),
             ),
           );
-        } else {
+        } else if (!silent) {
           setError(response.message || 'Error al cargar preguntas no resueltas');
         }
       } catch (err) {
         console.error(err);
-        setError('Error al consultar preguntas pendientes');
+        if (!silent) {
+          setError('Error al consultar preguntas pendientes');
+        }
       } finally {
-        setUnresolvedLoading(false);
+        if (!silent) {
+          setUnresolvedLoading(false);
+        }
       }
     },
     [],
@@ -662,8 +680,65 @@ export const AdminChatbotPage = () => {
   }, [notification]);
 
   useEffect(() => {
+    searchTermRef.current = searchTerm;
+  }, [searchTerm]);
+
+  useEffect(() => {
+    unresolvedPageRef.current = unresolvedPage;
+  }, [unresolvedPage]);
+
+  useEffect(() => {
     void loadUnresolved({ search: searchTerm, page: unresolvedPage });
   }, [loadUnresolved, searchTerm, unresolvedPage]);
+
+  useEffect(() => {
+    let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+    const scheduleRefresh = () => {
+      if (refreshTimer) {
+        return;
+      }
+
+      refreshTimer = setTimeout(() => {
+        refreshTimer = null;
+        void Promise.all([
+          loadMetrics({ silent: true }),
+          loadUnresolved({
+            search: searchTermRef.current,
+            page: unresolvedPageRef.current,
+            silent: true,
+          }),
+        ]);
+      }, 250);
+    };
+
+    void adminChatbotWsService.connect().catch((error) => {
+      console.error('No se pudo conectar al websocket de admin chatbot', error);
+    });
+
+    const unsubNewMessage = adminChatbotWsService.on(
+      'newMessage',
+      scheduleRefresh,
+    );
+    const unsubUnresolved = adminChatbotWsService.on(
+      'unresolvedQuestionCreated',
+      scheduleRefresh,
+    );
+
+    // Fallback de resiliencia: aunque falle WS, refresca solo cada 5s.
+    const pollingInterval = setInterval(() => {
+      scheduleRefresh();
+    }, 5000);
+
+    return () => {
+      if (refreshTimer) {
+        clearTimeout(refreshTimer);
+      }
+      clearInterval(pollingInterval);
+      unsubNewMessage();
+      unsubUnresolved();
+      adminChatbotWsService.disconnect();
+    };
+  }, [loadMetrics, loadUnresolved]);
 
   const metricCards = useMemo(() => {
     const base = metrics ?? {
@@ -883,7 +958,7 @@ export const AdminChatbotPage = () => {
                         {canonicalByUnresolvedId[item.id] || item.normalizedText}
                       </strong>
                     )}
-                    {!item.resolvedAt && (
+                    {!item.resolvedAt && questionEditingId !== item.id && (
                       <button
                         type="button"
                         className="admin-chatbot-page__query-edit"
