@@ -24,6 +24,11 @@ import { ChatbotGateway } from './chatbot.gateway';
     UnresolvedQuestionService,
     ChatbotGateway,
   ],
-  exports: [ChatbotOrchestratorService, ChatbotMatchingConfigService, ChatbotGateway],
+  exports: [
+    ChatbotOrchestratorService,
+    ChatbotMatchingConfigService,
+    ChatbotGateway,
+    KnowledgeBaseService,
+  ],
 })
 export class ChatbotModule {}
