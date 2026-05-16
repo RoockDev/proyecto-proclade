@@ -1,0 +1,81 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Docker Compose — MODO PRODUCCIÓN
+#
+# Diferencias clave vs docker-compose.yml (dev):
+#   • Sólo Nginx expone puertos al host (80:80). DB y backend viven en la red
+#     interna de Docker y no son accesibles desde fuera.
+#   • Backend se construye con docker/backend/Dockerfile.prod (Nest compilado,
+#     `node dist/main`, prisma migrate deploy).
+#   • Frontend NO existe como servicio: el build estático de Vite se copia
+#     dentro de la imagen de Nginx (docker/frontend/Dockerfile.prod).
+#   • Uploads se sirven directamente por Nginx desde un volumen compartido
+#     con el backend (más rápido y descarga a Nest).
+#   • Volúmenes nombrados separados de dev (`db_data_prod`) para que ambos
+#     entornos puedan convivir en la misma máquina sin pisarse.
+#
+# Uso:
+#   1) Copia backend/.env.prod.example → backend/.env y rellena los valores.
+#   2) Copia .env.example → .env (POSTGRES_*).
+#   3) docker compose -f docker-compose.prod.yml up -d --build
+#   4) Acceso: http://localhost
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: proyectoproclade_prod
+
+services:
+  ### POSTGRES BBDD
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Sin puerto expuesto: la BBDD solo es accesible internamente desde
+    # otros contenedores (servicio `db`, puerto 5432).
+    volumes:
+      - db_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  ### BACKEND (NestJS compilado)
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile.prod
+    env_file:
+      - backend/.env
+    environment:
+      NODE_ENV: production
+    # Sin volúmenes de código fuente: la imagen es inmutable.
+    # Sólo se monta el volumen compartido para los uploads, que Nginx también
+    # tiene montado en modo solo-lectura.
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ### NGINX + Frontend estático (todo en una imagen)
+  # La imagen lleva dentro el build de Vite. Actúa como punto único de entrada
+  # y como reverse proxy hacia el backend (/api/, /socket.io/).
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile.prod
+    ports:
+      - "80:80"
+    volumes:
+      # Uploads servidos directamente por Nginx (solo lectura)
+      - uploads_data:/var/www/uploads:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data_prod:
+  uploads_data:

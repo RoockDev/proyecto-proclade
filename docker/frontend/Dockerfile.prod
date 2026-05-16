@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1.7
+
+# ───────────────────────────────────────────────────────────────────────
+# Stage 1: builder — instala deps y genera el bundle estático con Vite
+# ───────────────────────────────────────────────────────────────────────
+FROM node:24.13.0-bookworm-slim AS builder
+
+WORKDIR /app
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+
+COPY frontend/package.json frontend/yarn.lock ./
+RUN yarn config set nodeLinker node-modules \
+ && yarn install --immutable
+
+COPY frontend ./
+
+# Build de producción (genera /app/dist con HTML/CSS/JS optimizados y con hash)
+RUN yarn build
+
+# ───────────────────────────────────────────────────────────────────────
+# Stage 2: nginx — sirve los estáticos del build + actúa como reverse
+# proxy hacia el backend (no hay servicio "frontend" en runtime).
+# ───────────────────────────────────────────────────────────────────────
+FROM nginx:alpine AS runtime
+
+# Configuración de Nginx (SPA fallback, /api → backend, /uploads, headers, …)
+COPY nginx/default.prod.conf /etc/nginx/conf.d/default.conf
+
+# Bundle estático del frontend
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

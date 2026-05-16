@@ -1,0 +1,68 @@
+# syntax=docker/dockerfile:1.7
+
+# ───────────────────────────────────────────────────────────────────────
+# Stage 1: builder — instala deps, genera Prisma Client y compila Nest
+# ───────────────────────────────────────────────────────────────────────
+FROM node:24.13.0-bookworm-slim AS builder
+
+WORKDIR /app
+
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends openssl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+
+# Instalación de dependencias (capa cacheable)
+COPY backend/package.json backend/yarn.lock ./
+RUN yarn config set nodeLinker node-modules \
+ && yarn install --immutable
+
+# Código fuente
+COPY backend ./
+
+# Generar Prisma Client (DATABASE_URL dummy: prisma generate no conecta)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+RUN yarn prisma:generate
+
+# Build de Nest (produce dist/)
+RUN yarn build
+
+# ───────────────────────────────────────────────────────────────────────
+# Stage 2: runtime — imagen final mínima, solo lo necesario para correr
+# ───────────────────────────────────────────────────────────────────────
+FROM node:24.13.0-bookworm-slim AS runtime
+
+WORKDIR /app
+
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends openssl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV NODE_ENV=production
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+
+# Copiamos los artefactos necesarios desde el builder
+COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/generated ./generated
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/prisma.config.ts ./
+# `prisma:init-system` ejecuta prisma/bootstrap-system.ts con tsx; ese script
+# importa utilidades de src/common/* a través de paths relativos. Copiamos
+# src/ para que la resolución funcione en runtime sin necesidad de compilarlo.
+COPY --from=builder /app/src ./src
+
+# Script de arranque de producción
+COPY backend/scripts/docker-start-prod.sh ./scripts/docker-start-prod.sh
+RUN chmod +x ./scripts/docker-start-prod.sh
+
+# El backend escucha en 3000 pero NO publicamos el puerto al host:
+# Nginx (el único servicio expuesto) lo consume vía red interna.
+EXPOSE 3000
+
+CMD ["sh", "./scripts/docker-start-prod.sh"]

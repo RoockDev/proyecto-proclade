@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.prod.example
 backend/.env
 frontend/.env
 
@@ -28,6 +29,9 @@ Thumbs.db
 
 # Docker
 *.pid
+
+# Nginx SSL certs (locales, no se versionan)
+nginx/ssl/
 
 # Yarn
 **/.yarn/install-state.gz

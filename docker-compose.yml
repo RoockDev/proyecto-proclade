@@ -7,8 +7,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
+    # Sin puerto expuesto al host: la BBDD sólo es accesible desde otros
+    # contenedores en la red interna de Docker (servicio `db`, puerto 5432).
+    # Para conectarse desde el host usa: docker compose exec db psql -U $POSTGRES_USER -d $POSTGRES_DB
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
