@@ -3,6 +3,7 @@ export type PublicRegionApiItem = {
   name: string;
   address: string;
   email: string;
+  phone: string | null;
 };
 
 export type HumanBookApiItem = {

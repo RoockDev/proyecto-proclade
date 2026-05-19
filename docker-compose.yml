@@ -1,7 +1,5 @@
 
 services:
-
-
   ### POSTRGES BBDD
   db:
     image: postgres:16
@@ -19,13 +17,6 @@ services:
       timeout: 3s
       retries: 20
 
-  ### REDIS
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
-
-
   ###BACKEND
   backend:
     build:
@@ -42,12 +33,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
-    command: >
-      sh -c "yarn exec prisma generate &&
-             yarn exec prisma migrate deploy &&
-             yarn start:dev"
+    command: ["sh", "./scripts/docker-start-dev.sh"]
   
 
   ### FRONTEND 

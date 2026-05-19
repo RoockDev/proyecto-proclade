@@ -1,4 +1,8 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Equals, IsBoolean, IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  PASSWORD_POLICY_REGEX,
+} from '../../common/utils/password-policy';
 
 export class RegisterDto {
   @IsString()
@@ -14,7 +18,15 @@ export class RegisterDto {
   email: string;
 
   @IsString()
-  @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
   @IsNotEmpty({ message: 'La contraseña es obligatoria' })
+  @Matches(PASSWORD_POLICY_REGEX, {
+    message: PASSWORD_POLICY_MESSAGE,
+  })
   password: string;
+
+  @IsBoolean({ message: 'La aceptación de la Política de privacidad es obligatoria' })
+  @Equals(true, {
+    message: 'Debes aceptar la Política de privacidad para crear una cuenta',
+  })
+  privacyAccepted: boolean;
 }

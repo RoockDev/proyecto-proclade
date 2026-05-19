@@ -12,6 +12,7 @@ export function ChatbotWidget() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [draftMessage, setDraftMessage] = useState('');
+  const [hasInteracted, setHasInteracted] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const {
     messages,
@@ -59,6 +60,7 @@ export function ChatbotWidget() {
     }
 
     setDraftMessage('');
+    setHasInteracted(true);
     void sendMessage(nextMessage, pageContext);
   };
 
@@ -68,6 +70,7 @@ export function ChatbotWidget() {
     }
 
     setDraftMessage('');
+    setHasInteracted(true);
     void sendMessage(suggestion, pageContext);
   };
 
@@ -144,6 +147,15 @@ export function ChatbotWidget() {
           {errorMessage && (
             <p className="chatbot-panel__error" role="status" aria-live="polite">
               {errorMessage}
+            </p>
+          )}
+
+          {!hasInteracted && (
+            <p className="chatbot-panel__privacy-notice" role="note">
+              <i className="bi bi-shield-exclamation" aria-hidden="true" />
+              <span>
+                No introduzcas datos sensibles. Las consultas pueden utilizarse para responderte y mejorar la información disponible en la web.
+              </span>
             </p>
           )}
 

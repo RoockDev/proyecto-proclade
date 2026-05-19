@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { AdminButton } from '../../shared/AdminButton/AdminButton';
+import { PASSWORD_POLICY_MESSAGE } from '../../../../../utils/password-policy';
 import './UsersForm.css';
 
 const ROLE_OPTIONS = ['ADMIN', 'USER'] as const;
@@ -155,6 +156,7 @@ export const UsersForm = ({
                           value={formData[field]}
                           onChange={(event) => onFieldChange(field, event.target.value)}
                           placeholder={getFieldPlaceholder(field)}
+                          minLength={isPasswordField || isConfirmField ? 8 : undefined}
                           required
                         />
                         {(isPasswordField || isConfirmField) && (
@@ -183,6 +185,11 @@ export const UsersForm = ({
                         )}
                       </div>
                     )}
+                    {field === 'password' ? (
+                      <span className="users-form-card__hint">
+                        {PASSWORD_POLICY_MESSAGE}
+                      </span>
+                    ) : null}
                   </label>
                 );
               })}

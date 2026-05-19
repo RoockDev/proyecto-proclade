@@ -57,7 +57,7 @@ export const mapDelegationContacts = (
       label: region.name,
       address: region.address,
       email: region.email,
-      phone: null,
+      phone: region.phone,
       mapQuery: buildMapQuery(region),
     };
 

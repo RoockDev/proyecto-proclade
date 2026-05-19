@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import './CtaSection.css';
+import { Link } from "react-router-dom";
+import "./CtaSection.css";
 
 export const CtaSection = () => {
   return (
@@ -7,12 +7,15 @@ export const CtaSection = () => {
       <div className="container text-center">
         <h2 className="home-cta__title">Únete al cambio</h2>
         <p className="home-cta__text">
-          Cada acción cuenta. Colabora con tu tiempo, tu historia o tu
-          donación para construir un mundo sin hambre.
+          Cada acción cuenta. Colabora con tu tiempo, tu historia o tu donación
+          para construir un mundo sin hambre.
         </p>
 
         <div className="home-cta__actions">
-          <Link to="/colabora" className="btn btn-light btn-lg home-cta__btn-main">
+          <Link
+            to="/colabora"
+            className="btn btn-light btn-lg home-cta__btn-main"
+          >
             Colabora ahora <i className="bi bi-arrow-right ms-2" />
           </Link>
 

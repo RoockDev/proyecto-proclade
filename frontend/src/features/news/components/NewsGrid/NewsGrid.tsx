@@ -13,7 +13,7 @@ export const NewsGrid = ({ items, variant }: NewsGridProps) => {
   return (
     <div className="row g-4">
       {items.map((item) => (
-        <div className={columnClass} key={item.id}>
+        <div className={`${columnClass} d-flex`} key={item.id}>
           <NewsCard news={item} variant={variant} />
         </div>
       ))}

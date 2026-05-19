@@ -40,5 +40,4 @@ export type SuperheroListState = {
   pageSize: number;
   total: number;
   totalPages: number;
-  isFallback: boolean;
 };

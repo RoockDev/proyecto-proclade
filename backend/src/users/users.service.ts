@@ -37,7 +37,13 @@ export class UsersService {
 
   private formatUserResponse(user: any) {
     if (!user) return null;
-    const { passwordHash, roles, ...rest } = user;
+    const {
+      passwordHash,
+      resetPasswordTokenHash,
+      resetPasswordExpiresAt,
+      roles,
+      ...rest
+    } = user;
     return {
       ...rest,
 
@@ -57,15 +63,28 @@ export class UsersService {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const rolesToConnect = roles?.length ? roles : [RoleName.USER];
+    const usesDefaultUserRole = !roles?.length;
 
     const user = await this.prisma.user.create({
       data: {
         ...rest,
         passwordHash,
-        roles: {
-          connect: rolesToConnect.map((roleName) => ({ name: roleName })),
-        },
+        roles: usesDefaultUserRole
+          ? {
+              connectOrCreate: [
+                {
+                  where: {
+                    name: RoleName.USER,
+                  },
+                  create: {
+                    name: RoleName.USER,
+                  },
+                },
+              ],
+            }
+          : {
+              connect: roles.map((roleName) => ({ name: roleName })),
+            },
       },
       include: { roles: true },
     });

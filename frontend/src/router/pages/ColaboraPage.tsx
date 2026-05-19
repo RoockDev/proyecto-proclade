@@ -1,20 +1,297 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import type { FormEvent } from 'react';
+import {
+  getPublicChallenges,
+  type PublicChallenge,
+} from '../../features/challenges/api/challenges.api';
+import { sendContactForm } from '../../features/colabora/api/colabora.api';
+import { ChallengeDetailModal } from './components/ChallengeDetailModal';
+import './ColaboraPage.css';
+
+const euroFormat = new Intl.NumberFormat('es-ES', {
+  style: 'currency',
+  currency: 'EUR',
+  maximumFractionDigits: 0,
+});
 
 export const ColaboraPage = () => {
+  const [challenges, setChallenges] = useState<PublicChallenge[]>([]);
+  const [selectedChallenge, setSelectedChallenge] = useState<
+    (PublicChallenge & { progress: number; remaining: number }) | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState<string | null>(null);
+
+  useEffect(() => {
+    void getPublicChallenges()
+      .then((response) => {
+        if (response.success && response.data) {
+          setChallenges(response.data);
+        }
+      })
+      .catch(() => setChallenges([]));
+  }, []);
+
+  const challengeCards = useMemo(
+    () =>
+      challenges.map((challenge) => {
+        const progress = Math.min(
+          100,
+          Math.round((challenge.currentAmount / challenge.targetAmount) * 100),
+        );
+        const remaining = Math.max(0, challenge.targetAmount - challenge.currentAmount);
+        return {
+          ...challenge,
+          progress,
+          remaining,
+        };
+      }),
+    [challenges],
+  );
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!privacyAccepted) {
+      setPrivacyError(
+        'Debes aceptar la Política de privacidad para enviar el formulario',
+      );
+      return;
+    }
+
+    setPrivacyError(null);
+    setIsLoading(true);
+    setMessage('');
+    setIsSuccess(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const data = {
+      nombre: formData.get('nombre') as string,
+      apellidos: formData.get('apellidos') as string,
+      email: formData.get('email') as string,
+      telefono: formData.get('telefono') as string || undefined,
+      mensaje: formData.get('mensaje') as string || undefined,
+      privacyAccepted: true,
+    };
+
+    try {
+      const response = await sendContactForm(data);
+      if (response.success) {
+        setMessage('Mensaje enviado correctamente. ¡Gracias por contactar!');
+        setIsSuccess(true);
+        form.reset();
+        setPrivacyAccepted(false);
+      } else {
+        setMessage(response.message || 'Error al enviar el mensaje. Inténtalo de nuevo.');
+        setIsSuccess(false);
+      }
+    } catch (error) {
+      console.error('Colabora submit error:', error);
+      setMessage('Error al enviar el mensaje. Inténtalo de nuevo.');
+      setIsSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <section className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-12 col-lg-8 text-center">
-          <h1 className="mb-3">Colabora</h1>
-          <p className="text-secondary mb-4">
-            Esta sección se desarrollará en la HU de Colabora. Desde Home ya
-            puedes acceder al botón de donación externa de Fundación PROCLADE.
+    <section className="colabora-page">
+      <header className="colabora-page__hero page-hero gradient-hero">
+        <div className="container text-center">
+          <span className="page-hero__eyebrow">Únete al cambio</span>
+          <h1>Colabora</h1>
+          <p>
+            Hay muchas formas de unirte al Equipo PUCH. Elige la tuya y ayúdanos a construir
+            un mundo sin hambre.
           </p>
-          <Link to="/" className="btn btn-brand-outline">
-            Volver a Home
-          </Link>
+        </div>
+      </header>
+
+      <div className="colabora-page__block">
+        <div className="colabora-page__container">
+          <h2>Retos activos</h2>
+          <p className="colabora-page__section-intro">
+            Cada reto convierte una aportación concreta en apoyo directo para proyectos
+            reales. Sigue su avance y descubre cuánto falta para completarlos.
+          </p>
+          <div className="colabora-page__challenges">
+            {challengeCards.length ? (
+              challengeCards.map((challenge) => (
+                <article key={challenge.id} className="colabora-page__challenge-card">
+                  <span className="colabora-page__challenge-badge">Reto activo</span>
+                  <h3>{challenge.title}</h3>
+                  <p className="colabora-page__challenge-description">
+                    {challenge.description}
+                  </p>
+                  <div className="colabora-page__amounts">
+                    <span>{euroFormat.format(challenge.currentAmount)}</span>
+                    <span>Meta: {euroFormat.format(challenge.targetAmount)}</span>
+                  </div>
+                  <div className="colabora-page__progress-track">
+                    <div style={{ width: `${challenge.progress}%` }} />
+                  </div>
+                  <small>
+                    Faltan {euroFormat.format(challenge.remaining)} - {challenge.progress}%
+                    completado
+                  </small>
+                  <button
+                    type="button"
+                    className="colabora-page__challenge-link"
+                    onClick={() => setSelectedChallenge(challenge)}
+                  >
+                    Ver detalles del reto <i className="bi bi-arrow-right" />
+                  </button>
+                </article>
+              ))
+            ) : (
+              <p className="colabora-page__empty">No hay retos activos en este momento.</p>
+            )}
+          </div>
         </div>
       </div>
+
+      <div className="colabora-page__block">
+        <div className="colabora-page__container">
+          <h2>¿Cómo participar?</h2>
+          <p className="colabora-page__section-intro">
+            Queremos ponértelo fácil: déjanos tus datos, cuéntanos cómo quieres sumar y
+            coordinamos contigo la mejor forma de colaborar.
+          </p>
+          <div className="colabora-page__steps">
+            <article className="colabora-page__step-card">
+              <span>1</span>
+              <h3>Cuéntanos tu idea</h3>
+              <p>Rellena el formulario de contacto y cuéntanos cómo quieres ayudar.</p>
+            </article>
+            <article className="colabora-page__step-card">
+              <span>2</span>
+              <h3>Te acompañamos</h3>
+              <p>Nuestro equipo te contactará para coordinar tu participación.</p>
+            </article>
+            <article className="colabora-page__step-card">
+              <span>3</span>
+              <h3>Empieza a sumar</h3>
+              <p>Empieza a cambiar vidas. Cada acción suma.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div className="colabora-page__block">
+        <div className="colabora-page__container colabora-page__form-wrap">
+          <h2>Formulario de contacto</h2>
+          <p className="colabora-page__section-intro">
+            Escríbenos y te responderemos para orientar tu colaboración, resolver dudas o
+            ayudarte a elegir la mejor forma de participar.
+          </p>
+          <form className="colabora-page__form-card" onSubmit={handleSubmit}>
+            <div className="colabora-page__form-grid">
+              <label>
+                Nombre *
+                <input type="text" name="nombre" placeholder="Tu nombre" required />
+              </label>
+              <label>
+                Apellidos *
+                <input type="text" name="apellidos" placeholder="Tus apellidos" required />
+              </label>
+            </div>
+            <label>
+              Correo electrónico *
+              <input type="email" name="email" placeholder="tu@email.com" required />
+            </label>
+            <label>
+              Teléfono
+              <input type="tel" name="telefono" placeholder="+34 600 000 000" />
+            </label>
+            <label>
+              Mensaje (opcional)
+              <textarea
+                name="mensaje"
+                rows={4}
+                placeholder="Cuéntanos en qué podemos ayudarte, qué información necesitas o cómo te gustaría participar..."
+              />
+            </label>
+            <small>
+              * Este formulario se envía a info@fundacionproclade.org y te
+              responderemos usando los datos que nos facilites.
+            </small>
+
+            <p className="colabora-page__privacy-notice">
+              Usaremos tus datos únicamente para responder a tu consulta o gestionar tu solicitud de colaboración.
+            </p>
+
+            <label className="colabora-page__privacy-check">
+              <input
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(event) => {
+                  setPrivacyAccepted(event.target.checked);
+                  if (event.target.checked) {
+                    setPrivacyError(null);
+                  }
+                }}
+                disabled={isLoading}
+              />
+              <span>
+                He leído y acepto la{' '}
+                <a
+                  href="https://www.fundacionproclade.org/politica-de-privacidad/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Política de privacidad
+                </a>
+              </span>
+            </label>
+            {privacyError && (
+              <p className="colabora-page__form-feedback colabora-page__form-feedback--error" role="alert">
+                {privacyError}
+              </p>
+            )}
+
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Enviando...' : 'Enviar'}
+            </button>
+            {message && (
+              <p
+                className={`colabora-page__form-feedback ${
+                  isSuccess === true
+                    ? 'colabora-page__form-feedback--success'
+                    : 'colabora-page__form-feedback--error'
+                }`}
+              >
+                {message}
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+
+      <div className="colabora-page__donation">
+        <div className="colabora-page__container">
+          <h2>¿Prefieres donar directamente?</h2>
+          <p>Tu donación ayuda a financiar proyectos contra el hambre en España y en el mundo.</p>
+          <a
+            href="https://www.fundacionproclade.org/colabora/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Ir a la página de donación
+          </a>
+        </div>
+      </div>
+
+      {selectedChallenge && (
+        <ChallengeDetailModal
+          challenge={selectedChallenge}
+          euroFormat={euroFormat}
+          onClose={() => setSelectedChallenge(null)}
+        />
+      )}
     </section>
   );
 };

@@ -1,4 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
@@ -6,25 +10,45 @@ import type { Transporter } from 'nodemailer';
 @Injectable()
 export class MailService {
   private readonly transporter: Transporter;
+  private readonly isSmtpConfigured: boolean;
   private readonly mailFrom: string;
+  private readonly contactFormTo: string;
   private readonly frontendUrl: string;
   private readonly logger = new Logger(MailService.name);
 
   constructor(private readonly configService: ConfigService) {
+    const smtpHost = this.configService.get<string>('SMTP_HOST');
+    const smtpPort = Number(this.configService.get<string>('SMTP_PORT') || '587');
+    const smtpUser = this.configService.get<string>('SMTP_USER');
+    const smtpPass = this.configService.get<string>('SMTP_PASS');
+
+    this.isSmtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
     this.mailFrom =
       this.configService.get<string>('MAIL_FROM') || 'noreply@proclade.org';
+    this.contactFormTo =
+      this.configService.get<string>('CONTACT_FORM_TO') ||
+      'info@fundacionproclade.org';
     this.frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost';
 
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('SMTP_HOST'),
-      port: Number(this.configService.get<string>('SMTP_PORT') || '587'),
-      secure: false,
-      auth: {
-        user: this.configService.get<string>('SMTP_USER'),
-        pass: this.configService.get<string>('SMTP_PASS'),
-      },
-    });
+    if (!this.isSmtpConfigured) {
+      this.logger.warn(
+        'SMTP no está configurado. Los correos se simularán en desarrollo y no se enviarán realmente.',
+      );
+      this.transporter = nodemailer.createTransport({
+        jsonTransport: true,
+      });
+    } else {
+      this.transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: false,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
+    }
   }
 
   async sendResetPasswordEmail(email: string, token: string): Promise<void> {
@@ -84,5 +108,120 @@ Equipo Proclade
       );
       throw error;
     }
+  }
+
+  async sendContactEmail(contactData: {
+    nombre: string;
+    apellidos: string;
+    email: string;
+    telefono?: string;
+    mensaje?: string;
+    privacyAccepted: boolean;
+    acceptedAt: Date;
+  }): Promise<void> {
+    if (!this.isSmtpConfigured) {
+      this.logger.error(
+        'Formulario de contacto sin SMTP configurado. Configura SMTP_HOST, SMTP_USER y SMTP_PASS para habilitar envíos reales.',
+      );
+      throw new ServiceUnavailableException(
+        'El servicio de correo no está disponible. Inténtalo de nuevo más tarde.',
+      );
+    }
+
+    const { nombre, apellidos, email, telefono, mensaje, privacyAccepted, acceptedAt } = contactData;
+    const safeNombre = this.escapeHtml(nombre);
+    const safeApellidos = this.escapeHtml(apellidos);
+    const safeEmail = this.escapeHtml(email);
+    const safeTelefono = this.escapeHtml(telefono || 'No proporcionado');
+    const safeMensajeHtml = mensaje
+      ? this.escapeHtml(mensaje).replace(/\n/g, '<br />')
+      : 'No proporcionado';
+    const acceptedAtIso = acceptedAt.toISOString();
+    const acceptedAtFormatted = acceptedAt.toLocaleString('es-ES', {
+      timeZone: 'Europe/Madrid',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+    const privacyLabel = privacyAccepted ? 'SÍ' : 'NO';
+
+    const mailOptions = {
+      from: this.mailFrom,
+      to: this.contactFormTo,
+      subject: 'Nuevo mensaje de contacto - Colabora',
+      text: `Nuevo mensaje de contacto desde el formulario de colaboración.\n\nNombre: ${nombre}\nApellidos: ${apellidos}\nEmail: ${email}\nTeléfono: ${telefono || 'No proporcionado'}\nMensaje: ${mensaje || 'No proporcionado'}\n\n--- Metadatos RGPD ---\nAceptación de la Política de privacidad: ${privacyLabel}\nFecha y hora de envío: ${acceptedAtFormatted} (${acceptedAtIso})\nOrigen: Formulario de Colabora\n\nSistema Proclade`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px; background: #f8fafc; color: #1f2937;">
+          <div style="background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);">
+            <div style="background: linear-gradient(135deg, #0f766e 0%, #22c55e 100%); padding: 22px 24px; color: white;">
+              <h1 style="margin: 0; font-size: 1.5rem; letter-spacing: -0.02em;">Nuevo mensaje de contacto</h1>
+              <p style="margin: 8px 0 0; font-size: 0.95rem; opacity: 0.9;">Un visitante ha completado el formulario de Colabora.</p>
+            </div>
+            <div style="padding: 24px;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tbody>
+                  <tr>
+                    <td style="padding: 12px 0; font-weight: 700; width: 120px;">Nombre:</td>
+                    <td style="padding: 12px 0;">${safeNombre}</td>
+                  </tr>
+                  <tr style="background: #f3f4f6;">
+                    <td style="padding: 12px 0; font-weight: 700;">Apellidos:</td>
+                    <td style="padding: 12px 0;">${safeApellidos}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 12px 0; font-weight: 700;">Email:</td>
+                    <td style="padding: 12px 0;"><a href="mailto:${safeEmail}" style="color: #2563eb; text-decoration: none;">${safeEmail}</a></td>
+                  </tr>
+                  <tr style="background: #f3f4f6;">
+                    <td style="padding: 12px 0; font-weight: 700;">Teléfono:</td>
+                    <td style="padding: 12px 0;">${safeTelefono}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="margin-top: 24px;">
+                <p style="margin: 0 0 8px; font-weight: 700;">Mensaje:</p>
+                <div style="background: #f8f9fb; border-radius: 12px; padding: 16px; color: #111827; line-height: 1.7;">
+                  ${safeMensajeHtml}
+                </div>
+              </div>
+
+              <div style="margin-top: 24px; padding: 16px; background: #ecfdf5; border-left: 4px solid #16a34a; border-radius: 8px;">
+                <p style="margin: 0 0 6px; font-weight: 700; color: #14532d;">Metadatos RGPD</p>
+                <p style="margin: 0 0 4px; color: #14532d;">✓ Aceptación de la Política de privacidad: <strong>${privacyLabel}</strong></p>
+                <p style="margin: 0 0 4px; color: #14532d;">Fecha y hora del envío: <strong>${acceptedAtFormatted}</strong> (${acceptedAtIso})</p>
+                <p style="margin: 0; color: #14532d;">Origen: Formulario de Colabora</p>
+              </div>
+
+              <p style="margin: 24px 0 0; font-size: 0.9rem; color: #6b7280;">Este correo se generó desde el formulario de colaboración de Equipo PUCH.</p>
+            </div>
+            <div style="background: #f3f4f6; padding: 18px 24px; font-size: 0.8rem; color: #6b7280; text-align: center;">
+              <span>Fundación PROCLADE • Sistema Proclade</span>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      this.logger.log(`Email de contacto enviado desde ${email}`);
+    } catch (error) {
+      this.logger.error(
+        `Error al enviar email de contacto desde ${email}`,
+        error instanceof Error ? error.stack : error,
+      );
+      throw new ServiceUnavailableException(
+        'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.',
+      );
+    }
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }

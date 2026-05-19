@@ -1,4 +1,5 @@
 import type { AdminRegion } from '../../../types/regions.types';
+import { formatRegionPhone } from '../../../../../utils/region-phone';
 import './RegionCard.css';
 
 type RegionCardProps = {
@@ -24,6 +25,10 @@ export const RegionCard = ({ region, onEdit, onDelete }: RegionCardProps) => (
       <div>
         <dt>Email</dt>
         <dd>{region.email}</dd>
+      </div>
+      <div>
+        <dt>Teléfono</dt>
+        <dd>{region.phone ? formatRegionPhone(region.phone) : 'No disponible'}</dd>
       </div>
     </dl>
 

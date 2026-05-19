@@ -7,11 +7,15 @@ import { NewsStatus, type News, type Prisma } from 'generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { ListNewsQueryDto } from './dto/list-news-query.dto';
+import { NewsImageStorageService } from './news-image-storage.service';
 import { UpdateNewsDto } from './dto/update-news.dto';
 
 @Injectable()
 export class NewsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly newsImageStorageService: NewsImageStorageService,
+  ) {}
 
   async findAllPublished(query: ListNewsQueryDto) {
     return this.prisma.news.findMany({
@@ -57,6 +61,7 @@ export class NewsService {
     const status = createNewsDto.status ?? NewsStatus.DRAFT;
     // El slug se calcula siempre en backend para evitar inconsistencias y edición manual desde cliente.
     const slug = await this.generateUniqueSlug(createNewsDto.title);
+    const normalizedImageUrl = this.normalizeImageUrl(createNewsDto.imageUrl);
 
     const news = await this.prisma.news.create({
       data: {
@@ -64,7 +69,7 @@ export class NewsService {
         slug,
         excerpt: createNewsDto.excerpt,
         content: createNewsDto.content,
-        imageUrl: createNewsDto.imageUrl,
+        imageUrl: normalizedImageUrl,
         status,
         publishedAt: status === NewsStatus.PUBLISHED ? new Date() : null,
         createdById,
@@ -80,6 +85,7 @@ export class NewsService {
   async update(id: number, updateNewsDto: UpdateNewsDto) {
     const currentNews = await this.findActiveById(id);
     const updateData: Prisma.NewsUpdateInput = {};
+    let nextImageUrl = currentNews.imageUrl;
 
     if (updateNewsDto.title !== undefined) {
       updateData.title = updateNewsDto.title;
@@ -102,7 +108,8 @@ export class NewsService {
     }
 
     if (updateNewsDto.imageUrl !== undefined) {
-      updateData.imageUrl = updateNewsDto.imageUrl;
+      nextImageUrl = this.normalizeImageUrl(updateNewsDto.imageUrl);
+      updateData.imageUrl = nextImageUrl;
     }
 
     if (updateNewsDto.status !== undefined) {
@@ -130,6 +137,10 @@ export class NewsService {
       data: updateData,
     });
 
+    if (this.shouldRemovePreviousImage(currentNews.imageUrl, news.imageUrl)) {
+      await this.newsImageStorageService.removeNewsImage(currentNews.imageUrl);
+    }
+
     return {
       message: 'Noticia actualizada correctamente',
       news,
@@ -137,14 +148,17 @@ export class NewsService {
   }
 
   async remove(id: number) {
-    await this.findActiveById(id);
+    const currentNews = await this.findActiveById(id);
 
     await this.prisma.news.update({
       where: { id },
       data: {
         deletedAt: new Date(),
+        imageUrl: null,
       },
     });
+
+    await this.newsImageStorageService.removeNewsImage(currentNews.imageUrl);
 
     return {
       message: 'Noticia eliminada correctamente',
@@ -221,5 +235,21 @@ export class NewsService {
       .replace(/^-+|-+$/g, '');
 
     return normalized || 'noticia';
+  }
+
+  private normalizeImageUrl(imageUrl: string | null | undefined): string | null {
+    if (typeof imageUrl !== 'string') {
+      return null;
+    }
+
+    const trimmedUrl = imageUrl.trim();
+    return trimmedUrl.length > 0 ? trimmedUrl : null;
+  }
+
+  private shouldRemovePreviousImage(
+    previousImageUrl: string | null,
+    nextImageUrl: string | null,
+  ): boolean {
+    return Boolean(previousImageUrl && previousImageUrl !== nextImageUrl);
   }
 }

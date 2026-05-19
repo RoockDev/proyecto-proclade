@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { NewsCardVariant, NewsItem } from '../../types/news.types';
+import { resolveNewsExcerpt } from '../../utils/news-excerpt';
 import { formatNewsDate } from '../../utils/news.mapper';
 import './NewsCard.css';
 
@@ -14,6 +15,7 @@ export const NewsCard = ({ news, variant }: NewsCardProps) => {
 
   const hasImage = Boolean(news.imageUrl) && !imageError;
   const detailPath = `/noticias/${news.slug}`;
+  const excerpt = resolveNewsExcerpt(news.excerpt, news.content);
 
   return (
     <article className={`news-card news-card--${variant} h-100`}>
@@ -34,7 +36,7 @@ export const NewsCard = ({ news, variant }: NewsCardProps) => {
         )}
       </div>
 
-      <div className="news-card__body d-flex flex-column">
+      <div className="news-card__body">
         <div className="news-card__meta">
           <span className="news-card__category">{news.category}</span>
           <time className="news-card__date" dateTime={news.publishedAt ?? news.createdAt}>
@@ -43,11 +45,17 @@ export const NewsCard = ({ news, variant }: NewsCardProps) => {
         </div>
 
         <h3 className="news-card__title">{news.title}</h3>
-        <p className={`news-card__excerpt ${variant === 'home' ? 'news-card__excerpt--clamp' : ''}`}>
-          {news.excerpt}
+        <p
+          className={`news-card__excerpt ${
+            variant === 'home'
+              ? 'news-card__excerpt--home'
+              : 'news-card__excerpt--list'
+          }`}
+        >
+          {excerpt}
         </p>
 
-        <Link to={detailPath} className="news-card__link mt-auto">
+        <Link to={detailPath} className="news-card__link">
           Leer más <i className="bi bi-arrow-right" />
         </Link>
       </div>

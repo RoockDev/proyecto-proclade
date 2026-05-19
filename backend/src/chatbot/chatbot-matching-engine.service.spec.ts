@@ -51,7 +51,7 @@ describe('ChatbotMatchingEngineService', () => {
       answer: 'Estos son los superhéroes del proyecto.',
       tags: ['superheroes', 'testimonios'],
       route: '/superheroes',
-      ctaLinks: [{ label: 'Superheroes', to: '/superheroes' }],
+      ctaLinks: [{ label: 'Superhéroes', to: '/superheroes' }],
       phrases: ['ver superheroes', 'equipo de superheroes'],
     },
     {
@@ -61,7 +61,7 @@ describe('ChatbotMatchingEngineService', () => {
       answer: 'Puedes escribirnos para solicitar información.',
       tags: ['solicitar', 'informacion', 'contacto'],
       route: '/colabora',
-      ctaLinks: [{ label: 'Contactar', to: 'mailto:equipo@equipopuch.org' }],
+      ctaLinks: [{ label: 'Contactar', to: 'mailto:info@fundacionproclade.org' }],
       phrases: ['necesito ayuda', 'quiero solicitar'],
     },
   ];
@@ -93,7 +93,7 @@ describe('ChatbotMatchingEngineService', () => {
     ).toBe(true);
   });
 
-  it('calcula fuzzyScore para typos y mantiene score util', () => {
+  it('calcula fuzzyScore para typos y mantiene score útil', () => {
     const engine = createEngine();
 
     const scored = engine.scoreCandidates({

@@ -13,6 +13,13 @@ import { UpdateChallengeAmountDto } from './dto/update-challenge-amount.dto';
 export class ChallengesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAllActivePublic(): Promise<Challenge[]> {
+    return this.prisma.challenge.findMany({
+      where: { deletedAt: null, isActive: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async findAllForAdmin(): Promise<Challenge[]> {
     return this.prisma.challenge.findMany({
       where: { deletedAt: null },

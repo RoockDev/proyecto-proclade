@@ -16,8 +16,6 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { GoogleSignInDto } from './dto/google-sign-in.dto';
-import { GoogleAuthService } from './google/google-auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -40,7 +38,6 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly googleAuthService: GoogleAuthService,
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
   ) {}
@@ -53,12 +50,6 @@ export class AuthService {
 
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
-    }
-
-    if (user.google) {
-      throw new UnauthorizedException(
-        'Esta cuenta debe iniciar sesión con Google',
-      );
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
@@ -87,16 +78,6 @@ export class AuthService {
       throw new ConflictException('El email ya está registrado');
     }
 
-    const userRole = await this.prisma.role.findUnique({
-      where: {
-        name: RoleName.USER,
-      },
-    });
-
-    if (!userRole) {
-      throw new NotFoundException('No existe el rol USER');
-    }
-
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
     const user = await this.prisma.user.create({
@@ -105,10 +86,18 @@ export class AuthService {
         passwordHash: hashedPassword,
         name: registerDto.name,
         surname: registerDto.surname,
+        privacyAcceptedAt: new Date(),
         roles: {
-          connect: {
-            id: userRole.id,
-          },
+          connectOrCreate: [
+            {
+              where: {
+                name: RoleName.USER,
+              },
+              create: {
+                name: RoleName.USER,
+              },
+            },
+          ],
         },
       },
       include: {
@@ -122,58 +111,6 @@ export class AuthService {
       safeUser,
       'Registro completado correctamente',
     );
-  }
-
-  async googleSignIn(googleSignInDto: GoogleSignInDto) {
-    const googlePayload = await this.googleAuthService.verifyIdToken(
-      googleSignInDto.idToken,
-    );
-
-    const email = googlePayload.email?.trim().toLowerCase();
-    if (!email || googlePayload.emailVerified !== true) {
-      throw new UnauthorizedException('No se pudo iniciar sesión con Google');
-    }
-
-    let user = await this.usersService.findActiveByEmailWithRoles(email);
-
-    if (!user) {
-      const userRole = await this.prisma.role.findUnique({
-        where: {
-          name: RoleName.USER,
-        },
-      });
-
-      if (!userRole) {
-        throw new NotFoundException('No existe el rol USER');
-      }
-
-      const name = googlePayload.name?.trim() || 'Usuario';
-      const surname = googlePayload.surname?.trim() || 'Google';
-      const randomPassword = randomBytes(24).toString('hex');
-      const passwordHash = await bcrypt.hash(randomPassword, 10);
-
-      user = await this.prisma.user.create({
-        data: {
-          email,
-          passwordHash,
-          name,
-          surname,
-          google: true,
-          roles: {
-            connect: {
-              id: userRole.id,
-            },
-          },
-        },
-        include: {
-          roles: true,
-          realHeroSuperhero: true,
-        },
-      });
-    }
-
-    const { passwordHash, ...safeUser } = user;
-    return this.buildAuthResponse(safeUser, 'Google Sign-In exitoso');
   }
 
   private buildAuthResponse(user: SafeUserWithRoles, message: string) {
@@ -216,7 +153,7 @@ export class AuthService {
     });
 
     // No revelar si el email existe o no (regla 3.4)
-    if (!user || user.google) {
+    if (!user) {
       this.logger.log(
         `Solicitud de recuperación ignorada para: ${forgotPasswordDto.email}`,
       );
@@ -313,12 +250,6 @@ export class AuthService {
 
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
-    }
-
-    if (user.google) {
-      throw new BadRequestException(
-        'Las cuentas de Google deben cambiar la contraseña desde su proveedor.',
-      );
     }
 
     if (

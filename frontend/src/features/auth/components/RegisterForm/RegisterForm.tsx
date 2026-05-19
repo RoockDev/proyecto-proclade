@@ -11,6 +11,10 @@ import {
 } from '../../utils/post-auth-redirect';
 import type { ApiResponse } from '../../../../types/api';
 import type { AuthResponseData } from '../../types/auth.api.types';
+import {
+  PASSWORD_POLICY_MESSAGE,
+  validatePasswordPolicy,
+} from '../../../../utils/password-policy';
 
 type RegisterFormState = {
   name: string;
@@ -18,6 +22,8 @@ type RegisterFormState = {
   email: string;
   password: string;
   confirmPassword: string;
+  privacyAccepted: boolean;
+  privacyError: string | null;
   loading: boolean;
   error: string | null;
   successMessage: string | null;
@@ -32,6 +38,8 @@ export const RegisterForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    privacyAccepted: false,
+    privacyError: null,
     loading: false,
     error: null,
     successMessage: null,
@@ -44,24 +52,49 @@ export const RegisterForm = () => {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormState((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
       error: null,
       successMessage: null,
+      ...(name === 'privacyAccepted' ? { privacyError: null } : {}),
     }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!formState.privacyAccepted) {
+      setFormState((prev) => ({
+        ...prev,
+        privacyError:
+          'Debes aceptar la Política de privacidad para crear una cuenta',
+        error: null,
+        successMessage: null,
+      }));
+      return;
+    }
+
     setFormState((prev) => ({
       ...prev,
       loading: true,
       error: null,
       successMessage: null,
+      privacyError: null,
     }));
+
+    const passwordError = validatePasswordPolicy(formState.password);
+
+    if (passwordError) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        error: passwordError,
+        successMessage: null,
+      }));
+      return;
+    }
 
     if (formState.password !== formState.confirmPassword) {
       setFormState((prev) => ({
@@ -79,6 +112,7 @@ export const RegisterForm = () => {
         surname: formState.surname.trim(),
         email: formState.email.trim(),
         password: formState.password,
+        privacyAccepted: true,
       });
 
       if (!response.success || !response.data) {
@@ -92,7 +126,7 @@ export const RegisterForm = () => {
       saveAuthSession(response.data);
       navigateAfterAuth();
     } catch (error) {
-      let errorMessage = 'No se pudo completar el registro. Intentalo de nuevo.';
+      let errorMessage = 'No se pudo completar el registro. Inténtalo de nuevo.';
 
       if (axios.isAxiosError(error)) {
         const backendError = error.response?.data as
@@ -186,8 +220,10 @@ export const RegisterForm = () => {
           placeholder="••••••••"
           disabled={formState.loading}
           required
+          minLength={8}
           autoComplete="new-password"
         />
+        <p className="auth-form__hint">{PASSWORD_POLICY_MESSAGE}</p>
       </div>
 
       <div className="auth-form__field">
@@ -204,6 +240,7 @@ export const RegisterForm = () => {
           placeholder="••••••••"
           disabled={formState.loading}
           required
+          minLength={8}
           autoComplete="new-password"
         />
       </div>
@@ -221,6 +258,36 @@ export const RegisterForm = () => {
           {formState.error}
         </div>
       )}
+
+      <div className="auth-form__field auth-form__field--checkbox">
+        <label htmlFor="privacyAccepted" className="auth-form__checkbox-label">
+          <input
+            type="checkbox"
+            id="privacyAccepted"
+            name="privacyAccepted"
+            checked={formState.privacyAccepted}
+            onChange={handleChange}
+            disabled={formState.loading}
+            className="auth-form__checkbox"
+          />
+          <span>
+            He leído y acepto la{' '}
+            <a
+              href="https://www.fundacionproclade.org/politica-de-privacidad/"
+              target="_blank"
+              rel="noreferrer"
+              className="auth-form__privacy-link"
+            >
+              Política de privacidad
+            </a>
+          </span>
+        </label>
+        {formState.privacyError && (
+          <p className="auth-form__field-error" role="alert">
+            {formState.privacyError}
+          </p>
+        )}
+      </div>
 
       <button
         type="submit"

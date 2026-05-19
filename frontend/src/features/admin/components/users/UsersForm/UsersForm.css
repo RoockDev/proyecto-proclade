@@ -59,6 +59,13 @@
   font-weight: 600;
 }
 
+.users-form-card__hint {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #6b5d4c;
+  font-weight: 500;
+}
+
 .users-form-card__grid input,
 .users-form-card__grid select {
   border: 1px solid rgba(207, 207, 207, 0.9);

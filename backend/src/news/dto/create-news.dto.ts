@@ -5,7 +5,6 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-  MinLength,
 } from 'class-validator';
 
 export class CreateNewsDto {
@@ -15,7 +14,6 @@ export class CreateNewsDto {
 
   @IsString()
   @IsNotEmpty({ message: 'El resumen es obligatorio' })
-  @MinLength(40, { message: 'El resumen debe tener al menos 40 caracteres' })
   @MaxLength(280, { message: 'El resumen no puede superar 280 caracteres' })
   excerpt: string;
 

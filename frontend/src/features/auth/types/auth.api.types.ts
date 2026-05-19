@@ -8,10 +8,7 @@ export type RegisterRequestDto = {
   surname: string;
   email: string;
   password: string;
-};
-
-export type GoogleSignInRequestDto = {
-  idToken: string;
+  privacyAccepted: boolean;
 };
 
 export type ForgotPasswordRequestDto = {

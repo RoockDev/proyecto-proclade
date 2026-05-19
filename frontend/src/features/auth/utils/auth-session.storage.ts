@@ -1,21 +1,21 @@
-import type { AuthResponseData, AuthUser } from '../types/auth.api.types';
+import type { AuthResponseData, AuthUser } from "../types/auth.api.types";
 
 /*
   Comentarios dejados a consciencia para ayuda propia y del equipo cuando volvamos a revisar este archivo
   He querido dejar todo este comentario ya que este helper es un poco lioso pero la verdad
-   que cuando he buscado como hacerlo
-  junto a la ia, me ha gustado mucho y creo puede ser una buena práctica hacerlo de esta manera,
-  y como siempre estoy pregúntandome como pueden mejorarse las cosas arquitéctonicamente pues he 
-  querido dejarlo, aunque lo más facil para mi hubiese sido guardar el user.role en el localstorage
+   que cuando he buscado cómo hacerlo
+  junto a la IA, me ha gustado mucho y creo puede ser una buena práctica hacerlo de esta manera,
+  y como siempre estoy preguntándome cómo pueden mejorarse las cosas arquitectónicamente pues he
+  querido dejarlo, aunque lo más fácil para mí hubiese sido guardar el user.role en localStorage
   desde loginform.tsx y fuera
-  y me iba a funcionar igual pero me chirriaba verlo así por lo tanto he decidido buscar como separar
-  responsabilidades y como se haría en entorno corporativo he visto esta opción y he decicido hacerlo así
+  y me iba a funcionar igual, pero me chirriaba verlo así. Por lo tanto he decidido buscar cómo separar
+  responsabilidades y cómo se haría en un entorno corporativo. He visto esta opción y he decidido hacerlo así.
   
   Este archivo centraliza la gestión de la sesión en frontend (token + usuario).
 
   - La HU15 necesita saber si el usuario autenticado tiene rol ADMIN para mostrar
     el botón "Panel Admin" en el Header.
-  - El backend ya devuelve ese dato en login/register/google (`user.roles`), pero
+  - El backend ya devuelve ese dato en login/register (`user.roles`), pero
     si cada componente accede directamente a localStorage por su cuenta:
       1) duplicamos lógica,
       2) es más fácil cometer errores,
@@ -37,12 +37,12 @@ import type { AuthResponseData, AuthUser } from '../types/auth.api.types';
   - Facilita futuras mejoras (Context, logout, refresh token) sin reescribir todo.
 */
 
-const ACCESS_TOKEN_STORAGE_KEY = 'accessToken';
-const AUTH_USER_STORAGE_KEY = 'authUser';
+const ACCESS_TOKEN_STORAGE_KEY = "accessToken";
+const AUTH_USER_STORAGE_KEY = "authUser";
 
 // Evento propio para avisar a la misma pestaña de que la sesión ha cambiado.
 // El evento nativo `storage` no siempre se dispara en la misma pestaña que modifica localStorage.
-export const AUTH_SESSION_CHANGE_EVENT = 'auth-session-changed';
+export const AUTH_SESSION_CHANGE_EVENT = "auth-session-changed";
 
 type AuthSessionSnapshot = {
   accessToken: string | null;
@@ -51,16 +51,16 @@ type AuthSessionSnapshot = {
 
 // Protección por si en el futuro este código se ejecuta fuera del navegador
 // (tests, SSR, etc.). Así evitamos errores al acceder a `window` o `localStorage`.
-const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== "undefined";
 
 const normalizeBase64Url = (value: string): string => {
-  const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+  const base64 = value.replace(/-/g, "+").replace(/_/g, "/");
   const paddingLength = (4 - (base64.length % 4)) % 4;
-  return `${base64}${'='.repeat(paddingLength)}`;
+  return `${base64}${"=".repeat(paddingLength)}`;
 };
 
 const parseJwtPayload = (token: string): Record<string, unknown> | null => {
-  const tokenParts = token.split('.');
+  const tokenParts = token.split(".");
   if (tokenParts.length !== 3 || !tokenParts[1]) {
     return null;
   }
@@ -69,7 +69,7 @@ const parseJwtPayload = (token: string): Record<string, unknown> | null => {
     const decodedPayload = atob(normalizeBase64Url(tokenParts[1]));
     const parsedPayload = JSON.parse(decodedPayload) as unknown;
 
-    if (typeof parsedPayload !== 'object' || parsedPayload === null) {
+    if (typeof parsedPayload !== "object" || parsedPayload === null) {
       return null;
     }
 
@@ -83,7 +83,7 @@ const isAccessTokenExpired = (token: string): boolean => {
   const payload = parseJwtPayload(token);
   const exp = payload?.exp;
 
-  if (typeof exp !== 'number') {
+  if (typeof exp !== "number") {
     return false;
   }
 
@@ -104,16 +104,15 @@ const parseStoredUser = (rawUser: string | null): AuthUser | null => {
   }
 
   try {
-    
     const parsed = JSON.parse(rawUser) as Partial<AuthUser>;
 
     if (
-      typeof parsed !== 'object' ||
+      typeof parsed !== "object" ||
       parsed === null ||
-      typeof parsed.id !== 'number' ||
-      typeof parsed.email !== 'string' ||
-      typeof parsed.name !== 'string' ||
-      typeof parsed.surname !== 'string' ||
+      typeof parsed.id !== "number" ||
+      typeof parsed.email !== "string" ||
+      typeof parsed.name !== "string" ||
+      typeof parsed.surname !== "string" ||
       !Array.isArray(parsed.roles)
     ) {
       return null;
@@ -124,7 +123,9 @@ const parseStoredUser = (rawUser: string | null): AuthUser | null => {
       email: parsed.email,
       name: parsed.name,
       surname: parsed.surname,
-      roles: parsed.roles.filter((role): role is string => typeof role === 'string'),
+      roles: parsed.roles.filter(
+        (role): role is string => typeof role === "string",
+      ),
     };
   } catch {
     return null;
@@ -189,12 +190,14 @@ export const clearAuthSession = (): void => {
   notifyAuthSessionChanged();
 };
 
-export const userHasAdminRole = (user: AuthUser | null | undefined): boolean => {
+export const userHasAdminRole = (
+  user: AuthUser | null | undefined,
+): boolean => {
   if (!user) {
     return false;
   }
 
-  return user.roles.some((role) => role.toUpperCase() === 'ADMIN');
+  return user.roles.some((role) => role.toUpperCase() === "ADMIN");
 };
 
 /*
@@ -234,11 +237,11 @@ export const subscribeToAuthSession = (onChange: () => void): (() => void) => {
   };
 
   window.addEventListener(AUTH_SESSION_CHANGE_EVENT, handleCustomChange);
-  window.addEventListener('storage', handleStorageChange);
+  window.addEventListener("storage", handleStorageChange);
 
   return () => {
     // Limpieza de listeners para evitar fugas de memoria cuando el componente se desmonta.
     window.removeEventListener(AUTH_SESSION_CHANGE_EVENT, handleCustomChange);
-    window.removeEventListener('storage', handleStorageChange);
+    window.removeEventListener("storage", handleStorageChange);
   };
 };

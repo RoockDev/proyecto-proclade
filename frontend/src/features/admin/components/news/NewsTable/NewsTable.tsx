@@ -90,7 +90,6 @@ export const NewsTable = ({ news, onEdit, onDelete, onToggleStatus }: NewsTableP
       cell: (item: AdminNewsItem) => (
         <div className="news-table__title-cell">
           <strong>{item.title}</strong>
-          <span>{item.slug}</span>
         </div>
       ),
     },
@@ -124,47 +123,47 @@ export const NewsTable = ({ news, onEdit, onDelete, onToggleStatus }: NewsTableP
         </time>
       ),
     },
-      {
-        key: 'actions',
-        header: 'Acciones',
-        cell: (item: AdminNewsItem) => (
-          <div className="news-table__actions">
-            <button
-              type="button"
-              onClick={() => onEdit(item)}
-              aria-label={`Editar ${item.title}`}
-              className="news-table__icon-button news-table__icon-button--tool"
-            >
-              <i className="bi bi-tools" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onToggleStatus(item)}
-              aria-label={`Cambiar estado de ${item.title}`}
-              className={`news-table__icon-button news-table__icon-button--status ${
-                item.status === 'PUBLISHED'
-                  ? 'news-table__icon-button--status--active'
-                  : ''
+    {
+      key: 'actions',
+      header: 'Acciones',
+      cell: (item: AdminNewsItem) => (
+        <div className="news-table__actions">
+          <button
+            type="button"
+            onClick={() => onEdit(item)}
+            aria-label={`Editar ${item.title}`}
+            className="news-table__icon-button news-table__icon-button--tool"
+          >
+            <i className="bi bi-tools" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onToggleStatus(item)}
+            aria-label={`Cambiar estado de ${item.title}`}
+            className={`news-table__icon-button news-table__icon-button--status ${
+              item.status === 'PUBLISHED'
+                ? 'news-table__icon-button--status--active'
+                : ''
+            }`}
+          >
+            <i
+              className={`bi ${
+                item.status === 'PUBLISHED' ? 'bi-eye-slash' : 'bi-eye'
               }`}
-            >
-              <i
-                className={`bi ${
-                  item.status === 'PUBLISHED' ? 'bi-eye-slash' : 'bi-eye'
-                }`}
-                aria-hidden="true"
-              />
-            </button>
-            <button
-              type="button"
-              onClick={() => onDelete(item)}
-              aria-label={`Eliminar ${item.title}`}
-              className="news-table__icon-button news-table__icon-button--delete"
-            >
-              <i className="bi bi-x-circle" aria-hidden="true" />
-            </button>
-          </div>
-        ),
-      },
+              aria-hidden="true"
+            />
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(item)}
+            aria-label={`Eliminar ${item.title}`}
+            className="news-table__icon-button news-table__icon-button--delete"
+          >
+            <i className="bi bi-x-circle" aria-hidden="true" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (

@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ChatbotOrchestratorService } from './chatbot-orchestrator.service';
+import { ChatbotGateway } from './chatbot.gateway';
 import { CreateChatSessionDto } from './dto/create-chat-session.dto';
 import { ListChatbotSuggestionsDto } from './dto/list-chatbot-suggestions.dto';
 import { RegisterChatbotFeedbackDto } from './dto/register-chatbot-feedback.dto';
@@ -9,6 +10,7 @@ import { SendChatMessageDto } from './dto/send-chat-message.dto';
 export class ChatbotController {
   constructor(
     private readonly chatbotOrchestratorService: ChatbotOrchestratorService,
+    private readonly chatbotGateway: ChatbotGateway,
   ) {}
 
   @Post('sessions')
@@ -19,12 +21,21 @@ export class ChatbotController {
   }
 
   @Post('message')
-  sendMessage(@Body() sendChatMessageDto: SendChatMessageDto) {
-    return this.chatbotOrchestratorService.sendMessage({
+  async sendMessage(@Body() sendChatMessageDto: SendChatMessageDto) {
+    const reply = await this.chatbotOrchestratorService.sendMessage({
       message: sendChatMessageDto.message,
       sessionId: sendChatMessageDto.sessionId,
       pageContext: sendChatMessageDto.pageContext,
     });
+
+    this.chatbotGateway.emitAdminEvents({
+      sessionId: reply.sessionId,
+      userMessage: sendChatMessageDto.message,
+      pageContext: sendChatMessageDto.pageContext,
+      reply,
+    });
+
+    return reply;
   }
 
   @Get('suggestions')

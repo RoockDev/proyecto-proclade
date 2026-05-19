@@ -18,7 +18,7 @@ export const UpdateAmountModal = ({
   onConfirm,
   onCancel,
 }: UpdateAmountModalProps) => {
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(() => challenge?.currentAmount.toString() ?? '');
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen || !challenge) return null;
@@ -27,7 +27,7 @@ export const UpdateAmountModal = ({
     const parsed = Number(amount);
 
     if (!Number.isInteger(parsed) || parsed < 0) {
-      setError('El monto debe ser un número entero no negativo.');
+      setError('El monto debe ser una cantidad entera en euros.');
       return;
     }
 
@@ -46,13 +46,11 @@ export const UpdateAmountModal = ({
     onCancel();
   };
 
-  const formatAmount = (cents: number) => {
-    const euros = cents / 100;
-    return euros.toLocaleString('es-ES', {
+  const formatAmount = (amountValue: number) =>
+    amountValue.toLocaleString('es-ES', {
       style: 'currency',
       currency: 'EUR',
     });
-  };
 
   return (
     <div className="update-amount-modal" role="dialog" aria-modal="true">
@@ -67,6 +65,8 @@ export const UpdateAmountModal = ({
         <p className="update-amount-modal__info">
           Reto: <strong>{challenge.title}</strong>
           <br />
+          Recaudado actual: {formatAmount(challenge.currentAmount)}
+          <br />
           Objetivo: {formatAmount(challenge.targetAmount)}
         </p>
 
@@ -77,10 +77,11 @@ export const UpdateAmountModal = ({
         )}
 
         <label className="update-amount-modal__field">
-          Nuevo monto actual (céntimos)
+          Nuevo monto actual (euros)
           <input
             type="number"
             min={0}
+            step={1}
             max={challenge.targetAmount}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}

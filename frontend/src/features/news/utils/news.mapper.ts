@@ -57,9 +57,8 @@ export function buildNewsListState(params: {
   items: NewsItem[];
   page: number;
   pageSize: number;
-  isFallback: boolean;
 }): NewsListState {
-  const { items, page, pageSize, isFallback } = params;
+  const { items, page, pageSize } = params;
   const total = items.length;
   const totalPages = total === 0 ? 0 : Math.ceil(total / pageSize);
   const boundedPage = totalPages === 0 ? 1 : Math.min(page, totalPages);
@@ -72,7 +71,6 @@ export function buildNewsListState(params: {
     pageSize,
     total,
     totalPages,
-    isFallback,
   };
 }
 
