@@ -4,14 +4,16 @@
 
 - [02.1 - C4 Context](./02.1-c4-context.md)
 - [02.2 - C4 Container](./02.2-c4-container.md)
-- [02.3 - C4 Component (Backend)](./02.3-c4-component-backend.md)
-- [02.4 - Flujos Runtime Clave](./02.4-runtime-flows.md)
-- [02.5 - Decisiones Arquitectonicas Actuales](./02.5-architecture-decisions.md)
+- [02.3 - C4 Component (backend)](./02.3-c4-component-backend.md)
+- [02.4 - Flujos runtime clave](./02.4-runtime-flows.md)
+- [02.5 - Decisiones arquitectónicas vigentes](./02.5-architecture-decisions.md)
 
-## Principios aplicados
+## Principios vigentes
 
-1. Arquitectura modular por dominio (backend) y por feature (frontend).
-2. Contrato de respuesta API unificado para todo el sistema.
-3. Seguridad por JWT + roles en capa backend.
-4. Persistencia con Prisma y reglas de negocio en servicios.
-5. Operacion local unificada por Docker Compose + Nginx.
+1. Un único punto de entrada público por Nginx.
+2. Backend modular por dominio.
+3. Frontend organizado por feature.
+4. Contrato de respuesta HTTP unificado.
+5. Seguridad real aplicada en backend, no solo en el router del frontend.
+6. Persistencia local simple para uploads, con sus limitaciones documentadas.
+7. Operación local basada en Docker Compose como camino principal.
